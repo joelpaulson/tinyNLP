@@ -17,8 +17,8 @@ model expression
 ## Package Areas
 
 - `ir`: minimal expression graph and scalar operation structures.
-- `autodiff`: future derivative construction and verification.
-- `nlp`: future problem API and assembly contracts.
+- `autodiff`: reverse-mode scalar gradients, Jacobians, and verification.
+- `nlp`: structural sparsity helpers and future problem API contracts.
 - `solvers`: future KKT and solver-step workflows.
 - `backends`: KernelPlan, backend protocol, registry, and Python reference
   backend.
@@ -27,8 +27,8 @@ model expression
 
 ## Current Boundary
 
-The current boundary is scalar expression construction/evaluation and plan
-visibility only. The repository intentionally does not implement autodiff,
-vector Jacobians, sparsity discovery, problem APIs, residual/Jacobian/Hessian
-assembly, KKT systems, solvers, sensitivities, bridges, optimized backends,
-inequalities, or bounds.
+The current boundary is scalar expression construction/evaluation, plan
+visibility, derivative construction and verification, and symbolic sparsity
+discovery only. The repository intentionally does not implement problem APIs,
+residual/Jacobian/Hessian assembly, KKT systems, solvers, sensitivities,
+bridges, optimized backends, inequalities, or bounds.

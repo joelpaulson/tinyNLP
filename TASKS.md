@@ -23,8 +23,7 @@ optimizable for available hardware.
   identity.
 - Do not add inequalities, bounds, GPU support, production IPOPT-style logic, or
   performance claims until a milestone explicitly asks for them.
-- The next technical run remains M6-M8: reverse-mode autodiff, vector Jacobians,
-  and structural sparsity. Stop before M9 unless explicitly approved.
+- With M6-M8 complete, stop before M9 unless explicitly approved.
 
 ## Shared Required Checks
 
@@ -229,7 +228,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M8 Structural Sparsity Discovery
 
-- Status: ready.
+- Status: complete.
 - Purpose: discover reusable structural sparsity separately from numeric values.
 - Allowed scope: structural dependency analysis, sparsity patterns for supported
   expressions/Jacobians, trace reports, and stability tests across value changes.
@@ -249,7 +248,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M9 Problem API and Assembly Contracts
 
-- Status: blocked until M8 is complete.
+- Status: ready.
 - Purpose: define the first problem-level API and explicit assembly contracts.
 - Allowed scope: smooth structured constrained problem containers, objective and
   residual registration, shape metadata, assembly contract types, and tests.

@@ -33,17 +33,15 @@ Codex may:
 - Add minimal package stubs needed for layout or importability.
 - Add tests for behavior that already exists or is explicitly requested by the
   active milestone.
-- Maintain and test completed M1-M5 features: core expression IR, reference
+- Maintain and test completed M1-M8 features: core expression IR, reference
   evaluator, trace reports, canonical examples, benchmark smoke scaffolding,
-  KernelPlan, backend protocol, and registered Python reference backend.
+  KernelPlan, backend protocol, registered Python reference backend, autodiff,
+  Jacobian verification, and structural sparsity.
 - Refine benchmark policy and benchmark harness structure before benchmark
   result summaries.
 
 Codex may not implement these before a milestone asks for them:
 
-- Autodiff or derivative graph construction.
-- Vector Jacobians or derivative verification workflows.
-- Sparsity or structure discovery.
 - Problem APIs.
 - Residual, Jacobian, Hessian, or KKT assembly.
 - Solver steps, solver backends, or sensitivities.
