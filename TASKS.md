@@ -124,7 +124,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M4 Benchmark Scaffolding
 
-- Status: ready.
+- Status: complete.
 - Purpose: create benchmark infrastructure before any performance claims.
 - Allowed scope: benchmark directory structure, benchmark metadata schema,
   correctness-before-timing helpers, pytest-benchmark smoke cases for the
@@ -147,7 +147,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M5 Reverse-Mode Autodiff for Scalar Outputs
 
-- Status: blocked until M4 is complete.
+- Status: blocked pending explicit next-stage request.
 - Purpose: add reverse-mode derivative construction for scalar-output
   expressions.
 - Allowed scope: derivative graph or tape representation for supported scalar
