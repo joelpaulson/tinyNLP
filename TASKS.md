@@ -248,16 +248,18 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M9 Problem API and Assembly Contracts
 
-- Status: ready.
+- Status: complete.
 - Purpose: define the first problem-level API and explicit assembly contracts.
 - Allowed scope: smooth structured constrained problem containers, objective and
-  residual registration, shape metadata, assembly contract types, and tests.
+  residual registration, equality residual blocks as the first supported block
+  kind, shape metadata, assembly contract types, and tests.
 - Out-of-scope items: inequalities, bounds, production solver APIs, sparse
   numeric assembly implementation, KKT systems, external solver wrappers.
 - Files likely touched: `src/tinynlp/nlp/`, `src/tinynlp/ir/`, `tests/`,
   `docs/architecture.md`, `TASKS.md`.
 - Implementation notes: equality constraints may be the initial implementation
-  path, but docs and APIs should not define tinyNLP as equality-only.
+  path, but docs and APIs should not define tinyNLP as equality-only; leave room
+  for future inequality and bound blocks.
 - Acceptance tests: problem definitions expose dimensions, symbolic structure,
   residual expressions, and assembly plans without solving.
 - Benchmark requirements: none.
@@ -268,7 +270,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M10 Sparse Residual/Jacobian Assembly
 
-- Status: blocked until M9 is complete.
+- Status: ready.
 - Purpose: assemble residual values and Jacobians using discovered structure.
 - Allowed scope: sparse coordinate/structure representation, residual assembly,
   Jacobian assembly, shape checks, trace metadata, and correctness tests.
@@ -277,8 +279,8 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
   bounds.
 - Files likely touched: `src/tinynlp/nlp/`, `src/tinynlp/autodiff/`,
   `src/tinynlp/backends/`, `tests/`, `docs/architecture.md`, `TASKS.md`.
-- Implementation notes: use simple internal sparse structures first; do not add
-  SciPy unless a later milestone explicitly approves it.
+- Implementation notes: use simple dependency-free coordinate sparse structures
+  first; do not add SciPy unless a later milestone explicitly approves it.
 - Acceptance tests: assembled residuals and Jacobians match dense/reference
   expectations for canonical problems; trace metadata identifies each
   contribution.
@@ -302,7 +304,8 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Files likely touched: `src/tinynlp/solvers/`, `src/tinynlp/nlp/`,
   `src/tinynlp/backends/`, `tests/`, `docs/architecture.md`, `TASKS.md`.
 - Implementation notes: keep the linear-solve interface backend-neutral and
-  inspectable; KKT blocks must expose dimensions and provenance.
+  inspectable; KKT blocks must expose dimensions and provenance; use an
+  identity/reference primal block until a later Hessian milestone exists.
 - Acceptance tests: KKT object exposes expected block structure; reference
   linear solve interface can solve tiny deterministic systems.
 - Benchmark requirements: none; KKT timing waits for benchmark baseline work.
