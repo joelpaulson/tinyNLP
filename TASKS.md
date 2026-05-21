@@ -61,7 +61,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M1 Core IR Data Model
 
-- Status: ready.
+- Status: complete.
 - Purpose: introduce the smallest inspectable expression IR data model.
 - Allowed scope: immutable node/value identifiers, operation metadata,
   variables, constants, basic scalar operations, graph/container types, and
@@ -83,7 +83,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M2 Reference Expression Evaluator
 
-- Status: blocked until M1 is complete.
+- Status: ready.
 - Purpose: add a CPU-first reference evaluator for the supported IR.
 - Allowed scope: scalar numeric evaluation, environment/value binding,
   deterministic errors for missing values, and evaluator tests.
