@@ -1,7 +1,7 @@
 # ROADMAP
 
 tinyNLP will grow through small, milestone-based phases. The roadmap stays
-high-level on purpose; detailed execution tasks will live in `TASKS.md` later.
+high-level on purpose; detailed execution tasks live in `TASKS.md`.
 
 ## Phase 0: Control Packet and Tooling
 
@@ -73,8 +73,8 @@ high-level on purpose; detailed execution tasks will live in `TASKS.md` later.
 - Hardware-specific execution.
 - Bridges to external formats when they preserve the inspectable pipeline.
 
-## Next Control Artifact
+## Execution Task Board
 
-`TASKS.md` will be generated next from this roadmap. It should translate each
-phase into concrete, testable tasks without expanding scope beyond the active
-milestone.
+`TASKS.md` is the execution board generated from this roadmap. It translates
+each phase into concrete, testable tasks without expanding scope beyond the
+active milestone.

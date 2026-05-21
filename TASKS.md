@@ -37,7 +37,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M0 Documentation and Tooling Sanity
 
-- Status: ready.
+- Status: complete.
 - Purpose: confirm the control packet, packaging, CI, and import skeleton are
   coherent before runtime feature work begins.
 - Allowed scope: documentation cleanup, CI wording, package metadata fixes,
@@ -61,7 +61,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M1 Core IR Data Model
 
-- Status: blocked until M0 is complete.
+- Status: ready.
 - Purpose: introduce the smallest inspectable expression IR data model.
 - Allowed scope: immutable node/value identifiers, operation metadata,
   variables, constants, basic scalar operations, graph/container types, and
