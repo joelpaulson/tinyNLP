@@ -61,7 +61,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M1 Core IR Data Model
 
-- Status: ready.
+- Status: complete.
 - Purpose: introduce the smallest inspectable expression IR data model.
 - Allowed scope: immutable node/value identifiers, operation metadata,
   variables, constants, basic scalar operations, graph/container types, and
@@ -83,7 +83,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M2 Reference Expression Evaluator
 
-- Status: blocked until M1 is complete.
+- Status: complete.
 - Purpose: add a CPU-first reference evaluator for the supported IR.
 - Allowed scope: scalar numeric evaluation, environment/value binding,
   deterministic errors for missing values, and evaluator tests.
@@ -103,7 +103,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M3 Trace Reports and Canonical Examples
 
-- Status: blocked until M2 is complete.
+- Status: complete.
 - Purpose: make the early IR/evaluator path explainable through traces and
   examples.
 - Allowed scope: human-readable trace reports, minimal example scripts or docs,
@@ -124,7 +124,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M4 Benchmark Scaffolding
 
-- Status: blocked until M3 is complete.
+- Status: complete.
 - Purpose: create benchmark infrastructure before any performance claims.
 - Allowed scope: benchmark directory structure, benchmark metadata schema,
   correctness-before-timing helpers, pytest-benchmark smoke cases for the
@@ -147,7 +147,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M5 Reverse-Mode Autodiff for Scalar Outputs
 
-- Status: blocked until M4 is complete.
+- Status: blocked pending explicit next-stage request.
 - Purpose: add reverse-mode derivative construction for scalar-output
   expressions.
 - Allowed scope: derivative graph or tape representation for supported scalar

@@ -1,11 +1,35 @@
 # Benchmarks
 
-This directory will hold benchmark sources and committed benchmark result
-summaries for tinyNLP.
+This directory holds benchmark sources for tinyNLP. There are no committed
+benchmark result summaries yet, and this repository does not make speed claims.
 
-There are no benchmark results yet. Do not use this repository to make
-performance claims until the relevant benchmark source, command, environment
-metadata, and result summary are committed.
+## Current Scaffold
 
-Benchmarks should validate outputs before timing claims and identify the
-pipeline stage being measured.
+- `test_reference_evaluator_benchmark.py` measures expression/residual
+  evaluation through the CPU reference evaluator.
+- The benchmark validates expected residual outputs before timing.
+- The only baseline in this scaffold is the expected numeric output for the
+  canonical examples, not another package or optimized backend.
+
+## Running Benchmarks
+
+Use pytest-benchmark through uv:
+
+```sh
+uv run pytest benchmarks
+```
+
+## Result Summary Requirements
+
+Do not add benchmark result summaries until there is a milestone that asks for
+them. Future committed summaries must include:
+
+- Benchmark source and command.
+- Measured pipeline stage.
+- Problem definition and expected output.
+- Dependency versions.
+- Machine and environment metadata.
+- Result summary tied to committed code.
+
+Do not make README performance claims without benchmark source, command,
+environment metadata, and committed result summary.
