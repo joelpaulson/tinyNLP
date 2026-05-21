@@ -37,7 +37,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M0 Documentation and Tooling Sanity
 
-- Status: ready.
+- Status: complete.
 - Purpose: confirm the control packet, packaging, CI, and import skeleton are
   coherent before runtime feature work begins.
 - Allowed scope: documentation cleanup, CI wording, package metadata fixes,
@@ -61,7 +61,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M1 Core IR Data Model
 
-- Status: blocked until M0 is complete.
+- Status: ready.
 - Purpose: introduce the smallest inspectable expression IR data model.
 - Allowed scope: immutable node/value identifiers, operation metadata,
   variables, constants, basic scalar operations, graph/container types, and
@@ -330,7 +330,9 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Files likely touched: `src/tinynlp/bridges/`, `tests/`, `examples/`,
   `pyproject.toml`, `docs/architecture.md`, `TASKS.md`.
 - Implementation notes: bridge must be optional and isolated; if
-  `pyproject.toml` changes, run the additional pyproject checks.
+  `pyproject.toml` changes, run the additional pyproject checks. M13 can be
+  revisited later if an earlier correctness baseline becomes valuable, but it
+  should not move earlier during M0.
 - Acceptance tests: tests skip cleanly when CasADi is absent; when present, the
   bridge matches tinyNLP results on canonical supported problems.
 - Benchmark requirements: none for speed; CasADi may be a correctness baseline
