@@ -185,7 +185,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M6 Reverse-Mode Autodiff for Scalar Outputs
 
-- Status: ready.
+- Status: complete.
 - Purpose: add reverse-mode derivative construction for scalar-output
   expressions.
 - Allowed scope: derivative graph or tape representation for supported scalar
@@ -206,7 +206,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M7 Vector Jacobians and Derivative Verification
 
-- Status: blocked until M6 is complete.
+- Status: ready.
 - Purpose: extend derivative support to vector outputs and add verification
   checks.
 - Allowed scope: Jacobian construction/evaluation for vector expressions,

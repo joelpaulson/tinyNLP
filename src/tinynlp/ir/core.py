@@ -37,6 +37,14 @@ class NodeId:
         return str(self.value)
 
 
+@dataclass(frozen=True, order=True)
+class VariableRef:
+    """Stable reference to a symbolic variable node."""
+
+    name: str
+    node_id: NodeId
+
+
 @dataclass(frozen=True)
 class Node:
     """Symbolic IR node.
