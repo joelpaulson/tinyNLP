@@ -83,7 +83,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M2 Reference Expression Evaluator
 
-- Status: ready.
+- Status: complete.
 - Purpose: add a CPU-first reference evaluator for the supported IR.
 - Allowed scope: scalar numeric evaluation, environment/value binding,
   deterministic errors for missing values, and evaluator tests.
@@ -103,7 +103,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M3 Trace Reports and Canonical Examples
 
-- Status: blocked until M2 is complete.
+- Status: ready.
 - Purpose: make the early IR/evaluator path explainable through traces and
   examples.
 - Allowed scope: human-readable trace reports, minimal example scripts or docs,
