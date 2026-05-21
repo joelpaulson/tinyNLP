@@ -158,3 +158,28 @@ asks for a different commit shape.
 - Each milestone should leave the repo validated and easy to review.
 - `TASKS.md` should translate the roadmap into concrete work only when the next
   planning step begins.
+
+## ADR 0008: Kernel Plans and Backend Protocol
+
+- Status: accepted
+- Date: 2026-05-21
+
+### Context
+
+tinyNLP needs execution kernels to be visible before optimized backends are
+added. The reference evaluator should remain usable while exposing the steps an
+optimized backend would eventually implement.
+
+### Decision
+
+Represent supported expression execution as deterministic `KernelPlan` objects,
+execute them through a small backend protocol, register the Python reference
+backend by name, and preserve `evaluate(expr, values)` as a compatibility
+wrapper.
+
+### Consequences
+
+- Optimized backends must match reference behavior before they can support
+  performance claims.
+- Runtime values stay separate from symbolic plans.
+- Performance claims still require committed benchmark evidence.

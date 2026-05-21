@@ -40,6 +40,9 @@ Benchmarks should name the pipeline stage they measure:
 
 ## Current State
 
-There are no benchmark results yet. `pytest-benchmark` is included as a
-development dependency so benchmark work can be added when the implementation
-has measurable behavior.
+Benchmark smoke sources now exist for expression/residual evaluation through the
+backend protocol and registered Python reference backend. They validate expected
+outputs before timing and are used as test/collection scaffolding.
+
+There are no committed benchmark result summaries yet, and tinyNLP still makes
+no speed or performance claims.

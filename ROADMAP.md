@@ -16,11 +16,16 @@ high-level on purpose; detailed execution tasks live in `TASKS.md`.
 - Introduce a small expression IR for smooth scalar/vector expressions.
 - Add a CPU-first reference evaluator.
 - Keep every operation traceable from model expression to IR node.
+- Make expression execution visible through deterministic `KernelPlan` objects
+  and a small backend protocol.
 
 ## Phase 2: Trace Reports and Canonical Examples
 
 - Add concise trace reports that explain what was built and evaluated.
+- Add kernel-plan reports that show executable steps, operation counts, and
+  temporary counts.
 - Create canonical examples that exercise the visible pipeline.
+- Add benchmark smoke scaffolding without result summaries or speed claims.
 - Keep examples focused on clarity rather than coverage.
 
 ## Phase 3: Autodiff and Derivative Verification

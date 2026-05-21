@@ -16,16 +16,19 @@ model expression
 
 ## Package Areas
 
-- `ir`: future expression graph and IR structures.
+- `ir`: minimal expression graph and scalar operation structures.
 - `autodiff`: future derivative construction and verification.
 - `nlp`: future problem API and assembly contracts.
 - `solvers`: future KKT and solver-step workflows.
-- `backends`: future CPU reference and optimized execution backends.
+- `backends`: KernelPlan, backend protocol, registry, and Python reference
+  backend.
 - `bridges`: future import/export adapters.
-- `profiling`: future tracing, timing, and benchmark helpers.
+- `profiling`: deterministic structural trace helpers.
 
 ## Current Boundary
 
-The repository currently contains structure, documentation, CI, and validation
-tooling only. It intentionally does not implement expression IR, autodiff,
-sparsity discovery, assembly, KKT systems, solvers, bridges, or benchmarks yet.
+The current boundary is scalar expression construction/evaluation and plan
+visibility only. The repository intentionally does not implement autodiff,
+vector Jacobians, sparsity discovery, problem APIs, residual/Jacobian/Hessian
+assembly, KKT systems, solvers, sensitivities, bridges, optimized backends,
+inequalities, or bounds.

@@ -17,6 +17,8 @@ optimizable for available hardware.
   identity.
 - Do not add inequalities, bounds, GPU support, production IPOPT-style logic, or
   performance claims until a milestone explicitly asks for them.
+- With M1-M5 complete, the next planned implementation run is M6-M8; stop before
+  M9 unless explicitly approved.
 
 ## Shared Required Checks
 
@@ -177,7 +179,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M6 Reverse-Mode Autodiff for Scalar Outputs
 
-- Status: blocked until M5 is complete.
+- Status: ready.
 - Purpose: add reverse-mode derivative construction for scalar-output
   expressions.
 - Allowed scope: derivative graph or tape representation for supported scalar
@@ -361,8 +363,9 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
   `pyproject.toml`, `docs/architecture.md`, `TASKS.md`.
 - Implementation notes: bridge must be optional and isolated; if
   `pyproject.toml` changes, run the additional pyproject checks. M14 can be
-  revisited later if an earlier correctness baseline becomes valuable, but it
-  should not move earlier during M0.
+  revisited during later planning if an earlier correctness baseline becomes
+  valuable, but CasADi must remain optional unless a milestone explicitly
+  changes dependency policy.
 - Acceptance tests: tests skip cleanly when CasADi is absent; when present, the
   bridge matches tinyNLP results on canonical supported problems.
 - Benchmark requirements: none for speed; CasADi may be a correctness baseline

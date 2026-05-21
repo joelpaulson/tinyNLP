@@ -34,10 +34,15 @@ hardware-specific execution planned later.
 
 ## Current Status
 
-tinyNLP is experimental and pre-implementation. The repository currently
-contains the package skeleton, documentation/control packet, CI, and validation
-tooling. It does not yet implement expression IR, autodiff, sparsity discovery,
-KKT assembly, solvers, bridges, or benchmarks.
+tinyNLP is experimental and pre-alpha. M1-M5 are complete: the repository now
+includes a minimal scalar expression IR, CPU-first reference evaluator,
+deterministic structural traces, canonical expression examples, a deterministic
+KernelPlan, a small backend protocol, a registered Python reference backend, and
+pytest-benchmark smoke sources.
+
+It does not yet implement autodiff, vector Jacobians, sparsity discovery,
+problem APIs, residual/Jacobian/Hessian assembly, KKT systems, solver steps,
+sensitivities, bridges, optimized backends, inequalities, or bounds.
 
 ## Installation From Source
 
@@ -100,6 +105,9 @@ identify what stage is measured, validate outputs before timing claims, and
 include the benchmark source, command, environment metadata, and committed
 result summary.
 
+The repository has benchmark smoke sources, but no committed benchmark result
+summaries and no performance claims.
+
 No speed or performance claims should appear in README or project documentation
 without committed benchmark evidence.
 
@@ -107,16 +115,16 @@ without committed benchmark evidence.
 
 ```text
 src/tinynlp/
-  ir/          future expression graph and IR structures
+  ir/          minimal scalar expression graph and IR structures
   autodiff/    future derivative construction
   nlp/         future problem API and assembly contracts
   solvers/     future KKT and solver-step workflows
-  backends/    future CPU reference and optimized execution backends
+  backends/    KernelPlan, backend protocol, registry, and Python reference backend
   bridges/     future import/export adapters
-  profiling/   future tracing, timing, and benchmark helpers
+  profiling/   deterministic structural trace helpers
 
 docs/          design notes and architecture sketches
-examples/      future canonical examples
-benchmarks/    future benchmark sources and committed summaries
+examples/      canonical expression examples for the current IR/evaluator path
+benchmarks/    benchmark smoke sources and future committed summaries
 tests/         pytest suite
 ```
