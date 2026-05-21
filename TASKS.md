@@ -103,7 +103,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M3 Trace Reports and Canonical Examples
 
-- Status: ready.
+- Status: complete.
 - Purpose: make the early IR/evaluator path explainable through traces and
   examples.
 - Allowed scope: human-readable trace reports, minimal example scripts or docs,
@@ -124,7 +124,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M4 Benchmark Scaffolding
 
-- Status: blocked until M3 is complete.
+- Status: ready.
 - Purpose: create benchmark infrastructure before any performance claims.
 - Allowed scope: benchmark directory structure, benchmark metadata schema,
   correctness-before-timing helpers, pytest-benchmark smoke cases for the
