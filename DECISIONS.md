@@ -183,3 +183,29 @@ wrapper.
   performance claims.
 - Runtime values stay separate from symbolic plans.
 - Performance claims still require committed benchmark evidence.
+
+## ADR 0009: Explicit KKT Systems and Reference Linear Solve
+
+- Status: accepted
+- Date: 2026-05-21
+
+### Context
+
+tinyNLP needs the transition from sparse Jacobian assembly to KKT systems to be
+visible before nonlinear solver steps or production linear algebra are added.
+
+### Decision
+
+Represent KKT systems as explicit coordinate matrices with block metadata and
+provenance. Use an identity/reference primal block by default, not a Hessian
+claim, and provide a pure-Python dense reference linear solver for tiny
+deterministic systems.
+
+### Consequences
+
+- KKT entries can be traced back to primal, Jacobian, transposed Jacobian, or
+  constraint-zero block metadata.
+- The dense reference solver exists for correctness and interface testing, not
+  performance claims.
+- Nonlinear solver loops, Hessian assembly, and production factorization remain
+  later milestones.

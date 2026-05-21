@@ -34,16 +34,18 @@ hardware-specific execution planned later.
 
 ## Current Status
 
-tinyNLP is experimental and pre-alpha. M1-M8 are complete: the repository now
+tinyNLP is experimental and pre-alpha. M1-M11 are complete: the repository now
 includes a minimal scalar expression IR, CPU-first reference evaluator,
 deterministic structural traces, canonical expression examples, a deterministic
 KernelPlan, a small backend protocol, a registered Python reference backend,
 reverse-mode scalar autodiff, vector Jacobian construction and verification,
-structural sparsity discovery, and pytest-benchmark smoke sources.
+structural sparsity discovery, problem containers, residual/Jacobian assembly
+contracts, dependency-free sparse coordinate assembly, explicit KKT system
+objects, a dense reference linear-solve interface, and pytest-benchmark smoke
+sources.
 
-It does not yet implement problem APIs, residual/Jacobian/Hessian assembly, KKT
-systems, solver steps, sensitivities, bridges, optimized backends,
-inequalities, or bounds.
+It does not yet implement Hessian assembly, nonlinear solver steps,
+sensitivities, bridges, optimized backends, inequalities, or bounds.
 
 ## Installation From Source
 
@@ -118,8 +120,8 @@ without committed benchmark evidence.
 src/tinynlp/
   ir/          minimal scalar expression graph and IR structures
   autodiff/    reverse-mode scalar gradients, Jacobians, and verification
-  nlp/         structural sparsity helpers and future problem APIs
-  solvers/     future KKT and solver-step workflows
+  nlp/         structural sparsity, problem APIs, and residual/Jacobian assembly
+  solvers/     KKT systems and reference linear-solve interface
   backends/    KernelPlan, backend protocol, registry, and Python reference backend
   bridges/     future import/export adapters
   profiling/   deterministic structural trace helpers

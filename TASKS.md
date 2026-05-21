@@ -23,7 +23,7 @@ optimizable for available hardware.
   identity.
 - Do not add inequalities, bounds, GPU support, production IPOPT-style logic, or
   performance claims until a milestone explicitly asks for them.
-- With M6-M8 complete, stop before M9 unless explicitly approved.
+- With M11 complete, stop before M12 unless explicitly approved.
 
 ## Shared Required Checks
 
@@ -293,7 +293,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M11 KKT System Object and Linear-Solve Interface
 
-- Status: ready.
+- Status: complete.
 - Purpose: represent KKT systems explicitly and define a minimal linear-solve
   interface.
 - Allowed scope: KKT block metadata, simple dense/reference KKT assembly from
@@ -316,7 +316,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M12 Simple Constrained Solver Prototype
 
-- Status: blocked until M11 is complete.
+- Status: ready.
 - Purpose: add a small constrained solver prototype for supported smooth
   structured constrained problems.
 - Allowed scope: simple step loop, residual/KKT calls, convergence diagnostics,
