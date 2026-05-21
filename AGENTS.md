@@ -73,6 +73,21 @@ uv sync
 python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 ```
 
+## Autonomous Branch Workflow
+
+For long Codex runs:
+
+- Start from a clean `main` that is up to date with `origin/main`.
+- Create a short-lived branch named `codex/<milestone-or-purpose>`.
+- Work one milestone at a time and keep one commit per milestone.
+- Run required checks before each milestone commit.
+- Fast-forward merge back to `main` only when checks pass and `main` has not
+  diverged.
+- Push `main` after the fast-forward merge if the user requested remote sync.
+- Delete the short-lived local branch after a successful merge.
+- Stop and ask the user if the merge is not fast-forward, if conflicts appear,
+  or if unrelated user changes are present.
+
 ## Commit Discipline
 
 - Keep one commit per milestone unless the user asks for a different shape.

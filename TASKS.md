@@ -12,13 +12,19 @@ optimizable for available hardware.
 - Use one branch per milestone or milestone group.
 - Make one commit per milestone.
 - Update this file's milestone status before committing.
-- Stop if tests fail after two focused repair attempts.
+- For autonomous runs, create a short-lived branch from clean `main`.
+- Keep each milestone in its own commit and update milestone status before
+  committing.
+- After a milestone commit passes checks, fast-forward merge to `main` only if
+  `main` has not diverged.
+- Stop on merge conflicts, non-fast-forward merges, unrelated worktree changes,
+  or validation failures after two focused repair attempts.
 - Keep equality constraints as an initial implementation path, not the package
   identity.
 - Do not add inequalities, bounds, GPU support, production IPOPT-style logic, or
   performance claims until a milestone explicitly asks for them.
-- With M1-M5 complete, the next planned implementation run is M6-M8; stop before
-  M9 unless explicitly approved.
+- The next technical run remains M6-M8: reverse-mode autodiff, vector Jacobians,
+  and structural sparsity. Stop before M9 unless explicitly approved.
 
 ## Shared Required Checks
 
