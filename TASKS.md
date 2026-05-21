@@ -270,7 +270,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M10 Sparse Residual/Jacobian Assembly
 
-- Status: ready.
+- Status: complete.
 - Purpose: assemble residual values and Jacobians using discovered structure.
 - Allowed scope: sparse coordinate/structure representation, residual assembly,
   Jacobian assembly, shape checks, trace metadata, and correctness tests.
@@ -293,7 +293,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M11 KKT System Object and Linear-Solve Interface
 
-- Status: blocked until M10 is complete.
+- Status: ready.
 - Purpose: represent KKT systems explicitly and define a minimal linear-solve
   interface.
 - Allowed scope: KKT block metadata, simple dense/reference KKT assembly from

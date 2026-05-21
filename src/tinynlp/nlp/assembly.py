@@ -2,13 +2,18 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 
 from tinynlp.autodiff import DerivativeTraceEvent, jacobian
-from tinynlp.backends import KernelPlan, build_kernel_plan
-from tinynlp.ir import Expr, VariableRef
+from tinynlp.backends import EvaluationError, KernelPlan, build_kernel_plan, get_backend
+from tinynlp.ir import Expr, NodeId, VariableRef
 from tinynlp.nlp.problem import Problem
 from tinynlp.nlp.sparsity import SparsityEntry, SparsityPattern, jacobian_sparsity
+
+
+class AssemblyError(ValueError):
+    """Raised when a contract term cannot be assembled numerically."""
 
 
 @dataclass(frozen=True)
@@ -42,6 +47,52 @@ class AssemblyContract:
     residual_terms: tuple[ResidualAssemblyTerm, ...]
     jacobian_terms: tuple[JacobianAssemblyTerm, ...]
     sparsity: SparsityPattern
+
+
+@dataclass(frozen=True)
+class AssemblyProvenance:
+    """Stable provenance for one assembled value."""
+
+    kind: str
+    row: int
+    column: int | None
+    source_node_id: NodeId
+    derivative_node_id: NodeId | None = None
+    variable: VariableRef | None = None
+
+
+@dataclass(frozen=True)
+class ResidualValue:
+    """One assembled residual value."""
+
+    row: int
+    value: float
+    provenance: AssemblyProvenance
+
+
+@dataclass(frozen=True)
+class ResidualAssembly:
+    """Assembled residual vector with row provenance."""
+
+    values: tuple[ResidualValue, ...]
+
+
+@dataclass(frozen=True)
+class CoordinateEntry:
+    """One sparse coordinate value."""
+
+    row: int
+    column: int
+    value: float
+    provenance: AssemblyProvenance
+
+
+@dataclass(frozen=True)
+class SparseMatrixAssembly:
+    """Dependency-free coordinate sparse matrix assembly."""
+
+    shape: tuple[int, int]
+    entries: tuple[CoordinateEntry, ...]
 
 
 def build_assembly_contract(problem: Problem) -> AssemblyContract:
@@ -91,6 +142,92 @@ def build_assembly_contract(problem: Problem) -> AssemblyContract:
         jacobian_terms=jacobian_terms,
         sparsity=sparsity,
     )
+
+
+def assemble_residuals(
+    contract: AssemblyContract,
+    values: Mapping[str, float],
+) -> ResidualAssembly:
+    """Assemble residual values through the registered Python backend."""
+
+    backend = get_backend("python")
+    assembled: list[ResidualValue] = []
+    for term in contract.residual_terms:
+        provenance = _residual_provenance(term)
+        try:
+            value = backend.execute(term.kernel_plan, values)
+        except EvaluationError as exc:
+            raise _assembly_error(provenance, exc) from exc
+        assembled.append(
+            ResidualValue(
+                row=term.row,
+                value=value,
+                provenance=provenance,
+            )
+        )
+    return ResidualAssembly(values=tuple(assembled))
+
+
+def assemble_jacobian(
+    contract: AssemblyContract,
+    values: Mapping[str, float],
+) -> SparseMatrixAssembly:
+    """Assemble structurally present Jacobian coordinates."""
+
+    backend = get_backend("python")
+    entries: list[CoordinateEntry] = []
+    for term in contract.jacobian_terms:
+        provenance = _jacobian_provenance(term)
+        try:
+            value = backend.execute(term.kernel_plan, values)
+        except EvaluationError as exc:
+            raise _assembly_error(provenance, exc) from exc
+        entries.append(
+            CoordinateEntry(
+                row=term.row,
+                column=term.column,
+                value=value,
+                provenance=provenance,
+            )
+        )
+    return SparseMatrixAssembly(
+        shape=contract.sparsity.shape,
+        entries=tuple(entries),
+    )
+
+
+def to_dense(matrix: SparseMatrixAssembly) -> list[list[float]]:
+    """Convert a coordinate assembly to a dense list for reference checks."""
+
+    rows, columns = matrix.shape
+    dense = [[0.0 for _ in range(columns)] for _ in range(rows)]
+    for entry in matrix.entries:
+        dense[entry.row][entry.column] = entry.value
+    return dense
+
+
+def format_residual_assembly(assembly: ResidualAssembly) -> str:
+    """Format residual values and provenance deterministically."""
+
+    lines = ["ResidualAssembly"]
+    lines.extend(
+        f"  row={value.row} value={value.value:g} "
+        f"provenance=[{_format_provenance(value.provenance)}]"
+        for value in assembly.values
+    )
+    return "\n".join(lines)
+
+
+def format_sparse_matrix(matrix: SparseMatrixAssembly) -> str:
+    """Format sparse coordinate entries and provenance deterministically."""
+
+    lines = [f"SparseMatrixAssembly shape={matrix.shape}"]
+    lines.extend(
+        f"  row={entry.row} col={entry.column} value={entry.value:g} "
+        f"provenance=[{_format_provenance(entry.provenance)}]"
+        for entry in matrix.entries
+    )
+    return "\n".join(lines)
 
 
 def format_assembly_contract(contract: AssemblyContract) -> str:
@@ -153,3 +290,64 @@ def _format_jacobian_term(term: JacobianAssemblyTerm) -> str:
         f"plan_output={term.kernel_plan.output} "
         f"trace_events={len(term.derivative_trace)}"
     )
+
+
+def _residual_provenance(term: ResidualAssemblyTerm) -> AssemblyProvenance:
+    return AssemblyProvenance(
+        kind="residual",
+        row=term.row,
+        column=None,
+        source_node_id=term.expr.id,
+    )
+
+
+def _jacobian_provenance(term: JacobianAssemblyTerm) -> AssemblyProvenance:
+    return AssemblyProvenance(
+        kind="jacobian",
+        row=term.row,
+        column=term.column,
+        source_node_id=term.source_residual.id,
+        derivative_node_id=term.derivative.id,
+        variable=term.variable,
+    )
+
+
+def _assembly_error(
+    provenance: AssemblyProvenance,
+    error: EvaluationError,
+) -> AssemblyError:
+    return AssemblyError(
+        f"failed to assemble {_format_error_context(provenance)}: {error}"
+    )
+
+
+def _format_error_context(provenance: AssemblyProvenance) -> str:
+    if provenance.column is None:
+        return f"residual row {provenance.row} source node {provenance.source_node_id}"
+    variable = _format_variable(provenance.variable)
+    return (
+        f"jacobian row {provenance.row} column {provenance.column} "
+        f"variable {variable} source node {provenance.source_node_id} "
+        f"derivative node {provenance.derivative_node_id}"
+    )
+
+
+def _format_provenance(provenance: AssemblyProvenance) -> str:
+    parts = [
+        f"kind={provenance.kind}",
+        f"row={provenance.row}",
+        f"source={provenance.source_node_id}",
+    ]
+    if provenance.column is not None:
+        parts.append(f"col={provenance.column}")
+    if provenance.variable is not None:
+        parts.append(f"variable={_format_variable(provenance.variable)}")
+    if provenance.derivative_node_id is not None:
+        parts.append(f"derivative={provenance.derivative_node_id}")
+    return " ".join(parts)
+
+
+def _format_variable(variable: VariableRef | None) -> str:
+    if variable is None:
+        return "<none>"
+    return f"{variable.name}@{variable.node_id}"

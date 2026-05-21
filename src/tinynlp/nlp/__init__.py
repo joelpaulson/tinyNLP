@@ -2,10 +2,21 @@
 
 from tinynlp.nlp.assembly import (
     AssemblyContract,
+    AssemblyError,
+    AssemblyProvenance,
+    CoordinateEntry,
     JacobianAssemblyTerm,
+    ResidualAssembly,
     ResidualAssemblyTerm,
+    ResidualValue,
+    SparseMatrixAssembly,
+    assemble_jacobian,
+    assemble_residuals,
     build_assembly_contract,
     format_assembly_contract,
+    format_residual_assembly,
+    format_sparse_matrix,
+    to_dense,
 )
 from tinynlp.nlp.problem import Problem, ResidualBlock, ResidualKind
 from tinynlp.nlp.sparsity import (
@@ -18,18 +29,29 @@ from tinynlp.nlp.sparsity import (
 )
 
 __all__ = [
+    "AssemblyError",
     "AssemblyContract",
+    "AssemblyProvenance",
+    "CoordinateEntry",
     "JacobianAssemblyTerm",
     "Problem",
+    "ResidualAssembly",
     "ResidualAssemblyTerm",
     "ResidualBlock",
     "ResidualKind",
+    "ResidualValue",
+    "SparseMatrixAssembly",
     "SparsityEntry",
     "SparsityPattern",
     "SparsityTraceEvent",
+    "assemble_jacobian",
+    "assemble_residuals",
     "build_assembly_contract",
     "expression_dependencies",
     "format_assembly_contract",
+    "format_residual_assembly",
     "format_sparsity",
+    "format_sparse_matrix",
     "jacobian_sparsity",
+    "to_dense",
 ]
