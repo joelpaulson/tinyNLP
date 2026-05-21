@@ -206,7 +206,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M7 Vector Jacobians and Derivative Verification
 
-- Status: ready.
+- Status: complete.
 - Purpose: extend derivative support to vector outputs and add verification
   checks.
 - Allowed scope: Jacobian construction/evaluation for vector expressions,
@@ -229,7 +229,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M8 Structural Sparsity Discovery
 
-- Status: blocked until M7 is complete.
+- Status: ready.
 - Purpose: discover reusable structural sparsity separately from numeric values.
 - Allowed scope: structural dependency analysis, sparsity patterns for supported
   expressions/Jacobians, trace reports, and stability tests across value changes.
