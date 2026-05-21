@@ -1,12 +1,11 @@
 # Benchmarks
 
-This directory will hold benchmark cases and benchmark output for tinyNLP.
+This directory will hold benchmark sources and committed benchmark result
+summaries for tinyNLP.
 
 There are no benchmark results yet. Do not use this repository to make
-performance claims until the relevant benchmark code and committed output are
-present.
+performance claims until the relevant benchmark source, command, environment
+metadata, and result summary are committed.
 
-Future benchmarks should identify which part of the pipeline is measured:
-expression graph construction, derivative graph construction, sparsity
-discovery, residual/Jacobian/Hessian assembly, KKT construction, solver steps,
-sensitivities, or end-to-end reporting.
+Benchmarks should validate outputs before timing claims and identify the
+pipeline stage being measured.

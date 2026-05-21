@@ -1,8 +1,11 @@
 # Documentation
 
-This directory will hold design notes and user-facing documentation as tinyNLP
-develops.
+This directory holds design notes and architecture sketches for tinyNLP.
 
-Initial documentation should focus on the transparent NLP execution pipeline,
-the separation of symbolic structure from numeric values, and benchmark-backed
-claims.
+Start here:
+
+- [Design Principles](design_principles.md)
+- [Architecture](architecture.md)
+
+Documentation should prepare the next milestone without implementing it. Keep
+claims grounded in tests, traces, or committed benchmark evidence.

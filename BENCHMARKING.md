@@ -1,21 +1,42 @@
 # BENCHMARKING
 
-tinyNLP does not make performance claims yet. Any future performance claim must
-be backed by benchmark code and committed benchmark output.
+tinyNLP does not make performance claims yet. Benchmarks are correctness checks
+plus timing, not demos.
 
 ## Policy
 
-- Benchmarks must live in `benchmarks/` or a clearly documented benchmark
-  support module.
-- Benchmark reports should include the command, problem definition, dependency
-  versions, machine information, and relevant configuration.
-- Claims in README or project documentation must link to committed benchmark
-  output.
-- Benchmark comparisons should describe exactly what is being measured:
-  expression graph construction, derivative graph construction, sparsity
-  discovery, assembly, KKT system construction, solver steps, sensitivities, or
-  end-to-end runtime.
-- Do not report speedups without a reproducible baseline and committed output.
+- Benchmarks must validate outputs before any timing result is used in a claim.
+- Benchmarks must identify exactly what is measured.
+- Benchmarks must live in `benchmarks/` or a documented benchmark support
+  module.
+- Benchmark reports must include the benchmark source, command, environment
+  metadata, problem definition, dependency versions, and committed result
+  summary.
+- README speed claims require benchmark source, command, environment metadata,
+  and committed result summary.
+- Do not report speedups without a reproducible baseline.
+
+## Measurement Targets
+
+Benchmarks should name the pipeline stage they measure:
+
+- Expression and residual evaluation.
+- Derivative evaluation.
+- Sparsity discovery.
+- Sparse assembly.
+- KKT assembly.
+- Sensitivities.
+- End-to-end solve traces.
+
+## Initial Benchmark Families
+
+- Expression/residual evaluation.
+- Derivative evaluation.
+- Sparsity discovery.
+- Sparse assembly.
+- KKT assembly.
+- Sensitivities.
+- End-to-end solve traces.
 
 ## Current State
 

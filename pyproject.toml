@@ -3,9 +3,9 @@ requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "tinynlp"
+name = "tinynlp-opt"
 version = "0.0.0"
-description = "A tinygrad-inspired, CPU-first nonlinear programming substrate."
+description = "A tinygrad-inspired, CPU-first nonlinear programming execution substrate."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }

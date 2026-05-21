@@ -1,15 +1,17 @@
 # tinyNLP
 
-tinyNLP is an experimental Python package for building a tinygrad-inspired,
-CPU-first nonlinear programming substrate.
+tinyNLP is an experimental, tinygrad-inspired, CPU-first nonlinear programming
+execution substrate. Its public hook is simple: make the NLP execution pipeline
+visible, traceable, benchmarkable, and eventually optimizable for available
+hardware.
 
-The project makes the computational path in nonlinear programming explicit and
-optimizable:
+## Core Pipeline
 
 ```text
-expression graph
-  -> derivative graph
-  -> sparsity
+model expression
+  -> IR
+  -> derivative construction
+  -> sparsity / structure
   -> residual / Jacobian / Hessian assembly
   -> KKT systems
   -> solver steps
@@ -19,27 +21,23 @@ expression graph
 
 ## Why tinyNLP Exists
 
-Nonlinear programming systems often hide important execution details behind
-large modeling layers, automatic differentiation systems, sparse assembly code,
-and solver interfaces. tinyNLP exists to make that pipeline inspectable end to
-end.
+Nonlinear programming workflows often spread important execution details across
+modeling layers, automatic differentiation, sparse assembly code, solver
+interfaces, and benchmark scripts. tinyNLP exists to make those stages explicit
+enough to inspect, test, trace, and improve.
 
-The goal is to provide a cleaner, more transparent substrate that creates room
+The goal is to provide a cleaner, more inspectable pipeline that creates room
 for hardware-aware optimization and benchmark-backed comparisons. The initial
-implementation may start with smooth structured equality-constrained problems,
-but the public direction is a broader NLP pipeline with planned growth toward
-inequalities, bounds, additional solver backends, sensitivities, and benchmark
-reporting.
+implementation path starts with smooth structured constrained problems, with
+inequalities, bounds, additional solver backends, code generation, and
+hardware-specific execution planned later.
 
 ## Current Status
 
-tinyNLP is experimental and pre-implementation. The repository currently defines
-the package skeleton, contributor rules, documentation placeholders, and
-validation tooling. It does not yet implement an expression IR, derivative
-engine, solver, or benchmark suite.
-
-No performance claims are made yet. Performance claims must be backed by
-committed benchmark output.
+tinyNLP is experimental and pre-implementation. The repository currently
+contains the package skeleton, documentation/control packet, CI, and validation
+tooling. It does not yet implement expression IR, autodiff, sparsity discovery,
+KKT assembly, solvers, bridges, or benchmarks.
 
 ## Installation From Source
 
@@ -56,6 +54,9 @@ Import the package:
 ```sh
 uv run python -c "import tinynlp; print(tinynlp.__version__)"
 ```
+
+The public project name is `tinyNLP`. The distribution name is `tinynlp-opt`,
+and the import package is `tinynlp`.
 
 ## Development Commands
 
@@ -77,7 +78,7 @@ Check formatting:
 uv run ruff format --check .
 ```
 
-Run the full milestone validation set:
+Run the standard milestone checks:
 
 ```sh
 uv run pytest
@@ -85,18 +86,37 @@ uv run ruff check .
 uv run ruff format --check .
 ```
 
+If `pyproject.toml` changes, also run:
+
+```sh
+uv sync
+python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
+```
+
+## Benchmark Policy
+
+Benchmarks are correctness checks plus timing, not demos. Benchmark results must
+identify what stage is measured, validate outputs before timing claims, and
+include the benchmark source, command, environment metadata, and committed
+result summary.
+
+No speed or performance claims should appear in README or project documentation
+without committed benchmark evidence.
+
 ## Repository Layout
 
 ```text
 src/tinynlp/
-  ir/          expression graph representation
-  autodiff/    derivative graph construction
-  nlp/         problem structure and assembly contracts
-  solvers/     solver steps and KKT workflows
-  backends/    numeric kernels and execution backends
-  bridges/     import/export bridges to other formats
-  profiling/   timing, tracing, and benchmark helpers
-```
+  ir/          future expression graph and IR structures
+  autodiff/    future derivative construction
+  nlp/         future problem API and assembly contracts
+  solvers/     future KKT and solver-step workflows
+  backends/    future CPU reference and optimized execution backends
+  bridges/     future import/export adapters
+  profiling/   future tracing, timing, and benchmark helpers
 
-These directories are placeholders for the planned architecture. They should
-stay small, inspectable, and traceable as features are added.
+docs/          design notes and architecture sketches
+examples/      future canonical examples
+benchmarks/    future benchmark sources and committed summaries
+tests/         pytest suite
+```

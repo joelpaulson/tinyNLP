@@ -297,7 +297,7 @@ wheels = [
 ]
 
 [[package]]
-name = "tinynlp"
+name = "tinynlp-opt"
 version = "0.0.0"
 source = { editable = "." }
 
