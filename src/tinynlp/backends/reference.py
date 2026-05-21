@@ -4,74 +4,86 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
-from tinynlp.ir import Expr, Node, NodeId, OpKind
+from tinynlp.backends.kernel_plan import KernelPlan, KernelStep, build_kernel_plan
+from tinynlp.ir import Expr, NodeId, OpKind
 
 
 class EvaluationError(ValueError):
     """Raised when a symbolic expression cannot be evaluated."""
 
 
+class PythonReferenceBackend:
+    """Reference Python backend for kernel plan execution."""
+
+    name = "python"
+
+    def execute(self, plan: KernelPlan, values: Mapping[str, float]) -> float:
+        results: dict[NodeId, float] = {}
+        for node_id, name in plan.variables:
+            results[node_id] = _variable_value(node_id, name, values)
+        for node_id, value in plan.constants:
+            results[node_id] = value
+        for step in plan.steps:
+            results[step.node_id] = _evaluate_step(step, results)
+
+        try:
+            return results[plan.output]
+        except KeyError as exc:
+            msg = f"output node {plan.output} has not been evaluated"
+            raise EvaluationError(msg) from exc
+
+
 def evaluate(expr: Expr, values: Mapping[str, float]) -> float:
     """Evaluate an expression with explicit variable bindings."""
 
-    results: dict[NodeId, float] = {}
-    for node in expr.graph.nodes:
-        results[node.id] = _evaluate_node(node, results, values)
-        if node.id == expr.id:
-            return results[node.id]
+    from tinynlp.backends.registry import get_backend
 
-    msg = f"expression node {expr.id} is not present in its graph"
+    plan = build_kernel_plan(expr)
+    return get_backend("python").execute(plan, values)
+
+
+def _evaluate_step(step: KernelStep, results: Mapping[NodeId, float]) -> float:
+    if step.op is OpKind.NEG:
+        return -_input_value(step, results, 0)
+    if step.op is OpKind.ADD:
+        return _input_value(step, results, 0) + _input_value(step, results, 1)
+    if step.op is OpKind.SUB:
+        return _input_value(step, results, 0) - _input_value(step, results, 1)
+    if step.op is OpKind.MUL:
+        return _input_value(step, results, 0) * _input_value(step, results, 1)
+    if step.op is OpKind.DIV:
+        denominator = _input_value(step, results, 1)
+        if denominator == 0.0:
+            msg = f"division by zero at node {step.node_id}"
+            raise EvaluationError(msg)
+        return _input_value(step, results, 0) / denominator
+
+    msg = f"unsupported operation {step.op!s} at node {step.node_id}"
     raise EvaluationError(msg)
 
 
-def _evaluate_node(
-    node: Node,
-    results: Mapping[NodeId, float],
+def _variable_value(
+    node_id: NodeId,
+    name: str,
     values: Mapping[str, float],
 ) -> float:
-    if node.op is OpKind.VARIABLE:
-        return _variable_value(node, values)
-    if node.op is OpKind.CONSTANT:
-        if node.value is None:
-            msg = f"constant node {node.id} is missing a literal value"
-            raise EvaluationError(msg)
-        return node.value
-    if node.op is OpKind.NEG:
-        return -_input_value(node, results, 0)
-    if node.op is OpKind.ADD:
-        return _input_value(node, results, 0) + _input_value(node, results, 1)
-    if node.op is OpKind.SUB:
-        return _input_value(node, results, 0) - _input_value(node, results, 1)
-    if node.op is OpKind.MUL:
-        return _input_value(node, results, 0) * _input_value(node, results, 1)
-    if node.op is OpKind.DIV:
-        denominator = _input_value(node, results, 1)
-        if denominator == 0.0:
-            msg = f"division by zero at node {node.id}"
-            raise EvaluationError(msg)
-        return _input_value(node, results, 0) / denominator
-
-    msg = f"unsupported operation {node.op!s} at node {node.id}"
-    raise EvaluationError(msg)
-
-
-def _variable_value(node: Node, values: Mapping[str, float]) -> float:
-    if node.name is None:
-        msg = f"variable node {node.id} is missing a name"
+    if name not in values:
+        msg = f"missing value for variable {name!r} at node {node_id}"
         raise EvaluationError(msg)
-    if node.name not in values:
-        msg = f"missing value for variable {node.name!r} at node {node.id}"
-        raise EvaluationError(msg)
-    return float(values[node.name])
+    return float(values[name])
 
 
-def _input_value(node: Node, results: Mapping[NodeId, float], index: int) -> float:
+def _input_value(
+    step: KernelStep,
+    results: Mapping[NodeId, float],
+    index: int,
+) -> float:
     try:
-        input_id = node.inputs[index]
+        input_id = step.inputs[index]
         return results[input_id]
     except IndexError as exc:
-        msg = f"node {node.id} is missing input {index}"
+        msg = f"node {step.node_id} is missing input {index}"
         raise EvaluationError(msg) from exc
     except KeyError as exc:
-        msg = f"node {node.id} input {input_id} has not been evaluated"
+        msg = f"node {step.node_id} input {input_id} has not been evaluated"
         raise EvaluationError(msg) from exc

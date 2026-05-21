@@ -145,9 +145,39 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Stop conditions: benchmark output would be presented as a performance claim;
   scaffolding needs unapproved runtime dependencies.
 
-## M5 Reverse-Mode Autodiff for Scalar Outputs
+## M5 Kernel Plan and Backend Protocol
 
-- Status: blocked pending explicit next-stage request.
+- Status: complete.
+- Purpose: make expression execution kernels visible before optimized backends.
+- Allowed scope: `KernelPlan` construction for supported expression graphs,
+  backend protocol/interface, registered reference Python backend, kernel plan
+  report formatting, simple operation and temporary counts, tests, and benchmark
+  smoke cases through the protocol.
+- Out-of-scope items: autodiff, sparsity discovery, problem APIs, KKT systems,
+  solvers, bridges, inequalities, bounds, GPU support, Numba, LLVM, C codegen,
+  CasADi, SciPy, optimized backends, external solver wrappers, speed claims.
+- Files likely touched: `src/tinynlp/backends/`, `src/tinynlp/profiling/`,
+  `tests/backends/`, `tests/profiling/`, `benchmarks/`, `TASKS.md`.
+- Implementation notes: preserve `evaluate(expr, values)` as a small
+  compatibility wrapper around the registered reference backend; keep symbolic
+  graph structure separate from runtime values; make plan order and reports
+  deterministic.
+- Acceptance tests: kernel plans are deterministic; operation counts and
+  temporary counts are stable; protocol execution matches current reference
+  evaluator behavior; report output is human-readable and contains no object
+  addresses.
+- Benchmark requirements: benchmark expression/residual evaluation through the
+  backend protocol only; baseline is expected numeric output, not another package
+  or optimized backend; no result summaries or speed claims.
+- Required checks: shared required checks.
+- Commit message: `Add kernel plan and backend protocol`.
+- Stop conditions: backend interface grows beyond expression execution, requires
+  new dependencies, implies optimized performance, or starts implementing future
+  milestones.
+
+## M6 Reverse-Mode Autodiff for Scalar Outputs
+
+- Status: blocked until M5 is complete.
 - Purpose: add reverse-mode derivative construction for scalar-output
   expressions.
 - Allowed scope: derivative graph or tape representation for supported scalar
@@ -166,9 +196,9 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Stop conditions: autodiff requires unsupported operations, hidden mutation, or
   external autodiff dependencies.
 
-## M6 Vector Jacobians and Derivative Verification
+## M7 Vector Jacobians and Derivative Verification
 
-- Status: blocked until M5 is complete.
+- Status: blocked until M6 is complete.
 - Purpose: extend derivative support to vector outputs and add verification
   checks.
 - Allowed scope: Jacobian construction/evaluation for vector expressions,
@@ -189,9 +219,9 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Stop conditions: verification becomes flaky or requires unapproved numeric
   libraries.
 
-## M7 Structural Sparsity Discovery
+## M8 Structural Sparsity Discovery
 
-- Status: blocked until M6 is complete.
+- Status: blocked until M7 is complete.
 - Purpose: discover reusable structural sparsity separately from numeric values.
 - Allowed scope: structural dependency analysis, sparsity patterns for supported
   expressions/Jacobians, trace reports, and stability tests across value changes.
@@ -209,9 +239,9 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Stop conditions: sparsity analysis depends on numeric sampling or hides
   dependency provenance.
 
-## M8 Problem API and Assembly Contracts
+## M9 Problem API and Assembly Contracts
 
-- Status: blocked until M7 is complete.
+- Status: blocked until M8 is complete.
 - Purpose: define the first problem-level API and explicit assembly contracts.
 - Allowed scope: smooth structured constrained problem containers, objective and
   residual registration, shape metadata, assembly contract types, and tests.
@@ -229,9 +259,9 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Stop conditions: API design implies unsupported inequalities/bounds or
   hard-codes a specific solver backend.
 
-## M9 Sparse Residual/Jacobian Assembly
+## M10 Sparse Residual/Jacobian Assembly
 
-- Status: blocked until M8 is complete.
+- Status: blocked until M9 is complete.
 - Purpose: assemble residual values and Jacobians using discovered structure.
 - Allowed scope: sparse coordinate/structure representation, residual assembly,
   Jacobian assembly, shape checks, trace metadata, and correctness tests.
@@ -252,9 +282,9 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Stop conditions: implementation requires external sparse dependencies or
   obscures contribution-level traceability.
 
-## M10 KKT System Object and Linear-Solve Interface
+## M11 KKT System Object and Linear-Solve Interface
 
-- Status: blocked until M9 is complete.
+- Status: blocked until M10 is complete.
 - Purpose: represent KKT systems explicitly and define a minimal linear-solve
   interface.
 - Allowed scope: KKT block metadata, simple dense/reference KKT assembly from
@@ -274,9 +304,9 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Stop conditions: design commits to a production solver backend or hides KKT
   block construction.
 
-## M11 Simple Constrained Solver Prototype
+## M12 Simple Constrained Solver Prototype
 
-- Status: blocked until M10 is complete.
+- Status: blocked until M11 is complete.
 - Purpose: add a small constrained solver prototype for supported smooth
   structured constrained problems.
 - Allowed scope: simple step loop, residual/KKT calls, convergence diagnostics,
@@ -296,9 +326,9 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Stop conditions: prototype starts growing into production solver policy or
   requires unsupported problem classes.
 
-## M12 Implicit Sensitivity Prototype
+## M13 Implicit Sensitivity Prototype
 
-- Status: blocked until M11 is complete.
+- Status: blocked until M12 is complete.
 - Purpose: add a first sensitivity workflow using the existing derivative and
   KKT path.
 - Allowed scope: sensitivity object/model, implicit solve through the KKT
@@ -317,9 +347,9 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Stop conditions: sensitivity path requires unsupported solver features or
   produces unverifiable results.
 
-## M13 CasADi Baseline Bridge
+## M14 CasADi Baseline Bridge
 
-- Status: blocked until M12 is complete.
+- Status: blocked until M13 is complete.
 - Purpose: add a baseline bridge for correctness comparison against CasADi where
   explicitly available.
 - Allowed scope: optional bridge module, optional dependency wiring if approved,
@@ -330,7 +360,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Files likely touched: `src/tinynlp/bridges/`, `tests/`, `examples/`,
   `pyproject.toml`, `docs/architecture.md`, `TASKS.md`.
 - Implementation notes: bridge must be optional and isolated; if
-  `pyproject.toml` changes, run the additional pyproject checks. M13 can be
+  `pyproject.toml` changes, run the additional pyproject checks. M14 can be
   revisited later if an earlier correctness baseline becomes valuable, but it
   should not move earlier during M0.
 - Acceptance tests: tests skip cleanly when CasADi is absent; when present, the
@@ -343,9 +373,9 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Stop conditions: bridge requires a mandatory heavy dependency, solver-wrapper
   behavior, or unsupported problem classes.
 
-## M14 First Optimized Backend and Benchmark-Backed Result
+## M15 First Optimized Backend and Benchmark-Backed Result
 
-- Status: blocked until M13 is complete.
+- Status: blocked until M14 is complete.
 - Purpose: add the first optimized backend and the first benchmark-backed
   result summary.
 - Allowed scope: one narrow optimized CPU backend for an already-supported

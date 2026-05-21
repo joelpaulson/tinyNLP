@@ -1,5 +1,27 @@
-"""Reference backend namespace."""
+"""Backend interfaces and reference execution."""
 
-from tinynlp.backends.reference import EvaluationError, evaluate
+from tinynlp.backends.kernel_plan import (
+    KernelPlan,
+    KernelPlanStats,
+    KernelStep,
+    build_kernel_plan,
+    format_kernel_plan,
+)
+from tinynlp.backends.protocol import Backend
+from tinynlp.backends.reference import EvaluationError, PythonReferenceBackend, evaluate
+from tinynlp.backends.registry import DEFAULT_BACKEND, get_backend, register_backend
 
-__all__ = ["EvaluationError", "evaluate"]
+__all__ = [
+    "Backend",
+    "DEFAULT_BACKEND",
+    "EvaluationError",
+    "KernelPlan",
+    "KernelPlanStats",
+    "KernelStep",
+    "PythonReferenceBackend",
+    "build_kernel_plan",
+    "evaluate",
+    "format_kernel_plan",
+    "get_backend",
+    "register_backend",
+]

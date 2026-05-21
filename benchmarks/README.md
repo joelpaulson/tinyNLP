@@ -6,10 +6,11 @@ benchmark result summaries yet, and this repository does not make speed claims.
 ## Current Scaffold
 
 - `test_reference_evaluator_benchmark.py` measures expression/residual
-  evaluation through the CPU reference evaluator.
+  evaluation through the backend protocol and registered Python reference
+  backend.
 - The benchmark validates expected residual outputs before timing.
 - The only baseline in this scaffold is the expected numeric output for the
-  canonical examples, not another package or optimized backend.
+  canonical examples, not another package, method, or optimized backend.
 
 ## Running Benchmarks
 
