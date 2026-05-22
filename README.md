@@ -16,6 +16,7 @@ model expression
   -> KKT systems
   -> solver steps
   -> sensitivities
+  -> execution scheduling
   -> benchmark reports
 ```
 
@@ -46,8 +47,10 @@ residual-reduction solver prototype, a scalar-parameter implicit sensitivity
 prototype, and pytest-benchmark smoke sources.
 
 It does not yet implement Hessian assembly, production nonlinear solver methods,
-production sensitivity workflows, bridges, optimized backends, inequalities, or
-bounds.
+production sensitivity workflows, runtime execution schedules, bridges,
+optimized backends, inequalities, or bounds. The planned scheduler layer will
+make backend choices, cached structures, materialized values, and validation
+status visible before optimized backends are added.
 
 ## Installation From Source
 

@@ -289,3 +289,38 @@ variables.
   solve should be excluded with explicit `solve_variables`.
 - Multi-parameter sensitivities, inequality/bound sensitivities, Hessian-backed
   methods, and performance claims remain later work.
+
+## ADR 0012: Scheduler-First Optimization
+
+- Status: accepted
+- Date: 2026-05-22
+
+### Context
+
+tinyNLP now has visible pieces of the nonlinear-programming execution pipeline:
+expression IR, derivatives, sparsity, residual/Jacobian assembly, KKT systems,
+solver steps, and sensitivity workflows. The next optimization work needs to
+stay aligned with the tinygrad-inspired goal of making execution explicit rather
+than adding isolated fast paths.
+
+### Decision
+
+Introduce a scheduler layer before optimized backend work. The scheduler should
+represent deterministic pipeline tasks, their dependencies, inputs, outputs,
+cached symbolic structures, materialized numeric values, backend choices, and
+validation status.
+
+Optimized backends must target scheduled tasks and validate against the
+reference path for the same task. Scheduler reports should become the place to
+inspect what ran, what was cached or materialized, which backend executed it,
+and what validation passed.
+
+### Consequences
+
+- Backend optimization is scheduler-backed instead of ad hoc.
+- Benchmark claims must name the scheduled stage, reference baseline, validation
+  result, command, environment metadata, and committed result summary.
+- Optional correctness bridges can remain useful, but they should integrate with
+  the scheduled pipeline rather than bypassing it.
+- Runtime scheduler implementation, bridges, optimized backends, and benchmark
+  result summaries remain separate later milestones.

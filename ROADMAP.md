@@ -64,11 +64,17 @@ high-level on purpose; detailed execution tasks live in `TASKS.md`.
 - Validate sensitivities against reference problems.
 - Document assumptions and failure modes.
 
-## Phase 9: Benchmark Baselines and First Optimized Backend
+## Phase 9: Scheduler, Benchmark Baselines, and Optimized Backends
 
-- Establish benchmark baselines for the implemented pipeline.
-- Commit benchmark commands, environment metadata, and result summaries.
-- Add the first optimized backend only after reference behavior is stable.
+- Define scheduler architecture before optimized backend work.
+- Add execution schedules that group pipeline work into deterministic tasks.
+- Add scheduled pipeline reports that show task dependencies, cached structures,
+  materialized values, backend choices, and validation status.
+- Keep optional correctness bridges such as CasADi isolated and skip-safe.
+- Add the first optimized backend only as a scheduler-backed backend for a
+  validated scheduled stage.
+- Audit benchmark commands, environment metadata, result summaries, and README
+  claims before any performance claim.
 
 ## Later
 

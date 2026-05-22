@@ -11,6 +11,7 @@ model expression
   -> KKT systems
   -> solver steps
   -> sensitivities
+  -> execution scheduling
   -> benchmark reports
 ```
 
@@ -27,6 +28,24 @@ model expression
 - `bridges`: future import/export adapters.
 - `profiling`: deterministic structural trace helpers.
 
+## Planned Scheduler Layer
+
+The next architecture layer should distinguish four responsibilities:
+
+- Frontend/model representation: expression IR, `Problem` objects, assembly
+  contracts, KKT systems, solver workflows, and sensitivity workflows.
+- Scheduling: deterministic grouping of pipeline work into scheduled tasks with
+  explicit dependencies.
+- Backend execution: the reference Python backend first, with optimized backends
+  added later through scheduled tasks rather than ad hoc fast paths.
+- Reports: printable schedules showing tasks, inputs, outputs, cached
+  structures, materialized values, backend choice, provenance, and validation
+  status.
+
+Initial scheduled stages should cover expression evaluation, residual
+evaluation, Jacobian evaluation, sparse coordinate assembly, KKT assembly,
+solver iteration steps, sensitivity RHS construction, and sensitivity solves.
+
 ## Current Boundary
 
 The current boundary is scalar expression construction/evaluation, plan
@@ -36,4 +55,4 @@ dense reference linear-solve interface, plus a simple constrained
 residual-reduction solver prototype and scalar-parameter implicit sensitivity
 prototype. The repository intentionally does not implement Hessian assembly,
 production nonlinear solver methods, production sensitivity workflows, bridges,
-optimized backends, inequalities, or bounds.
+runtime execution schedules, optimized backends, inequalities, or bounds.

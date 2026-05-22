@@ -23,7 +23,7 @@ optimizable for available hardware.
   identity.
 - Do not add inequalities, bounds, GPU support, production IPOPT-style logic, or
   performance claims until a milestone explicitly asks for them.
-- With M13 complete, stop before M14 unless explicitly approved.
+- With M14 complete, stop before M15 unless explicitly approved.
 
 ## Shared Required Checks
 
@@ -364,55 +364,164 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Stop conditions: sensitivity path requires unsupported solver features or
   produces unverifiable results.
 
-## M14 CasADi Baseline Bridge
+## M14 Scheduler Architecture and Task-Board Revision
+
+- Status: complete.
+- Purpose: revise the post-M13 roadmap so optimized backends are scheduler-backed
+  rather than ad hoc fast paths.
+- Allowed scope: documentation and control-packet edits that define the planned
+  scheduler layer, remaining milestone order, and benchmark/optimization
+  boundaries.
+- Out-of-scope items: scheduler runtime code, CasADi bridge implementation,
+  optimized backend implementation, solver changes, sensitivity changes,
+  inequalities, bounds, GPU support, external solver wrappers, new dependencies,
+  benchmark result summaries, performance claims.
+- Files likely touched: `TASKS.md`, `ROADMAP.md`, `docs/architecture.md`,
+  `DECISIONS.md`, `README.md`.
+- Implementation notes: define scheduling as deterministic grouping of pipeline
+  work into scheduled tasks. Planned task stages include expression evaluation,
+  residual evaluation, Jacobian evaluation, sparse coordinate assembly, KKT
+  assembly, solver iteration step, sensitivity RHS construction, and sensitivity
+  solve. Planned schedule records should identify inputs, outputs, cached
+  structures, materialized values, backend choice, and validation status.
+- Acceptance tests: documentation names the scheduler as planned future
+  infrastructure, preserves the optional CasADi correctness bridge, and states
+  that the optimized backend must be scheduler-backed.
+- Benchmark requirements: none; no timing claims.
+- Required checks: shared required checks.
+- Commit message: `Add scheduler roadmap after sensitivity prototype`.
+- Stop conditions: this milestone starts implementing runtime scheduler code,
+  removes optional correctness bridges without justification, or leaves the
+  optimized backend milestone as an ad hoc fast path.
+
+## M15 Execution Schedule Core
 
 - Status: ready.
-- Purpose: add a baseline bridge for correctness comparison against CasADi where
+- Purpose: add the first runtime representation for scheduled NLP execution
+  tasks.
+- Allowed scope: schedule/task data structures, deterministic dependency order,
+  stage names, task identifiers, task inputs/outputs, cached-structure metadata,
+  backend choice metadata, validation-status metadata, and tests.
+- Out-of-scope items: optimized execution, CasADi bridge work, benchmark result
+  summaries, scheduler-driven solver policy changes, inequalities, bounds, GPU
+  support, external solver wrappers.
+- Files likely touched: `src/tinynlp/profiling/` or a new scheduler package,
+  `src/tinynlp/backends/`, `tests/`, `docs/architecture.md`, `TASKS.md`.
+- Implementation notes: keep the schedule as metadata over the existing
+  pipeline first. It should describe expression evaluation, residual/Jacobian
+  evaluation, sparse coordinate assembly, KKT assembly, solver iteration steps,
+  sensitivity RHS construction, and sensitivity solves without replacing the
+  current reference execution path.
+- Acceptance tests: schedule construction is deterministic, address-free, and
+  preserves stage order and dependency metadata for canonical expression,
+  problem/assembly/KKT, solver, and sensitivity paths.
+- Benchmark requirements: none; no timing claims.
+- Required checks: shared required checks.
+- Commit message: `Add execution schedule core`.
+- Stop conditions: schedule objects start executing optimized code, hide
+  existing provenance, or require new dependencies.
+
+## M16 Scheduled Pipeline Reports
+
+- Status: blocked until M15 is complete.
+- Purpose: add printable reports for scheduled NLP execution.
+- Allowed scope: report formatting, validation summaries, task input/output
+  summaries, cached structure summaries, materialized value summaries, backend
+  choice summaries, and address-free deterministic tests.
+- Out-of-scope items: new runtime execution semantics, optimized backends,
+  CasADi bridge work, benchmark result summaries, inequalities, bounds, GPU
+  support.
+- Files likely touched: scheduler/report modules, `tests/`, `docs/architecture.md`,
+  `TASKS.md`.
+- Implementation notes: reports should make the computational path inspectable:
+  what is symbolic, what is cached structure, what is materialized numeric data,
+  what backend is selected, and what validation has passed.
+- Acceptance tests: reports are deterministic, include scheduled tasks and
+  validation status, and contain no object addresses.
+- Benchmark requirements: none; no timing claims.
+- Required checks: shared required checks.
+- Commit message: `Add scheduled pipeline reports`.
+- Stop conditions: reports imply performance claims or obscure task-level
+  provenance.
+
+## M17 Optional CasADi Correctness Bridge
+
+- Status: blocked until M16 is complete.
+- Purpose: add an optional correctness bridge for comparison against CasADi where
   explicitly available.
 - Allowed scope: optional bridge module, optional dependency wiring if approved,
-  small conversion path for canonical supported problems, and skip-safe tests.
+  small conversion path for canonical supported problems, skip-safe tests, and
+  schedule/report integration if scheduler metadata exists.
 - Out-of-scope items: making CasADi a required runtime dependency, IPOPT-style
   production logic, broad modeling coverage, inequalities, bounds, performance
   claims.
 - Files likely touched: `src/tinynlp/bridges/`, `tests/`, `examples/`,
   `pyproject.toml`, `docs/architecture.md`, `TASKS.md`.
 - Implementation notes: bridge must be optional and isolated; if
-  `pyproject.toml` changes, run the additional pyproject checks. M14 can be
-  revisited during later planning if an earlier correctness baseline becomes
-  valuable, but CasADi must remain optional unless a milestone explicitly
-  changes dependency policy.
+  `pyproject.toml` changes, run the additional pyproject checks. CasADi remains
+  a correctness bridge only unless a later milestone explicitly changes
+  dependency policy.
 - Acceptance tests: tests skip cleanly when CasADi is absent; when present, the
   bridge matches tinyNLP results on canonical supported problems.
 - Benchmark requirements: none for speed; CasADi may be a correctness baseline
   only in this milestone.
 - Required checks: shared required checks, plus `uv sync` and the `tomllib`
   parse check if dependency metadata changes.
-- Commit message: `Add CasADi baseline bridge`.
+- Commit message: `Add optional CasADi correctness bridge`.
 - Stop conditions: bridge requires a mandatory heavy dependency, solver-wrapper
-  behavior, or unsupported problem classes.
+  behavior, unsupported problem classes, or unscheduled ad hoc comparison paths.
 
-## M15 First Optimized Backend and Benchmark-Backed Result
+## M18 First Scheduler-Backed Optimized Backend
 
-- Status: blocked until M14 is complete.
-- Purpose: add the first optimized backend and the first benchmark-backed
-  result summary.
+- Status: blocked until M17 is complete.
+- Purpose: add the first optimized backend by attaching it to scheduled pipeline
+  tasks rather than creating an ad hoc fast path.
 - Allowed scope: one narrow optimized CPU backend for an already-supported
-  pipeline stage, benchmark source, benchmark command, environment metadata,
-  committed result summary, and docs linking only to committed evidence.
+  scheduled stage, reference validation, benchmark source, benchmark command,
+  environment metadata, committed result summary, and docs linking only to
+  committed evidence.
 - Out-of-scope items: GPU support, broad code generation, unsupported problem
   classes, uncommitted speed claims, production solver claims, inequalities,
   bounds.
-- Files likely touched: `src/tinynlp/backends/`, `benchmarks/`, `docs/`,
-  `BENCHMARKING.md`, `README.md`, `tests/`, `TASKS.md`.
-- Implementation notes: optimized behavior must match the CPU reference path
-  before timing is reported; keep the measured stage narrow.
+- Files likely touched: scheduler modules, `src/tinynlp/backends/`,
+  `benchmarks/`, `docs/`, `BENCHMARKING.md`, `README.md`, `tests/`,
+  `TASKS.md`.
+- Implementation notes: optimized behavior must match the CPU reference path for
+  the same scheduled task before timing is reported. Schedule reports should
+  identify which backend executed the task and what validation passed.
 - Acceptance tests: optimized backend produces the same outputs as the reference
-  path on benchmarked problems; benchmark report validates outputs before timing.
-- Benchmark requirements: expected benchmark is one committed expression/residual
-  or sparse assembly benchmark from the implemented pipeline; baseline is the
-  CPU reference backend for the same problem, command, dependency set, machine
-  metadata, and output validation.
+  path for the scheduled stage, and schedule reports expose backend choice and
+  validation status.
+- Benchmark requirements: expected benchmark is one committed scheduled-stage
+  benchmark from the implemented pipeline; baseline is the CPU reference backend
+  for the same scheduled task, command, dependency set, machine metadata, and
+  output validation.
 - Required checks: shared required checks.
-- Commit message: `Add first optimized backend with benchmark result`.
-- Stop conditions: result cannot be reproduced, output validation fails, or the
-  benchmark would imply a broader performance claim than the evidence supports.
+- Commit message: `Add first scheduler-backed optimized backend`.
+- Stop conditions: result cannot be reproduced, output validation fails, the
+  backend bypasses scheduler metadata, or the benchmark would imply a broader
+  performance claim than the evidence supports.
+
+## M19 Benchmark and Result-Claim Audit
+
+- Status: blocked until M18 is complete.
+- Purpose: audit benchmark evidence and documentation before any public
+  performance claim.
+- Allowed scope: benchmark result summaries, benchmark metadata review,
+  README/docs wording audit, reproducibility notes, and links from claims to
+  committed evidence.
+- Out-of-scope items: new optimized backend work, new problem classes, GPU
+  support, inequalities, bounds, solver-wrapper behavior.
+- Files likely touched: `BENCHMARKING.md`, `benchmarks/`, `README.md`, `docs/`,
+  `TASKS.md`.
+- Implementation notes: every performance claim must name the scheduled stage,
+  benchmark source, command, environment metadata, reference baseline, validation
+  result, and committed result summary.
+- Acceptance tests: docs contain no unbacked performance claims; committed
+  benchmark summaries cite reproducible commands and validation results.
+- Benchmark requirements: required for any performance claim added in this
+  milestone.
+- Required checks: shared required checks.
+- Commit message: `Audit benchmark claims after first scheduler-backed backend`.
+- Stop conditions: result summaries cannot be reproduced or claims exceed the
+  committed evidence.
