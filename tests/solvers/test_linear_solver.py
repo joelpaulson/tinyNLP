@@ -57,7 +57,10 @@ def test_dense_reference_linear_solver_rejects_singular_systems() -> None:
         DenseReferenceLinearSolver().solve(singular, [1.0])
 
 
-def test_solver_namespace_does_not_add_nonlinear_step_policy() -> None:
+def test_solver_namespace_exposes_only_prototype_solver_api() -> None:
+    assert hasattr(solvers, "solve_constraints")
+    assert hasattr(solvers, "SolverResult")
+    assert hasattr(solvers, "IterationRecord")
     assert not hasattr(solvers, "solve")
     assert not hasattr(solvers, "SolverStep")
     assert not hasattr(solvers, "ConvergencePolicy")

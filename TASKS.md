@@ -23,7 +23,7 @@ optimizable for available hardware.
   identity.
 - Do not add inequalities, bounds, GPU support, production IPOPT-style logic, or
   performance claims until a milestone explicitly asks for them.
-- With M11 complete, stop before M12 unless explicitly approved.
+- With M12 complete, stop before M13 unless explicitly approved.
 
 ## Shared Required Checks
 
@@ -316,7 +316,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M12 Simple Constrained Solver Prototype
 
-- Status: ready.
+- Status: complete.
 - Purpose: add a small constrained solver prototype for supported smooth
   structured constrained problems.
 - Allowed scope: simple step loop, residual/KKT calls, convergence diagnostics,
@@ -340,7 +340,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M13 Implicit Sensitivity Prototype
 
-- Status: blocked until M12 is complete.
+- Status: ready.
 - Purpose: add a first sensitivity workflow using the existing derivative and
   KKT path.
 - Allowed scope: sensitivity object/model, implicit solve through the KKT

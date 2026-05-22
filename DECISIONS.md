@@ -209,3 +209,37 @@ deterministic systems.
   performance claims.
 - Nonlinear solver loops, Hessian assembly, and production factorization remain
   later milestones.
+
+## ADR 0010: Simple Residual-Reduction Solver Prototype
+
+- Status: accepted
+- Date: 2026-05-22
+
+### Context
+
+tinyNLP needs a first visible solver-step workflow after residual/Jacobian
+assembly, KKT construction, and reference linear solves. The project does not
+yet have objective gradients, Hessian assembly, or production nonlinear solver
+policy.
+
+### Decision
+
+Add a simple constrained solver prototype that repeatedly solves the explicit
+identity-primal KKT system:
+
+```text
+[I  J^T] [dx    ] = [0 ]
+[J   0 ] [lambda]   [-r]
+```
+
+This step is a transparent minimum-norm linearized residual correction. It is
+not a Hessian-backed Newton method or an IPOPT-style production solver.
+
+### Consequences
+
+- Solver traces expose residual norms, step norms, KKT solve residuals,
+  objective metric values when available, and deterministic variable values.
+- Objective values remain reported metrics until objective-gradient and Hessian
+  support exists.
+- Future production solver methods must preserve this inspectable reference path
+  and avoid performance claims without committed benchmark evidence.

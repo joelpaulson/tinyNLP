@@ -1,5 +1,8 @@
 # M11 Readiness
 
+This is a historical pre-M12 readiness note. M12 has since added the simple
+constrained residual-reduction solver prototype.
+
 M11 is sufficient for the first M12 prototype if that prototype is framed as a
 small constrained residual-reduction workflow.
 

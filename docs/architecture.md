@@ -19,7 +19,8 @@ model expression
 - `ir`: minimal expression graph and scalar operation structures.
 - `autodiff`: reverse-mode scalar gradients, Jacobians, and verification.
 - `nlp`: structural sparsity, problem APIs, and residual/Jacobian assembly.
-- `solvers`: explicit KKT systems and reference linear-solve workflows.
+- `solvers`: explicit KKT systems, reference linear-solve workflows, and the
+  simple constrained residual-reduction solver prototype.
 - `backends`: KernelPlan, backend protocol, registry, and Python reference
   backend.
 - `bridges`: future import/export adapters.
@@ -30,6 +31,7 @@ model expression
 The current boundary is scalar expression construction/evaluation, plan
 visibility, derivative construction and verification, symbolic sparsity
 discovery, residual/Jacobian assembly, explicit KKT system construction, and a
-dense reference linear-solve interface. The repository intentionally does not
-implement Hessian assembly, nonlinear solver steps, sensitivities, bridges,
-optimized backends, inequalities, or bounds.
+dense reference linear-solve interface, and a simple constrained
+residual-reduction solver prototype. The repository intentionally does not
+implement Hessian assembly, production nonlinear solver methods, sensitivities,
+bridges, optimized backends, inequalities, or bounds.
