@@ -33,13 +33,13 @@ Codex may:
 - Add minimal package stubs needed for layout or importability.
 - Add tests for behavior that already exists or is explicitly requested by the
   active milestone.
-- Maintain and test completed M1-M13 features: core expression IR, reference
+- Maintain and test completed M1-M15 features: core expression IR, reference
   evaluator, trace reports, canonical examples, benchmark smoke scaffolding,
   KernelPlan, backend protocol, registered Python reference backend, autodiff,
   Jacobian verification, structural sparsity, problem APIs, residual/Jacobian
   assembly, KKT system objects, the reference linear-solve interface, and the
-  simple constrained residual-reduction solver and implicit sensitivity
-  prototypes.
+  simple constrained residual-reduction solver, implicit sensitivity prototype,
+  and execution schedule metadata.
 - Refine benchmark policy and benchmark harness structure before benchmark
   result summaries.
 
@@ -52,6 +52,7 @@ Codex may not implement these before a milestone asks for them:
   prototype.
 - Bridges to external modeling systems.
 - Optimized backends.
+- Scheduler-driven optimized execution.
 - Benchmark result summaries.
 - Inequalities, bounds, GPU support, hardware-specific code generation, or large
   external solver wrappers.

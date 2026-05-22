@@ -23,7 +23,7 @@ optimizable for available hardware.
   identity.
 - Do not add inequalities, bounds, GPU support, production IPOPT-style logic, or
   performance claims until a milestone explicitly asks for them.
-- With M14 complete, stop before M15 unless explicitly approved.
+- With M15 complete, stop before M16 unless explicitly approved.
 
 ## Shared Required Checks
 
@@ -396,7 +396,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M15 Execution Schedule Core
 
-- Status: ready.
+- Status: complete.
 - Purpose: add the first runtime representation for scheduled NLP execution
   tasks.
 - Allowed scope: schedule/task data structures, deterministic dependency order,
@@ -423,7 +423,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M16 Scheduled Pipeline Reports
 
-- Status: blocked until M15 is complete.
+- Status: ready.
 - Purpose: add printable reports for scheduled NLP execution.
 - Allowed scope: report formatting, validation summaries, task input/output
   summaries, cached structure summaries, materialized value summaries, backend

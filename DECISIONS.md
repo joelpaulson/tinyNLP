@@ -324,3 +324,36 @@ and what validation passed.
   the scheduled pipeline rather than bypassing it.
 - Runtime scheduler implementation, bridges, optimized backends, and benchmark
   result summaries remain separate later milestones.
+
+## ADR 0013: Execution Schedule Core as Metadata
+
+- Status: accepted
+- Date: 2026-05-22
+
+### Context
+
+tinyNLP has expression-level `KernelPlan` objects and visible structures for
+residual/Jacobian assembly, sparse coordinates, KKT systems, solver steps, and
+sensitivities. Before adding optimized execution, the project needs a broader
+pipeline-level schedule that keeps these stages inspectable without changing
+their current execution behavior.
+
+### Decision
+
+Add `ExecutionSchedule` and `ExecutionTask` as dependency-free metadata objects.
+They describe ordered pipeline tasks, dependencies, inputs, outputs, cached
+structures, materialized-value placeholders, backend choices, provenance, and
+validation status.
+
+`KernelPlan` remains the expression-level executable plan. `ExecutionSchedule`
+summarizes larger NLP pipeline tasks and may cache `KernelPlan` summaries when a
+task depends on expression evaluation. Schedule construction is descriptive in
+M15: it does not execute tasks, optimize backends, or change solver behavior.
+
+### Consequences
+
+- The scheduler layer can describe residual/Jacobian assembly and KKT assembly
+  before it controls execution.
+- Later reports and optimized backends have a stable task metadata surface.
+- Schedule metadata must stay deterministic, address-free, and tied to existing
+  provenance.

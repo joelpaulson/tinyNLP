@@ -23,14 +23,15 @@ model expression
 - `solvers`: explicit KKT systems, reference linear-solve workflows, and the
   simple constrained residual-reduction solver and implicit sensitivity
   prototypes.
+- `schedule`: execution schedule metadata for visible NLP pipeline stages.
 - `backends`: KernelPlan, backend protocol, registry, and Python reference
   backend.
 - `bridges`: future import/export adapters.
 - `profiling`: deterministic structural trace helpers.
 
-## Planned Scheduler Layer
+## Scheduler Layer
 
-The next architecture layer should distinguish four responsibilities:
+The scheduler layer distinguishes four responsibilities:
 
 - Frontend/model representation: expression IR, `Problem` objects, assembly
   contracts, KKT systems, solver workflows, and sensitivity workflows.
@@ -46,6 +47,12 @@ Initial scheduled stages should cover expression evaluation, residual
 evaluation, Jacobian evaluation, sparse coordinate assembly, KKT assembly,
 solver iteration steps, sensitivity RHS construction, and sensitivity solves.
 
+`KernelPlan` remains the expression-level execution plan for one scalar
+expression graph. `ExecutionSchedule` is broader metadata over NLP pipeline
+tasks; it may cache or reference `KernelPlan` summaries when a scheduled task
+uses expression evaluation, but it does not replace the backend protocol or
+execute optimized code.
+
 ## Current Boundary
 
 The current boundary is scalar expression construction/evaluation, plan
@@ -53,6 +60,8 @@ visibility, derivative construction and verification, symbolic sparsity
 discovery, residual/Jacobian assembly, explicit KKT system construction, and a
 dense reference linear-solve interface, plus a simple constrained
 residual-reduction solver prototype and scalar-parameter implicit sensitivity
-prototype. The repository intentionally does not implement Hessian assembly,
-production nonlinear solver methods, production sensitivity workflows, bridges,
-runtime execution schedules, optimized backends, inequalities, or bounds.
+prototype. The repository also has execution schedule metadata for expression,
+assembly, and KKT stages. It intentionally does not implement Hessian assembly,
+production nonlinear solver methods, production sensitivity workflows, full
+scheduled pipeline reports, scheduler-driven execution, bridges, optimized
+backends, inequalities, or bounds.
