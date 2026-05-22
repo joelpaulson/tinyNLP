@@ -1,4 +1,5 @@
 import importlib.util
+import subprocess
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -125,6 +126,23 @@ def test_chain_case_rejects_invalid_inputs() -> None:
 
     with pytest.raises(ValueError, match="horizon \\+ 1"):
         chain_example.chain_dynamics_case(horizon=3, references=(1.0, 1.1, 1.2))
+
+
+def test_chain_example_runs_directly_from_checkout() -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    module_path = repo_root / "examples" / "chain_dynamics_problem.py"
+
+    result = subprocess.run(
+        [sys.executable, str(module_path)],
+        cwd=repo_root,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    assert "chain_dynamics horizon=3" in result.stdout
+    assert "jacobian_shape=(3, 7) jacobian_entries=9" in result.stdout
+    assert "kkt_shape=(10, 10) kkt_entries=25" in result.stdout
 
 
 def _expected_chain_jacobian(case):

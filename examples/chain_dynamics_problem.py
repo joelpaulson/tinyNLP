@@ -8,14 +8,13 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+_examples_dir = Path(__file__).resolve().parent
+if str(_examples_dir) not in sys.path:
+    sys.path.insert(0, str(_examples_dir))
 
-def _ensure_repo_src_on_path() -> None:
-    repo_src = Path(__file__).resolve().parents[1] / "src"
-    if repo_src.exists() and str(repo_src) not in sys.path:
-        sys.path.insert(0, str(repo_src))
+from _bootstrap import ensure_repo_src_on_path
 
-
-_ensure_repo_src_on_path()
+ensure_repo_src_on_path()
 
 from tinynlp.backends import evaluate
 from tinynlp.ir import Expr, Graph
