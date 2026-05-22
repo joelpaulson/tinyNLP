@@ -12,7 +12,8 @@ smoke case for the pre-solver pipeline and the canonical smoke case for the
 simple constrained solver prototype. It is not a production nonlinear solver
 example. The parameter sensitivity problem is the first scalar-parameter
 implicit sensitivity smoke example and is not a production differentiable
-optimization workflow.
+optimization workflow. The sensitivity example treats the parameter as a
+symbolic variable and keeps solve variables explicit.
 
 Examples that are meant to run as scripts use `_bootstrap.py` so they can import
 the local `src/tinynlp` package directly from a source checkout.

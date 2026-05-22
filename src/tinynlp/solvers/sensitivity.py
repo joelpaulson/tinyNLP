@@ -1,4 +1,12 @@
-"""Reference implicit sensitivity workflow for supported constrained problems."""
+"""Reference implicit sensitivity workflow for supported constrained problems.
+
+M13 treats one symbolic problem variable as a scalar parameter and solves for
+selected solve-variable sensitivities at a residual-satisfying point. For square
+full-rank reduced Jacobians this matches the usual implicit equation
+``J_z dz/dp = -J_p``. For rectangular reduced Jacobians, the identity-primal KKT
+system gives the same minimum-norm reference convention used by the M12
+residual-correction prototype.
+"""
 
 from __future__ import annotations
 
@@ -57,6 +65,7 @@ class SensitivityTrace:
 
     parameter: VariableRef
     solve_variables: tuple[VariableRef, ...]
+    linear_solver_name: str
     residual_norm: float
     residual_values: tuple[float, ...]
     kkt_system: KKTSystem
@@ -99,6 +108,12 @@ def implicit_sensitivity(
     is the residual derivative column for the scalar parameter. The primal block
     is the same identity/reference block used by the M12 residual-correction
     prototype; this is not a Hessian-backed sensitivity method.
+
+    The parameter is currently represented by a symbolic variable in the
+    problem. If the problem includes variables that should not participate in the
+    solve sensitivity, pass ``solve_variables`` explicitly. The reduced KKT
+    system must be nonsingular for the selected variables; otherwise a
+    ``SensitivityError`` is raised.
     """
 
     tolerance = _validate_residual_tolerance(residual_tolerance)
@@ -139,6 +154,7 @@ def implicit_sensitivity(
     trace = SensitivityTrace(
         parameter=parameter_ref,
         solve_variables=solve_refs,
+        linear_solver_name=solve_result.solver_name,
         residual_norm=residual_norm,
         residual_values=residual_values,
         kkt_system=kkt_system,
@@ -161,6 +177,7 @@ def format_sensitivity(result: SensitivityResult) -> str:
         (
             "SensitivityResult "
             f"parameter={_format_variable(result.parameter)} "
+            f"linear_solver={trace.linear_solver_name} "
             f"residual_norm={trace.residual_norm:g} "
             f"kkt_shape={trace.kkt_system.shape} "
             f"kkt_solve_residual_norm={trace.kkt_solve_residual_norm:g}"

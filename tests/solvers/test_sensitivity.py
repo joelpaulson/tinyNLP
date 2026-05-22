@@ -88,6 +88,7 @@ def test_sensitivity_trace_and_format_are_deterministic_and_address_free() -> No
     assert first == second
     assert result.trace.parameter.name == "p"
     assert [variable.name for variable in result.trace.solve_variables] == ["x", "y"]
+    assert result.trace.linear_solver_name == "dense-reference"
     assert result.trace.kkt_system.shape == (4, 4)
     assert result.trace.rhs == pytest.approx((0.0, 0.0, -1.0, 2.0))
     assert [
@@ -99,6 +100,7 @@ def test_sensitivity_trace_and_format_are_deterministic_and_address_free() -> No
     ]
     assert result.trace.kkt_solve_residual_norm == pytest.approx(0.0)
     assert "SensitivityResult parameter=p@" in first
+    assert "linear_solver=dense-reference" in first
     assert "kkt_shape=(4, 4)" in first
     assert "rhs_entries:" in first
     assert "object at" not in first
@@ -239,6 +241,25 @@ def test_structurally_absent_parameter_column_gives_zero_sensitivity() -> None:
     assert result.trace.rhs == pytest.approx((0.0, -0.0))
     assert result.trace.rhs_entries[0].provenance is None
     assert "structural-zero" in format_sensitivity(result)
+
+
+def test_explicit_solve_variables_can_exclude_objective_only_variables() -> None:
+    graph = Graph()
+    x = graph.variable("x")
+    p = graph.variable("p")
+    q = graph.variable("q")
+    problem = Problem.from_residuals([x + p - 3], objective=q * q)
+
+    result = implicit_sensitivity(
+        problem,
+        {"x": 2.0, "p": 1.0, "q": 10.0},
+        parameter="p",
+        solve_variables=("x",),
+    )
+
+    assert [entry.variable.name for entry in result.entries] == ["x"]
+    assert result.sensitivities == pytest.approx({"x": -1.0})
+    assert [variable.name for variable in result.trace.solve_variables] == ["x"]
 
 
 def test_parameter_sensitivity_example_runs_directly_from_checkout() -> None:

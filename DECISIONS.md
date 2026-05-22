@@ -272,11 +272,20 @@ The workflow accepts residual-satisfying solution values, exposes RHS entries,
 KKT metadata, and solve residuals in a trace object, and verifies behavior
 against finite differences on tiny deterministic examples.
 
+The scalar parameter is represented by a symbolic problem variable in the M13
+prototype. The caller chooses which variables are solve variables; for
+rectangular reduced Jacobians, the identity-primal KKT block defines a
+minimum-norm reference convention rather than a general NLP optimal-solution
+sensitivity. The reduced KKT system must be nonsingular for the chosen solve
+variables.
+
 ### Consequences
 
 - Sensitivities remain a reference workflow for supported smooth equality
   residual systems, not a production differentiable-optimization framework.
 - Runtime values, parameter columns, RHS construction, and KKT solves remain
   inspectable.
+- Variables that are objective-only or otherwise not part of the sensitivity
+  solve should be excluded with explicit `solve_variables`.
 - Multi-parameter sensitivities, inequality/bound sensitivities, Hessian-backed
   methods, and performance claims remain later work.

@@ -352,7 +352,10 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Implementation notes: document assumptions and failure modes; keep sensitivity
   calculations tied to inspectable KKT metadata. M13 can rely on preserved extra
   solver values, normalized solver options, and pre-step residual trace context
-  from the M12 cleanup.
+  from the M12 cleanup. Treat the scalar parameter as a symbolic problem
+  variable, use explicit `solve_variables` when objective-only variables should
+  be excluded, and describe rectangular systems as using the current
+  identity-primal minimum-norm reference convention.
 - Acceptance tests: sensitivities match reference finite-difference checks on
   tiny canonical problems within explicit tolerances.
 - Benchmark requirements: none; no timing claims.
