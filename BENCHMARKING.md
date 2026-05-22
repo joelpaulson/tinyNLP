@@ -41,8 +41,10 @@ Benchmarks should name the pipeline stage they measure:
 ## Current State
 
 Benchmark smoke sources now exist for expression/residual evaluation through the
-backend protocol and registered Python reference backend. They validate expected
-outputs before timing and are used as test/collection scaffolding.
+backend protocol and registered Python reference backend, and for chain
+dynamics residual assembly, sparse Jacobian assembly, and KKT construction.
+They validate expected outputs before timing and are used as test/collection
+scaffolding.
 
 There are no committed benchmark result summaries yet, and tinyNLP still makes
 no speed or performance claims.

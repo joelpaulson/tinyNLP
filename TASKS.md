@@ -327,7 +327,9 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Files likely touched: `src/tinynlp/solvers/`, `src/tinynlp/nlp/`, `tests/`,
   `examples/`, `docs/architecture.md`, `TASKS.md`.
 - Implementation notes: prioritize correctness, traceability, and readable
-  diagnostics over breadth; keep equality constraints an initial path only.
+  diagnostics over breadth; keep equality constraints an initial path only. Use
+  the chain dynamics problem as the canonical smoke case; objective values are
+  tracked metrics until objective-gradient and Hessian support exists.
 - Acceptance tests: solver reduces residuals on tiny deterministic problems and
   reports clear failure states on invalid inputs.
 - Benchmark requirements: none; no solve-time claims.

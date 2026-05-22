@@ -8,7 +8,11 @@ benchmark result summaries yet, and this repository does not make speed claims.
 - `test_reference_evaluator_benchmark.py` measures expression/residual
   evaluation through the backend protocol and registered Python reference
   backend.
-- The benchmark validates expected residual outputs before timing.
+- `test_chain_pipeline_benchmark.py` measures chain dynamics residual assembly,
+  sparse Jacobian assembly, and KKT construction for correctness-guarded smoke
+  cases.
+- Benchmark sources validate expected outputs, dimensions, or entry counts
+  before timing.
 - The only baseline in this scaffold is the expected numeric output for the
   canonical examples, not another package, method, or optimized backend.
 

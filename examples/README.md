@@ -1,13 +1,11 @@
 # Examples
 
-This directory holds canonical expression examples for the current IR/evaluator
-path.
+This directory holds canonical examples for the current visible pipeline.
 
 Examples should make the computational path visible. Prefer a small number of
 traceable examples over broad coverage.
 
 Current examples include an affine expression, a quadratic expression, a
-residual-like expression list, and a larger banded residual system. The banded
-system exercises the current expression, Jacobian, verification, and structural
-sparsity path without becoming a Problem API, sparse assembly, or solver
-example.
+residual-like expression list, a larger banded residual system, and a chain
+dynamics problem. The chain dynamics problem is the first problem/assembly/KKT
+smoke case for the pre-solver pipeline. It is not a nonlinear solver example.
