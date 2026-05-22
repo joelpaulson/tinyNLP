@@ -6,8 +6,10 @@ from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from enum import StrEnum
 from math import sqrt
+from numbers import Real
 
 from tinynlp.backends import EvaluationError, evaluate
+from tinynlp.ir import VariableRef
 from tinynlp.nlp import (
     AssemblyContract,
     AssemblyError,
@@ -52,6 +54,7 @@ class IterationRecord:
     """One visible solver-iteration record."""
 
     iteration: int
+    previous_residual_norm: float | None
     residual_norm: float
     step_norm: float | None
     kkt_solve_residual_norm: float | None
@@ -66,7 +69,7 @@ class SolverResult:
 
     status: SolverStatus
     message: str
-    final_values: dict[str, float]
+    final_values: dict[str, object]
     trace: tuple[IterationRecord, ...]
 
     @property
@@ -78,7 +81,7 @@ class SolverResult:
 
 def solve_constraints(
     problem: Problem,
-    values: Mapping[str, float],
+    values: Mapping[str, object],
     *,
     max_iterations: int = 10,
     residual_tolerance: float = 1e-8,
@@ -93,7 +96,7 @@ def solve_constraints(
     prototype, not a Hessian-backed NLP method.
     """
 
-    _validate_options(
+    options = _validate_options(
         max_iterations=max_iterations,
         residual_tolerance=residual_tolerance,
         step_tolerance=step_tolerance,
@@ -104,28 +107,29 @@ def solve_constraints(
     current_values = _initial_values(contract, values)
     records: list[IterationRecord] = []
 
-    for iteration in range(max_iterations):
+    for iteration in range(options.max_iterations):
         state = _evaluate_state(contract, current_values, iteration)
-        if state.residual_norm <= residual_tolerance:
+        if state.residual_norm <= options.residual_tolerance:
             records.append(state.record)
             return SolverResult(
                 status=SolverStatus.CONVERGED,
                 message=(
                     "converged: residual norm "
-                    f"{state.residual_norm:g} <= {residual_tolerance:g}"
+                    f"{state.residual_norm:g} <= {options.residual_tolerance:g}"
                 ),
-                final_values=current_values,
+                final_values=dict(current_values),
                 trace=tuple(records),
             )
 
         step, kkt_residual_norm = _solve_step(contract, current_values, state, solver)
         step_norm = _norm(step)
-        if step_norm <= step_tolerance:
+        if step_norm <= options.step_tolerance:
             records.append(
                 _record(
                     contract=contract,
                     values=current_values,
                     iteration=iteration,
+                    previous_residual_norm=None,
                     residual_norm=state.residual_norm,
                     step_norm=step_norm,
                     kkt_solve_residual_norm=kkt_residual_norm,
@@ -135,8 +139,10 @@ def solve_constraints(
             )
             return SolverResult(
                 status=SolverStatus.STEP_TOLERANCE,
-                message=f"stopped: step norm {step_norm:g} <= {step_tolerance:g}",
-                final_values=current_values,
+                message=(
+                    f"stopped: step norm {step_norm:g} <= {options.step_tolerance:g}"
+                ),
+                final_values=dict(current_values),
                 trace=tuple(records),
             )
 
@@ -145,7 +151,7 @@ def solve_constraints(
             values=current_values,
             step=step,
             current_norm=state.residual_norm,
-            damping_steps=damping_steps,
+            damping_steps=options.damping_steps,
         )
         if accepted is None:
             records.append(
@@ -153,6 +159,7 @@ def solve_constraints(
                     contract=contract,
                     values=current_values,
                     iteration=iteration,
+                    previous_residual_norm=None,
                     residual_norm=state.residual_norm,
                     step_norm=step_norm,
                     kkt_solve_residual_norm=kkt_residual_norm,
@@ -163,7 +170,7 @@ def solve_constraints(
             return SolverResult(
                 status=SolverStatus.LINE_SEARCH_FAILED,
                 message="stopped: no damping step reduced the residual norm",
-                final_values=current_values,
+                final_values=dict(current_values),
                 trace=tuple(records),
             )
 
@@ -173,6 +180,7 @@ def solve_constraints(
                 contract=contract,
                 values=current_values,
                 iteration=iteration,
+                previous_residual_norm=state.residual_norm,
                 residual_norm=accepted.residual_norm,
                 step_norm=step_norm * accepted.step_length,
                 kkt_solve_residual_norm=kkt_residual_norm,
@@ -180,21 +188,21 @@ def solve_constraints(
                 accepted_step_length=accepted.step_length,
             )
         )
-        if accepted.residual_norm <= residual_tolerance:
+        if accepted.residual_norm <= options.residual_tolerance:
             return SolverResult(
                 status=SolverStatus.CONVERGED,
                 message=(
                     "converged: residual norm "
-                    f"{accepted.residual_norm:g} <= {residual_tolerance:g}"
+                    f"{accepted.residual_norm:g} <= {options.residual_tolerance:g}"
                 ),
-                final_values=current_values,
+                final_values=dict(current_values),
                 trace=tuple(records),
             )
 
     return SolverResult(
         status=SolverStatus.MAX_ITERATIONS,
-        message=f"stopped: reached max_iterations={max_iterations}",
-        final_values=current_values,
+        message=f"stopped: reached max_iterations={options.max_iterations}",
+        final_values=dict(current_values),
         trace=tuple(records),
     )
 
@@ -206,6 +214,7 @@ def format_solver_trace(records: Iterable[IterationRecord]) -> str:
     for record in records:
         parts = [
             f"iteration={record.iteration}",
+            f"previous_residual_norm={_format_optional(record.previous_residual_norm)}",
             f"residual_norm={record.residual_norm:g}",
             f"step_norm={_format_optional(record.step_norm)}",
             f"kkt_solve_residual_norm={_format_optional(record.kkt_solve_residual_norm)}",
@@ -229,9 +238,17 @@ class _IterationState:
 
 @dataclass(frozen=True)
 class _AcceptedStep:
-    values: dict[str, float]
+    values: dict[str, object]
     residual_norm: float
     step_length: float
+
+
+@dataclass(frozen=True)
+class _SolverOptions:
+    max_iterations: int
+    residual_tolerance: float
+    step_tolerance: float
+    damping_steps: tuple[float, ...]
 
 
 def _validate_options(
@@ -240,20 +257,27 @@ def _validate_options(
     residual_tolerance: float,
     step_tolerance: float,
     damping_steps: Sequence[float],
-) -> None:
+) -> _SolverOptions:
     if isinstance(max_iterations, bool) or not isinstance(max_iterations, int):
         msg = "max_iterations must be a positive integer"
         raise SolverError(msg)
     if max_iterations < 1:
         msg = "max_iterations must be a positive integer"
         raise SolverError(msg)
-    try:
-        residual_tolerance_value = float(residual_tolerance)
-        step_tolerance_value = float(step_tolerance)
-        damping_step_values = tuple(float(step) for step in damping_steps)
-    except (TypeError, ValueError) as exc:
+
+    if not _is_real_number(residual_tolerance):
+        msg = "residual_tolerance must be a positive real number"
+        raise SolverError(msg)
+    if not _is_real_number(step_tolerance):
+        msg = "step_tolerance must be a positive real number"
+        raise SolverError(msg)
+    if any(not _is_real_number(step) for step in damping_steps):
         msg = "solver tolerances and damping_steps must be numeric"
-        raise SolverError(msg) from exc
+        raise SolverError(msg)
+
+    residual_tolerance_value = float(residual_tolerance)
+    step_tolerance_value = float(step_tolerance)
+    damping_step_values = tuple(float(step) for step in damping_steps)
 
     if residual_tolerance_value <= 0.0:
         msg = "residual_tolerance must be positive"
@@ -268,6 +292,12 @@ def _validate_options(
         if step <= 0.0 or step > 1.0:
             msg = "damping_steps must be in the interval (0, 1]"
             raise SolverError(msg)
+    return _SolverOptions(
+        max_iterations=max_iterations,
+        residual_tolerance=residual_tolerance_value,
+        step_tolerance=step_tolerance_value,
+        damping_steps=damping_step_values,
+    )
 
 
 def _build_contract(problem: Problem) -> AssemblyContract:
@@ -279,13 +309,9 @@ def _build_contract(problem: Problem) -> AssemblyContract:
 
 def _initial_values(
     contract: AssemblyContract,
-    values: Mapping[str, float],
-) -> dict[str, float]:
-    try:
-        current_values = {name: float(value) for name, value in values.items()}
-    except (TypeError, ValueError) as exc:
-        msg = "values must map variable names to numeric values"
-        raise SolverError(msg) from exc
+    values: Mapping[str, object],
+) -> dict[str, object]:
+    current_values = dict(values)
     missing = [
         variable.name
         for variable in contract.variables
@@ -294,12 +320,18 @@ def _initial_values(
     if missing:
         msg = "missing values for problem variables: " + ", ".join(missing)
         raise SolverError(msg)
+    for variable in contract.variables:
+        value = current_values[variable.name]
+        if not _is_real_number(value):
+            msg = "values must map problem variable names to numeric values"
+            raise SolverError(msg)
+        current_values[variable.name] = float(value)
     return current_values
 
 
 def _evaluate_state(
     contract: AssemblyContract,
-    values: dict[str, float],
+    values: dict[str, object],
     iteration: int,
 ) -> _IterationState:
     residual_values = _residual_values(contract, values)
@@ -313,6 +345,7 @@ def _evaluate_state(
             contract=contract,
             values=values,
             iteration=iteration,
+            previous_residual_norm=None,
             residual_norm=residual_norm,
             step_norm=None,
             kkt_solve_residual_norm=None,
@@ -324,12 +357,14 @@ def _evaluate_state(
 
 def _solve_step(
     contract: AssemblyContract,
-    values: dict[str, float],
+    values: dict[str, object],
     state: _IterationState,
     linear_solver: LinearSolver,
 ) -> tuple[tuple[float, ...], float]:
     try:
-        jacobian = assemble_jacobian(contract, values)
+        jacobian = assemble_jacobian(
+            contract, _problem_numeric_values(contract, values)
+        )
         system = build_kkt_system(jacobian)
         rhs = (0.0,) * contract.problem.variable_dimension + tuple(
             -value for value in state.residual_values
@@ -345,7 +380,7 @@ def _solve_step(
 def _accept_step(
     *,
     contract: AssemblyContract,
-    values: dict[str, float],
+    values: dict[str, object],
     step: tuple[float, ...],
     current_norm: float,
     damping_steps: Sequence[float],
@@ -364,33 +399,39 @@ def _accept_step(
 
 def _apply_step(
     contract: AssemblyContract,
-    values: dict[str, float],
+    values: dict[str, object],
     step: tuple[float, ...],
     step_length: float,
-) -> dict[str, float]:
+) -> dict[str, object]:
     updated = dict(values)
     for index, variable in enumerate(contract.variables):
-        updated[variable.name] = values[variable.name] + (step_length * step[index])
+        updated[variable.name] = _variable_float(values, variable.name) + (
+            step_length * step[index]
+        )
     return updated
 
 
 def _residual_values(
     contract: AssemblyContract,
-    values: dict[str, float],
+    values: dict[str, object],
 ) -> tuple[float, ...]:
     try:
+        numeric_values = _problem_numeric_values(contract, values)
         return tuple(
-            value.value for value in assemble_residuals(contract, values).values
+            value.value for value in assemble_residuals(contract, numeric_values).values
         )
     except AssemblyError as exc:
         raise SolverError(f"failed to assemble residuals: {exc}") from exc
 
 
-def _objective_value(problem: Problem, values: dict[str, float]) -> float | None:
+def _objective_value(problem: Problem, values: dict[str, object]) -> float | None:
     if problem.objective is None:
         return None
     try:
-        return evaluate(problem.objective, values)
+        return evaluate(
+            problem.objective,
+            _problem_numeric_values_for_problem(problem, values),
+        )
     except EvaluationError as exc:
         raise SolverError(f"failed to evaluate objective metric: {exc}") from exc
 
@@ -398,8 +439,9 @@ def _objective_value(problem: Problem, values: dict[str, float]) -> float | None
 def _record(
     *,
     contract: AssemblyContract,
-    values: dict[str, float],
+    values: dict[str, object],
     iteration: int,
+    previous_residual_norm: float | None,
     residual_norm: float,
     step_norm: float | None,
     kkt_solve_residual_norm: float | None,
@@ -408,6 +450,7 @@ def _record(
 ) -> IterationRecord:
     return IterationRecord(
         iteration=iteration,
+        previous_residual_norm=previous_residual_norm,
         residual_norm=float(residual_norm),
         step_norm=step_norm,
         kkt_solve_residual_norm=kkt_solve_residual_norm,
@@ -418,6 +461,41 @@ def _record(
             for variable in contract.variables
         ),
     )
+
+
+def _problem_numeric_values(
+    contract: AssemblyContract,
+    values: dict[str, object],
+) -> dict[str, float]:
+    return _problem_numeric_values_for_variables(contract.variables, values)
+
+
+def _problem_numeric_values_for_problem(
+    problem: Problem,
+    values: dict[str, object],
+) -> dict[str, float]:
+    return _problem_numeric_values_for_variables(problem.variables, values)
+
+
+def _problem_numeric_values_for_variables(
+    variables: tuple[VariableRef, ...],
+    values: dict[str, object],
+) -> dict[str, float]:
+    return {
+        variable.name: _variable_float(values, variable.name) for variable in variables
+    }
+
+
+def _variable_float(values: dict[str, object], name: str) -> float:
+    value = values[name]
+    if not _is_real_number(value):
+        msg = f"value for problem variable {name!r} must be numeric"
+        raise SolverError(msg)
+    return float(value)
+
+
+def _is_real_number(value: object) -> bool:
+    return isinstance(value, Real) and not isinstance(value, bool)
 
 
 def _norm(values: Sequence[float]) -> float:

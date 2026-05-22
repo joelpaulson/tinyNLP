@@ -350,7 +350,9 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Files likely touched: `src/tinynlp/solvers/`, `src/tinynlp/nlp/`,
   `src/tinynlp/autodiff/`, `tests/`, `docs/architecture.md`, `TASKS.md`.
 - Implementation notes: document assumptions and failure modes; keep sensitivity
-  calculations tied to inspectable KKT metadata.
+  calculations tied to inspectable KKT metadata. M13 can rely on preserved extra
+  solver values, normalized solver options, and pre-step residual trace context
+  from the M12 cleanup.
 - Acceptance tests: sensitivities match reference finite-difference checks on
   tiny canonical problems within explicit tolerances.
 - Benchmark requirements: none; no timing claims.

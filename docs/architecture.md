@@ -31,7 +31,7 @@ model expression
 The current boundary is scalar expression construction/evaluation, plan
 visibility, derivative construction and verification, symbolic sparsity
 discovery, residual/Jacobian assembly, explicit KKT system construction, and a
-dense reference linear-solve interface, and a simple constrained
+dense reference linear-solve interface, plus a simple constrained
 residual-reduction solver prototype. The repository intentionally does not
 implement Hessian assembly, production nonlinear solver methods, sensitivities,
 bridges, optimized backends, inequalities, or bounds.

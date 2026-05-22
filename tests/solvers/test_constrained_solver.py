@@ -44,6 +44,7 @@ def test_linear_equality_problem_converges_in_one_correction() -> None:
     assert result.final_values["y"] == pytest.approx(1.5)
     assert len(result.trace) == 1
     assert result.trace[0].iteration == 0
+    assert result.trace[0].previous_residual_norm == pytest.approx(3.0)
     assert result.trace[0].residual_norm == pytest.approx(0.0)
     assert result.trace[0].step_norm == pytest.approx((1.5**2 + 1.5**2) ** 0.5)
     assert result.trace[0].accepted_step_length == 1.0
@@ -83,6 +84,7 @@ def test_solver_trace_format_is_deterministic_and_address_free() -> None:
     assert first == second
     assert "SolverTrace" in first
     assert "iteration=0" in first
+    assert "previous_residual_norm=" in first
     assert "residual_norm=" in first
     assert "kkt_solve_residual_norm=" in first
     assert "objective_value=" in first
@@ -94,13 +96,19 @@ def test_solver_does_not_mutate_input_values_and_preserves_extra_values() -> Non
     graph = Graph()
     x = graph.variable("x")
     problem = Problem.from_residuals([x - 1])
-    values = {"x": 0.0, "unused": 99.0}
+    sentinel = object()
+    values = {"x": 0.0, "unused": "keep-me", "sentinel": sentinel}
 
     result = solve_constraints(problem, values)
 
-    assert values == {"x": 0.0, "unused": 99.0}
+    assert values == {"x": 0.0, "unused": "keep-me", "sentinel": sentinel}
     assert result.final_values["x"] == pytest.approx(1.0)
-    assert result.final_values["unused"] == 99.0
+    assert result.final_values["unused"] == "keep-me"
+    assert result.final_values["sentinel"] is sentinel
+    assert result.final_values is not values
+
+    result.final_values["x"] = -100.0
+    assert values["x"] == 0.0
 
 
 def test_solver_reports_max_iterations_without_claiming_success() -> None:
@@ -130,8 +138,17 @@ def test_solver_rejects_missing_values_and_invalid_options() -> None:
     with pytest.raises(SolverError, match="max_iterations"):
         solve_constraints(problem, {"x": 0.0}, max_iterations=0)
 
+    with pytest.raises(SolverError, match="max_iterations"):
+        solve_constraints(problem, {"x": 0.0}, max_iterations=True)
+
     with pytest.raises(SolverError, match="residual_tolerance"):
         solve_constraints(problem, {"x": 0.0}, residual_tolerance=0.0)
+
+    with pytest.raises(SolverError, match="residual_tolerance"):
+        solve_constraints(problem, {"x": 0.0}, residual_tolerance="1e-8")
+
+    with pytest.raises(SolverError, match="step_tolerance"):
+        solve_constraints(problem, {"x": 0.0}, step_tolerance=True)
 
     with pytest.raises(SolverError, match="damping_steps"):
         solve_constraints(problem, {"x": 0.0}, damping_steps=())
@@ -140,7 +157,49 @@ def test_solver_rejects_missing_values_and_invalid_options() -> None:
         solve_constraints(problem, {"x": 0.0}, damping_steps=(1.5,))
 
     with pytest.raises(SolverError, match="numeric"):
+        solve_constraints(problem, {"x": 0.0}, damping_steps=("0.5",))
+
+    with pytest.raises(SolverError, match="numeric"):
         solve_constraints(problem, {"x": "not-a-number"})
+
+
+def test_solver_accepts_numeric_options_after_normalization() -> None:
+    graph = Graph()
+    x = graph.variable("x")
+    problem = Problem.from_residuals([x - 1])
+
+    result = solve_constraints(
+        problem,
+        {"x": 0},
+        max_iterations=2,
+        residual_tolerance=1e-8,
+        step_tolerance=1e-12,
+        damping_steps=(1,),
+    )
+
+    assert result.success
+    assert result.trace[0].accepted_step_length == 1.0
+
+
+def test_accepted_trace_records_previous_and_current_residual_norms() -> None:
+    case = chain_example.chain_dynamics_case(horizon=3)
+
+    result = solve_constraints(case.problem, case.values, max_iterations=5)
+
+    first = result.trace[0]
+    assert first.previous_residual_norm is not None
+    assert first.previous_residual_norm > first.residual_norm
+    assert first.step_norm is not None
+    assert first.kkt_solve_residual_norm is not None
+    assert [value.name for value in first.variables] == [
+        "x0",
+        "x1",
+        "x2",
+        "x3",
+        "u0",
+        "u1",
+        "u2",
+    ]
 
 
 def test_solver_raises_clear_error_for_singular_kkt_step() -> None:
