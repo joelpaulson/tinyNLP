@@ -61,6 +61,8 @@ def test_solver_namespace_exposes_only_prototype_solver_api() -> None:
     assert hasattr(solvers, "solve_constraints")
     assert hasattr(solvers, "SolverResult")
     assert hasattr(solvers, "IterationRecord")
+    assert hasattr(solvers, "implicit_sensitivity")
+    assert hasattr(solvers, "SensitivityResult")
     assert not hasattr(solvers, "solve")
     assert not hasattr(solvers, "SolverStep")
     assert not hasattr(solvers, "ConvergencePolicy")

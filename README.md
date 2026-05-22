@@ -34,7 +34,7 @@ hardware-specific execution planned later.
 
 ## Current Status
 
-tinyNLP is experimental and pre-alpha. M1-M12 are complete: the repository now
+tinyNLP is experimental and pre-alpha. M1-M13 are complete: the repository now
 includes a minimal scalar expression IR, CPU-first reference evaluator,
 deterministic structural traces, canonical expression examples, a deterministic
 KernelPlan, a small backend protocol, a registered Python reference backend,
@@ -42,10 +42,12 @@ reverse-mode scalar autodiff, vector Jacobian construction and verification,
 structural sparsity discovery, problem containers, residual/Jacobian assembly
 contracts, dependency-free sparse coordinate assembly, explicit KKT system
 objects, a dense reference linear-solve interface, a simple constrained
-residual-reduction solver prototype, and pytest-benchmark smoke sources.
+residual-reduction solver prototype, a scalar-parameter implicit sensitivity
+prototype, and pytest-benchmark smoke sources.
 
 It does not yet implement Hessian assembly, production nonlinear solver methods,
-sensitivities, bridges, optimized backends, inequalities, or bounds.
+production sensitivity workflows, bridges, optimized backends, inequalities, or
+bounds.
 
 ## Installation From Source
 
@@ -121,13 +123,13 @@ src/tinynlp/
   ir/          minimal scalar expression graph and IR structures
   autodiff/    reverse-mode scalar gradients, Jacobians, and verification
   nlp/         structural sparsity, problem APIs, and residual/Jacobian assembly
-  solvers/     KKT systems, reference linear solve, and solver prototype
+  solvers/     KKT systems, reference linear solve, solver, and sensitivities
   backends/    KernelPlan, backend protocol, registry, and Python reference backend
   bridges/     future import/export adapters
   profiling/   deterministic structural trace helpers
 
 docs/          design notes and architecture sketches
-examples/      canonical expression examples for the current IR/evaluator path
+examples/      canonical examples for the current visible pipeline
 benchmarks/    benchmark smoke sources and future committed summaries
 tests/         pytest suite
 ```

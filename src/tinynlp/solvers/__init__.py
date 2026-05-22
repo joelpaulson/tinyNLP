@@ -26,6 +26,15 @@ from tinynlp.solvers.linear import (
     LinearSolver,
     LinearSolveResult,
 )
+from tinynlp.solvers.sensitivity import (
+    SensitivityEntry,
+    SensitivityError,
+    SensitivityResult,
+    SensitivityRhsEntry,
+    SensitivityTrace,
+    format_sensitivity,
+    implicit_sensitivity,
+)
 
 __all__ = [
     "DenseReferenceLinearSolver",
@@ -39,12 +48,19 @@ __all__ = [
     "LinearSolveError",
     "LinearSolveResult",
     "LinearSolver",
+    "SensitivityEntry",
+    "SensitivityError",
+    "SensitivityResult",
+    "SensitivityRhsEntry",
+    "SensitivityTrace",
     "SolverError",
     "SolverResult",
     "SolverStatus",
     "VariableValue",
     "build_kkt_system",
+    "format_sensitivity",
     "format_solver_trace",
+    "implicit_sensitivity",
     "format_kkt_system",
     "kkt_to_dense",
     "solve_constraints",

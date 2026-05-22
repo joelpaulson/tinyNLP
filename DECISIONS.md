@@ -243,3 +243,40 @@ not a Hessian-backed Newton method or an IPOPT-style production solver.
   support exists.
 - Future production solver methods must preserve this inspectable reference path
   and avoid performance claims without committed benchmark evidence.
+
+## ADR 0011: KKT-Based Implicit Sensitivity Prototype
+
+- Status: accepted
+- Date: 2026-05-22
+
+### Context
+
+tinyNLP needs a first sensitivity workflow that stays tied to the existing
+visible pipeline. The repository has residual/Jacobian assembly, explicit KKT
+systems, and a dense reference linear solver, but it does not yet have Hessian
+assembly, production differentiable-optimization machinery, or inequality/bound
+sensitivity support.
+
+### Decision
+
+Add a scalar-parameter implicit sensitivity prototype that partitions the
+assembled residual Jacobian into solve-variable columns `J_z` and one parameter
+column `J_p`, then solves the explicit identity-primal KKT system:
+
+```text
+[I  J_z^T] [dz/dp ] = [0    ]
+[J_z  0  ] [lambda]   [-J_p]
+```
+
+The workflow accepts residual-satisfying solution values, exposes RHS entries,
+KKT metadata, and solve residuals in a trace object, and verifies behavior
+against finite differences on tiny deterministic examples.
+
+### Consequences
+
+- Sensitivities remain a reference workflow for supported smooth equality
+  residual systems, not a production differentiable-optimization framework.
+- Runtime values, parameter columns, RHS construction, and KKT solves remain
+  inspectable.
+- Multi-parameter sensitivities, inequality/bound sensitivities, Hessian-backed
+  methods, and performance claims remain later work.

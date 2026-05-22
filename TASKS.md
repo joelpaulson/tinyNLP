@@ -23,7 +23,7 @@ optimizable for available hardware.
   identity.
 - Do not add inequalities, bounds, GPU support, production IPOPT-style logic, or
   performance claims until a milestone explicitly asks for them.
-- With M12 complete, stop before M13 unless explicitly approved.
+- With M13 complete, stop before M14 unless explicitly approved.
 
 ## Shared Required Checks
 
@@ -340,7 +340,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M13 Implicit Sensitivity Prototype
 
-- Status: ready.
+- Status: complete.
 - Purpose: add a first sensitivity workflow using the existing derivative and
   KKT path.
 - Allowed scope: sensitivity object/model, implicit solve through the KKT
@@ -363,7 +363,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M14 CasADi Baseline Bridge
 
-- Status: blocked until M13 is complete.
+- Status: ready.
 - Purpose: add a baseline bridge for correctness comparison against CasADi where
   explicitly available.
 - Allowed scope: optional bridge module, optional dependency wiring if approved,
