@@ -1,8 +1,21 @@
 """Chain dynamics problem for pre-solver pipeline smoke tests."""
 
+# ruff: noqa: E402
+
 from __future__ import annotations
 
+import sys
 from dataclasses import dataclass
+from pathlib import Path
+
+
+def _ensure_repo_src_on_path() -> None:
+    repo_src = Path(__file__).resolve().parents[1] / "src"
+    if repo_src.exists() and str(repo_src) not in sys.path:
+        sys.path.insert(0, str(repo_src))
+
+
+_ensure_repo_src_on_path()
 
 from tinynlp.backends import evaluate
 from tinynlp.ir import Expr, Graph
@@ -154,3 +167,28 @@ def _validate_horizon(horizon: int) -> None:
     if isinstance(horizon, bool) or not isinstance(horizon, int) or horizon < 1:
         msg = "chain dynamics horizon must be a positive integer"
         raise ValueError(msg)
+
+
+def _main() -> None:
+    case = chain_dynamics_case()
+    residuals = assemble_chain_residuals(case)
+    jacobian = assemble_chain_jacobian(case)
+    kkt = build_chain_kkt(case)
+
+    print(f"chain_dynamics horizon={case.horizon}")
+    print(
+        f"variables={case.problem.variable_dimension} "
+        f"residuals={case.problem.residual_dimension}"
+    )
+    print(f"objective={evaluate_chain_objective(case):g}")
+    print(
+        "residuals=["
+        + ", ".join(f"{value.value:g}" for value in residuals.values)
+        + "]"
+    )
+    print(f"jacobian_shape={jacobian.shape} jacobian_entries={len(jacobian.entries)}")
+    print(f"kkt_shape={kkt.shape} kkt_entries={len(kkt.entries)}")
+
+
+if __name__ == "__main__":
+    _main()
