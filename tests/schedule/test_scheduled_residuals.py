@@ -90,6 +90,22 @@ def test_scheduled_residual_validation_format_is_deterministic() -> None:
     assert "object at" not in formatted
 
 
+def test_prepared_residual_schedule_report_example_is_deterministic() -> None:
+    example = _load_example("prepared_residual_schedule_report")
+
+    report = example.prepared_residual_schedule_report()
+
+    assert report == example.prepared_residual_schedule_report()
+    assert "ScheduledResidualValidation" in report
+    assert "passed=True" in report
+    assert "max_abs_error=0" in report
+    assert "stage=evaluate_residuals" in report
+    assert "backend=prepared-python" in report
+    assert "prepared_residual_kernels" in report
+    assert "validation_status=reference_validated" in report
+    assert "object at" not in report
+
+
 def test_scheduled_residual_evaluator_reports_missing_values() -> None:
     case = chain_example.chain_dynamics_case(horizon=3)
     contract = build_assembly_contract(case.problem)
@@ -99,3 +115,15 @@ def test_scheduled_residual_evaluator_reports_missing_values() -> None:
 
     with pytest.raises(AssemblyError, match="scheduled residual row 0"):
         evaluator.evaluate(values)
+
+
+def _load_example(name: str) -> ModuleType:
+    examples_path = Path(__file__).resolve().parents[2] / "examples"
+    module_path = examples_path / f"{name}.py"
+    spec = importlib.util.spec_from_file_location(name, module_path)
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module

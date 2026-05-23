@@ -23,7 +23,7 @@ optimizable for available hardware.
   identity.
 - Do not add inequalities, bounds, GPU support, production IPOPT-style logic, or
   performance claims until a milestone explicitly asks for them.
-- With M19 complete, stop before M20 unless explicitly approved.
+- With M20 complete, pause for fresh roadmap planning before new runtime work.
 
 ## Shared Required Checks
 
@@ -543,7 +543,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M20 Benchmark and Result-Claim Audit
 
-- Status: ready.
+- Status: complete.
 - Purpose: audit benchmark evidence and documentation before any public
   performance claim.
 - Allowed scope: benchmark result summaries, benchmark metadata review,
@@ -564,3 +564,15 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Commit message: `Audit benchmark claims after first scheduler-backed backend`.
 - Stop conditions: result summaries cannot be reproduced or claims exceed the
   committed evidence.
+
+## Next Phase Planning
+
+- Status: ready.
+- Purpose: decide the next roadmap direction after the first scheduler-backed
+  optimized backend and benchmark-claim audit.
+- Allowed scope: roadmap/task-board planning, architecture review, and selection
+  of the next milestone sequence.
+- Out-of-scope items: new runtime work before a fresh milestone is approved.
+- Required checks: documentation checks as appropriate.
+- Stop conditions: proposed work would add broad performance claims, unsupported
+  problem classes, or dependencies without explicit roadmap approval.

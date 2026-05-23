@@ -16,9 +16,9 @@ uv run pytest benchmarks/test_scheduler_backend_benchmark.py --benchmark-json /p
 
 ## Code
 
-- Commit: pending final hash for the M19 commit
-  `Add first scheduler-backed optimized backend`; the containing Git commit is
-  the authoritative hash for this summary.
+- Evidence commit: `af56b74` (`Add first scheduler-backed optimized backend`).
+- Audit commit: this summary was reviewed during M20
+  `Audit benchmark claims after optimized backend`.
 - Benchmark source: `benchmarks/test_scheduler_backend_benchmark.py`.
 - Measured stage: scheduled `evaluate_residuals`.
 - Problem: `chain_dynamics_case(horizon=100)`.

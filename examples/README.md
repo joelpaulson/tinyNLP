@@ -16,9 +16,17 @@ optimization workflow. The sensitivity example treats the parameter as a
 symbolic variable and keeps solve variables explicit.
 
 The scheduled pipeline report examples show how to inspect the current
-frontend -> schedule -> backend metadata path for chain assembly/KKT work and
-the parameter sensitivity workflow. They are audit examples, not optimized
-execution, benchmark, or bridge examples.
+frontend -> schedule -> backend metadata path for chain assembly/KKT work, the
+parameter sensitivity workflow, and prepared residual evaluation. They are
+inspection and audit examples, not benchmark reports, solver comparisons, or
+bridge examples. `prepared_residual_schedule_report.py` is the easiest way to
+see the M19 scheduler-backed residual path by eye.
 
 Examples that are meant to run as scripts use `_bootstrap.py` so they can import
 the local `src/tinynlp` package directly from a source checkout.
+
+Run the prepared residual schedule inspection example with:
+
+```sh
+uv run python examples/prepared_residual_schedule_report.py
+```

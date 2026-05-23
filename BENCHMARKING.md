@@ -83,8 +83,8 @@ Committed result summaries for this target must include the command, Python
 version, OS and CPU metadata, dependency versions, problem horizon, scheduled
 stage, validation result, baseline measurements, and optimized measurements.
 
-If the result succeeds before the benchmark-claim audit, the only acceptable
-claim wording is a narrow result-summary statement:
+The M20 benchmark-claim audit accepts only narrow scheduled-stage wording for
+this result:
 
 > On `<environment>`, for scheduled `evaluate_residuals` on
 > `chain_dynamics_case(horizon=N)`, the prepared KernelPlan backend measured
