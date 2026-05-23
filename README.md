@@ -49,14 +49,15 @@ prototype, a scalar-parameter implicit sensitivity prototype, execution
 schedule metadata, scheduled pipeline reports, audit examples for assembly/KKT
 and sensitivity paths, an optional CasADi correctness bridge, a prepared
 scheduler-backed residual-evaluation backend, a prepared scheduler-backed
-residual+Jacobian evaluation path, a narrow scheduled-stage benchmark result
-summary, pytest-benchmark smoke sources, and a benchmark-claim audit.
+residual+Jacobian evaluation path, narrow scheduled-stage benchmark result
+summaries, pytest-benchmark smoke sources, and benchmark-claim audits.
 
 It does not yet implement Hessian assembly, production nonlinear solver methods,
 production sensitivity workflows, broad scheduler-driven execution, external
 solver wrappers, broad optimized backends, inequalities, or bounds. The current
-committed benchmark result is limited to scheduled residual evaluation for the
-canonical chain dynamics problem.
+committed benchmark results are limited to scheduled residual evaluation for the
+canonical chain dynamics problem and scheduled residual+Jacobian evaluation for
+the flagship chain problem.
 
 ## Installation From Source
 
@@ -132,6 +133,16 @@ That benchmark is limited to scheduled `evaluate_residuals` on the canonical
 chain dynamics problem and validates outputs before timing. It is not a solver,
 Jacobian, KKT, sensitivity, CasADi, or package-wide speed comparison.
 
+Run the flagship residual+Jacobian benchmark source:
+
+```sh
+uv run pytest benchmarks/test_scheduler_residual_jacobian_benchmark.py --benchmark-json /private/tmp/tinynlp-flagship-rj-benchmark.json
+```
+
+That benchmark is limited to scheduled residual+Jacobian evaluation on
+`flagship_chain_case(horizon=100)`. It is not a solver, CasADi, KKT,
+sensitivity, or package-wide speed comparison.
+
 ## Development Commands
 
 Run the test suite:
@@ -178,6 +189,11 @@ A narrow committed benchmark result summary exists for scheduled
 `evaluate_residuals` on `chain_dynamics_case(horizon=100)`. It is documented in
 `benchmarks/results/scheduled_residual_evaluation.md` and is not a solver,
 Jacobian, KKT, sensitivity, or package-wide speed claim.
+
+A second narrow committed benchmark result summary exists for scheduled
+residual+Jacobian evaluation on `flagship_chain_case(horizon=100)`. It is
+documented in `benchmarks/results/flagship_residual_jacobian_evaluation.md` and
+is not a solver, CasADi, KKT, sensitivity, or package-wide speed claim.
 
 No speed or performance claims should appear in README or project documentation
 without committed benchmark evidence.

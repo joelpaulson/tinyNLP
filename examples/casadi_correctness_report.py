@@ -15,7 +15,7 @@ from _bootstrap import ensure_repo_src_on_path
 
 ensure_repo_src_on_path()
 
-from chain_dynamics_problem import chain_dynamics_case
+from flagship_chain_modeling import flagship_chain_case
 
 from tinynlp.bridges import (
     casadi_available,
@@ -25,13 +25,13 @@ from tinynlp.bridges import (
 
 
 def casadi_correctness_report(horizon: int = 3) -> str:
-    """Return a skip-safe CasADi correctness report for chain dynamics."""
+    """Return a skip-safe CasADi correctness report for the flagship chain."""
 
     lines = [
         "CasadiCorrectnessReport",
         "  purpose=correctness_only",
         "  comparison=problem_residual_jacobian_assembly",
-        f"  problem=chain_dynamics horizon={horizon}",
+        f"  problem=flagship_chain horizon={horizon}",
     ]
     if not casadi_available():
         lines.extend(
@@ -43,7 +43,7 @@ def casadi_correctness_report(horizon: int = 3) -> str:
         )
         return "\n".join(lines)
 
-    case = chain_dynamics_case(horizon=horizon)
+    case = flagship_chain_case(horizon=horizon)
     comparison = compare_problem_assembly(case.problem, case.values)
     lines.extend(
         [

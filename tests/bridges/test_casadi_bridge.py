@@ -35,11 +35,11 @@ def test_casadi_correctness_report_example_is_skip_safe() -> None:
     assert "CasadiCorrectnessReport" in report
     assert "purpose=correctness_only" in report
     assert "comparison=problem_residual_jacobian_assembly" in report
-    assert "problem=chain_dynamics horizon=3" in report
+    assert "problem=flagship_chain horizon=3" in report
     assert "object at" not in report
     if casadi_available():
         assert "available=True" in report
-        assert "CasadiProblemAssemblyComparison problem=chain_dynamics" in report
+        assert "CasadiProblemAssemblyComparison problem=flagship_chain" in report
         assert "passed=True" in report
         assert "max_error=0" in report
     else:
@@ -111,6 +111,19 @@ def test_chain_problem_assembly_matches_casadi_when_available() -> None:
     _require_casadi()
     chain = _load_example("chain_dynamics_problem")
     case = chain.chain_dynamics_case(horizon=3)
+
+    comparison = compare_problem_assembly(case.problem, case.values)
+
+    assert comparison.passed is True
+    assert comparison.max_error == pytest.approx(0.0)
+    assert len(comparison.residuals) == 3
+    assert len(comparison.jacobian_entries) == 9
+
+
+def test_flagship_problem_assembly_matches_casadi_when_available() -> None:
+    _require_casadi()
+    flagship = _load_example("flagship_chain_modeling")
+    case = flagship.flagship_chain_case(horizon=3)
 
     comparison = compare_problem_assembly(case.problem, case.values)
 

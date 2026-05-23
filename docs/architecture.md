@@ -68,8 +68,9 @@ canonical chain dynamics problem. That target uses the scheduler to identify the
 `evaluate_residuals` stage and uses prepared residual `KernelPlan`s as the
 backend-facing work unit. It is not a solver, Jacobian, KKT, sensitivity, or
 package-wide performance target. F3 extends the same pattern to a prepared
-residual+Jacobian path for the flagship workflow, but no result summary or
-speed claim exists for that path yet.
+residual+Jacobian path for the flagship workflow. F4 adds a narrow committed
+result summary for that scheduled residual+Jacobian stage group; it is not a
+solver, CasADi, KKT, sensitivity, or package-wide performance target.
 
 ## Current Boundary
 
@@ -85,10 +86,11 @@ reduces residual norms through visible normal equations and reports
 schedule metadata for expression, assembly, KKT, and sensitivity stages,
 deterministic scheduled pipeline reports and audit examples, and one
 scheduler-backed prepared residual-evaluation path plus a prepared
-residual+Jacobian path for the canonical chain dynamics problem. It
-intentionally does not implement Hessian assembly, production nonlinear solver
-methods, production sensitivity workflows, broad scheduler-driven execution,
-external solver wrappers, broad optimized backends, inequalities, or bounds.
+residual+Jacobian path for the flagship chain problem, each with narrow
+stage-specific benchmark evidence. It intentionally does not implement Hessian
+assembly, production nonlinear solver methods, production sensitivity workflows,
+broad scheduler-driven execution, external solver wrappers, broad optimized
+backends, inequalities, or bounds.
 
 The optional CasADi bridge is isolated under `tinynlp.bridges` and is a
 correctness comparison path only. CasADi symbols and arrays do not enter core IR,

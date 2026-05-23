@@ -30,9 +30,10 @@ scheduler-backed residual path by eye, while
 residual+Jacobian path.
 
 `casadi_correctness_report.py` is an optional correctness-only bridge example.
-It compares the chain dynamics residual/Jacobian assembly path against CasADi
+It compares the flagship chain residual/Jacobian assembly path against CasADi
 when CasADi is installed, and otherwise prints a skip-safe install hint. It is
-not a solver wrapper, speed comparison, or benchmark report.
+not a solver wrapper, speed comparison, performance baseline, or benchmark
+report.
 
 Examples that are meant to run as scripts use `_bootstrap.py` so they can import
 the local `src/tinynlp` package directly from a source checkout.

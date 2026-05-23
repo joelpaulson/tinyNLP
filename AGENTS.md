@@ -44,7 +44,8 @@ Codex may:
   scheduler-backed residual-evaluation backend, plus the M20 benchmark-claim
   audit, final roadmap closeout, F0 flagship roadmap, and F1 ergonomic modeling
   helpers, the F2 transparent residual least-squares prototype, and the F3
-  scheduler-backed residual+Jacobian execution helpers.
+  scheduler-backed residual+Jacobian execution helpers, plus the F4 flagship
+  correctness and benchmark evidence.
 - Refine benchmark policy and benchmark harness structure before benchmark
   result summaries.
 
@@ -62,7 +63,7 @@ Codex may not implement these before a milestone asks for them:
 - Scheduler-driven optimized execution beyond the M19 scheduled
   `evaluate_residuals` path and F3 residual+Jacobian path.
 - Benchmark result summaries beyond the M19 scheduled residual-evaluation
-  summary.
+  summary and F4 flagship residual+Jacobian summary.
 - Inequalities, bounds, GPU support, hardware-specific code generation, or large
   external solver wrappers.
 - New expression operations unless the active milestone explicitly asks for

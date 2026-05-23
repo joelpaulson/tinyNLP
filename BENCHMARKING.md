@@ -51,14 +51,23 @@ scaffolding.
 The F3 benchmark source
 `benchmarks/test_scheduler_residual_jacobian_benchmark.py` validates prepared
 scheduled residual+Jacobian execution against reference residual/Jacobian
-assembly before timing. It has no committed result summary yet and must not be
-used for README speed wording until a later benchmark audit accepts evidence.
+assembly before timing. F4 added a committed narrow result summary for the
+flagship chain problem:
+`benchmarks/results/flagship_residual_jacobian_evaluation.md`. That summary is
+limited to scheduled residual+Jacobian evaluation and must not be described as
+solver, CasADi, KKT, sensitivity, or package-wide performance.
 
 A narrow committed benchmark result summary now exists for scheduled
 `evaluate_residuals` on `chain_dynamics_case(horizon=100)`:
 `benchmarks/results/scheduled_residual_evaluation.md`. It is limited to that
 scheduled stage and must not be described as solver, Jacobian, KKT, sensitivity,
 or package-wide performance.
+
+A second narrow committed benchmark result summary exists for scheduled
+residual+Jacobian evaluation on `flagship_chain_case(horizon=100)`:
+`benchmarks/results/flagship_residual_jacobian_evaluation.md`. It is limited to
+that scheduled stage group and must not be described as solver, CasADi, KKT,
+sensitivity, or package-wide performance.
 
 The optional CasADi bridge is a correctness comparison path for supported
 canonical problems only. It does not call external solvers, run code generation,
@@ -132,8 +141,8 @@ benchmark evidence easier to understand. Keep these rules:
   result.
 - Do not add README speed wording until the exact claim appears in a committed
   benchmark result summary.
-- Treat the F3 residual+Jacobian benchmark source as preparatory until F4 adds
-  committed evidence and claim review.
+- Treat the F4 residual+Jacobian result summary as narrow evidence for one
+  scheduled stage group, not solver-speed evidence.
 
 Flagship evidence should stay separated into three categories:
 

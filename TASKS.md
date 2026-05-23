@@ -10,9 +10,9 @@ optimizable for available hardware.
 
 The M0-M20 roadmap is complete. The current repository has an end-to-end visible
 reference pipeline through scheduled residual evaluation, an optional CasADi
-correctness bridge, and one narrow committed scheduled-stage benchmark result
-summary. The active roadmap is now the F-series flagship usability and speed
-track, with F4 as the next implementation milestone.
+correctness bridge, and narrow committed scheduled-stage benchmark result
+summaries. The active roadmap is now the F-series flagship usability and speed
+track, with F5 as the next implementation milestone.
 
 ## How Codex Should Use This File
 
@@ -696,7 +696,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## F4 Flagship Benchmark and Optional CasADi Correctness Comparison
 
-- Status: ready.
+- Status: complete.
 - Purpose: produce narrow correctness and benchmark evidence for the flagship
   workflow.
 - Allowed scope: optional CasADi correctness report integration for the
@@ -726,7 +726,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## F5 Polished User-Facing Flagship Example and README Audit
 
-- Status: blocked until F4 is complete.
+- Status: ready.
 - Purpose: make the flagship value proposition obvious to a new user.
 - Allowed scope: one start-here example/tutorial, README updates, example docs,
   command snippets, report formatting polish, and final claim audit.

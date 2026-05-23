@@ -1,8 +1,8 @@
 # Benchmarks
 
-This directory holds benchmark sources for tinyNLP. A narrow committed result
-summary exists for scheduled residual evaluation, and this repository does not
-make broad speed claims.
+This directory holds benchmark sources for tinyNLP. Narrow committed result
+summaries exist for scheduled residual evaluation and scheduled residual plus
+Jacobian evaluation, and this repository does not make broad speed claims.
 
 ## Current Scaffold
 
@@ -13,8 +13,8 @@ make broad speed claims.
   sparse Jacobian assembly, and KKT construction for correctness-guarded smoke
   cases.
 - `test_scheduler_residual_jacobian_benchmark.py` measures prepared scheduled
-  residual+Jacobian execution against the reference assembly path. It is a
-  benchmark source only and has no committed result summary yet.
+  residual+Jacobian execution against the reference assembly path. It has a
+  narrow F4 result summary for the flagship chain problem.
 - Benchmark sources validate expected outputs, dimensions, or entry counts
   before timing.
 - Most scaffold baselines are expected numeric outputs for canonical examples.
@@ -66,13 +66,13 @@ The benchmark must validate residual values before timing. Any committed result
 summary must state that the result is limited to this scheduled stage and is not
 a solver, Jacobian, KKT, sensitivity, or package-wide performance claim.
 
-## Flagship Residual+Jacobian Benchmark Source
+## Flagship Residual+Jacobian Benchmark
 
-The F3 benchmark source prepares the next flagship stage:
+The F4 benchmark result is narrow and scheduler-backed:
 
 - Source: `benchmarks/test_scheduler_residual_jacobian_benchmark.py`.
 - Stage: scheduled residual+Jacobian evaluation.
-- Problem: `flagship_chain_case(horizon=N)`.
+- Problem: `flagship_chain_case(horizon=100)`.
 - Baseline: reference `assemble_residuals` plus `assemble_jacobian` with a
   cached `AssemblyContract`.
 - Prepared path: `ScheduledResidualJacobianEvaluator.evaluate(values)`.
@@ -81,7 +81,9 @@ The F3 benchmark source prepares the next flagship stage:
   ```sh
   uv run pytest benchmarks/test_scheduler_residual_jacobian_benchmark.py --benchmark-json <result-json>
   ```
+- Result summary:
+  `benchmarks/results/flagship_residual_jacobian_evaluation.md`.
 
-This source must validate residual and Jacobian outputs before timing. It does
-not support a speed claim until a later milestone commits a result summary and
-claim audit.
+This benchmark validates residual and Jacobian outputs before timing. Its
+result summary is limited to this scheduled stage group and is not a solver,
+CasADi, KKT, sensitivity, or package-wide performance claim.
