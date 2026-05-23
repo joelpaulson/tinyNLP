@@ -457,3 +457,36 @@ correctness bridge and is not a performance baseline.
   not imply solver, Jacobian, KKT, sensitivity, or package-wide speed.
 - Residual/Jacobian fusion, KKT assembly optimization, sensitivity speedups,
   GPU support, and code generation remain later decisions.
+
+## ADR 0017: Prepared KernelPlan Backend for Scheduled Residuals
+
+- Status: accepted
+- Date: 2026-05-23
+
+### Context
+
+M19 needed one narrow scheduler-backed optimized CPU path. The audit selected
+scheduled residual evaluation for the canonical chain dynamics problem, with the
+existing Python residual assembly as the reference baseline.
+
+### Decision
+
+Add a dependency-free `prepared-python` backend that prepares supported
+`KernelPlan`s into slot-indexed executable data. Use it through a scheduled
+residual evaluator for the `evaluate_residuals` stage. The reference Python
+backend and existing residual assembly path remain unchanged.
+
+The prepared backend does not use `eval`, `exec`, code generation, GPU support,
+or external dependencies. It is attached to `ExecutionSchedule` metadata so
+reports can show backend choice, cached prepared kernels, materialized residual
+values, and reference-validation status.
+
+### Consequences
+
+- The first optimized path is scheduler-backed and inspectable.
+- Output validation against reference residual assembly is required before
+  timing.
+- The committed benchmark result summary is limited to scheduled chain residual
+  evaluation.
+- Broader optimized backends, residual/Jacobian fusion, KKT optimization,
+  sensitivity optimization, and hardware-specific execution remain later work.

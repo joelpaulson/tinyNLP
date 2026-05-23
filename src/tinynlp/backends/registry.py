@@ -30,9 +30,11 @@ def get_backend(name: str = DEFAULT_BACKEND) -> Backend:
 
 
 def _ensure_default_backend() -> None:
-    if DEFAULT_BACKEND in _BACKENDS:
-        return
+    if DEFAULT_BACKEND not in _BACKENDS:
+        from tinynlp.backends.reference import PythonReferenceBackend
 
-    from tinynlp.backends.reference import PythonReferenceBackend
+        register_backend(PythonReferenceBackend())
+    if "prepared-python" not in _BACKENDS:
+        from tinynlp.backends.prepared import PreparedKernelBackend
 
-    register_backend(PythonReferenceBackend())
+        register_backend(PreparedKernelBackend())

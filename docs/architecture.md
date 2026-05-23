@@ -23,10 +23,10 @@ model expression
 - `solvers`: explicit KKT systems, reference linear-solve workflows, and the
   simple constrained residual-reduction solver and implicit sensitivity
   prototypes.
-- `schedule`: execution schedule metadata and deterministic reports for visible
-  NLP pipeline stages.
-- `backends`: KernelPlan, backend protocol, registry, and Python reference
-  backend.
+- `schedule`: execution schedule metadata, deterministic reports, and scheduled
+  residual-evaluation helpers.
+- `backends`: KernelPlan, backend protocol, registry, Python reference backend,
+  and prepared KernelPlan backend.
 - `bridges`: optional correctness bridges, currently CasADi for supported
   canonical problems, plus future import/export adapters.
 - `profiling`: deterministic structural trace helpers.
@@ -52,18 +52,19 @@ solver iteration steps, sensitivity RHS construction, and sensitivity solves.
 `KernelPlan` remains the expression-level execution plan for one scalar
 expression graph. `ExecutionSchedule` is broader metadata over NLP pipeline
 tasks; it may cache or reference `KernelPlan` summaries when a scheduled task
-uses expression evaluation, but it does not replace the backend protocol or
-execute optimized code.
+uses expression evaluation, but it does not replace the backend protocol. The
+current optimized path is a small helper around a scheduled residual-evaluation
+task, not a general schedule executor.
 
 Scheduled reports are the current audit surface for the tinyNLP analog of
 frontend -> scheduler -> backend execution. They show the frontend structures
 that define the work, the scheduled task order and dependencies, and the
-reference backend or linear-solve component selected for each task. They are
-inspection artifacts, not optimized execution logs.
+reference or prepared backend, or linear-solve component, selected for each
+task. They are inspection artifacts, not a general optimized runtime log.
 
-The first planned optimized backend target is scheduled residual evaluation for
-the canonical chain dynamics problem. That target uses the scheduler to identify
-the `evaluate_residuals` stage and uses prepared residual `KernelPlan`s as the
+The first optimized backend target is scheduled residual evaluation for the
+canonical chain dynamics problem. That target uses the scheduler to identify the
+`evaluate_residuals` stage and uses prepared residual `KernelPlan`s as the
 backend-facing work unit. It is not a solver, Jacobian, KKT, sensitivity, or
 package-wide performance target.
 
@@ -75,11 +76,12 @@ discovery, residual/Jacobian assembly, explicit KKT system construction, and a
 dense reference linear-solve interface, plus a simple constrained
 residual-reduction solver prototype and scalar-parameter implicit sensitivity
 prototype. The repository also has execution schedule metadata for expression,
-assembly, KKT, and sensitivity stages, plus deterministic scheduled pipeline
-reports and audit examples. It intentionally does not implement Hessian
-assembly, production nonlinear solver methods, production sensitivity workflows,
-scheduler-driven execution, external solver wrappers, optimized backends,
-inequalities, or bounds.
+assembly, KKT, and sensitivity stages, deterministic scheduled pipeline reports
+and audit examples, and one scheduler-backed prepared residual-evaluation path
+for the canonical chain dynamics problem. It intentionally does not implement
+Hessian assembly, production nonlinear solver methods, production sensitivity
+workflows, broad scheduler-driven execution, external solver wrappers, broad
+optimized backends, inequalities, or bounds.
 
 The optional CasADi bridge is isolated under `tinynlp.bridges` and is a
 correctness comparison path only. CasADi symbols and arrays do not enter core IR,

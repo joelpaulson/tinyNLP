@@ -33,14 +33,15 @@ Codex may:
 - Add minimal package stubs needed for layout or importability.
 - Add tests for behavior that already exists or is explicitly requested by the
   active milestone.
-- Maintain and test completed M1-M17 features: core expression IR, reference
+- Maintain and test completed M1-M19 features: core expression IR, reference
   evaluator, trace reports, canonical examples, benchmark smoke scaffolding,
   KernelPlan, backend protocol, registered Python reference backend, autodiff,
   Jacobian verification, structural sparsity, problem APIs, residual/Jacobian
   assembly, KKT system objects, the reference linear-solve interface, and the
   simple constrained residual-reduction solver, implicit sensitivity prototype,
-  execution schedule metadata, scheduled report helpers, and schedule audit
-  examples, and the optional CasADi correctness bridge.
+  execution schedule metadata, scheduled report helpers, schedule audit
+  examples, the optional CasADi correctness bridge, and the M19 prepared
+  scheduler-backed residual-evaluation backend.
 - Refine benchmark policy and benchmark harness structure before benchmark
   result summaries.
 
@@ -53,9 +54,11 @@ Codex may not implement these before a milestone asks for them:
   prototype.
 - Broad bridges to external modeling systems beyond the optional M17 CasADi
   correctness bridge.
-- Optimized backends.
-- Scheduler-driven optimized execution.
-- Benchmark result summaries.
+- Optimized backends beyond the M19 prepared residual-evaluation path.
+- Scheduler-driven optimized execution beyond the M19 scheduled
+  `evaluate_residuals` path.
+- Benchmark result summaries beyond the M19 scheduled residual-evaluation
+  summary.
 - Inequalities, bounds, GPU support, hardware-specific code generation, or large
   external solver wrappers.
 

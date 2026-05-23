@@ -1,7 +1,8 @@
 # Benchmarks
 
-This directory holds benchmark sources for tinyNLP. There are no committed
-benchmark result summaries yet, and this repository does not make speed claims.
+This directory holds benchmark sources for tinyNLP. A narrow committed result
+summary exists for scheduled residual evaluation, and this repository does not
+make broad speed claims.
 
 ## Current Scaffold
 
@@ -13,8 +14,9 @@ benchmark result summaries yet, and this repository does not make speed claims.
   cases.
 - Benchmark sources validate expected outputs, dimensions, or entry counts
   before timing.
-- The only baseline in this scaffold is the expected numeric output for the
-  canonical examples, not another package, method, or optimized backend.
+- Most scaffold baselines are expected numeric outputs for canonical examples.
+  The M19 scheduled residual benchmark also compares against the Python
+  reference backend for the same scheduled stage.
 
 ## Running Benchmarks
 
@@ -26,8 +28,8 @@ uv run pytest benchmarks
 
 ## Result Summary Requirements
 
-Do not add benchmark result summaries until there is a milestone that asks for
-them. Future committed summaries must include:
+Committed benchmark result summaries must be tied to milestones that ask for
+them. Summaries must include:
 
 - Benchmark source and command.
 - Measured pipeline stage.
@@ -39,9 +41,9 @@ them. Future committed summaries must include:
 Do not make README performance claims without benchmark source, command,
 environment metadata, and committed result summary.
 
-## Planned First Optimized Benchmark
+## First Optimized Benchmark
 
-The first optimized backend benchmark should be narrow and scheduler-backed:
+The first optimized backend benchmark is narrow and scheduler-backed:
 
 - Source: `benchmarks/test_scheduler_backend_benchmark.py`.
 - Stage: scheduled `evaluate_residuals`.
@@ -55,6 +57,7 @@ The first optimized backend benchmark should be narrow and scheduler-backed:
   ```sh
   uv run pytest benchmarks/test_scheduler_backend_benchmark.py --benchmark-json <result-json>
   ```
+- Result summary: `benchmarks/results/scheduled_residual_evaluation.md`.
 
 The benchmark must validate residual values before timing. Any committed result
 summary must state that the result is limited to this scheduled stage and is not

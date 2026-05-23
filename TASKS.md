@@ -23,7 +23,7 @@ optimizable for available hardware.
   identity.
 - Do not add inequalities, bounds, GPU support, production IPOPT-style logic, or
   performance claims until a milestone explicitly asks for them.
-- With M18 complete, stop before M19 unless explicitly approved.
+- With M19 complete, stop before M20 unless explicitly approved.
 
 ## Shared Required Checks
 
@@ -504,7 +504,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M19 First Scheduler-Backed Optimized Backend
 
-- Status: ready.
+- Status: complete.
 - Purpose: add the first optimized backend by attaching it to the scheduled
   `evaluate_residuals` stage for the canonical chain dynamics problem.
 - Allowed scope: one narrow dependency-free CPU backend for prepared
@@ -543,7 +543,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M20 Benchmark and Result-Claim Audit
 
-- Status: blocked until M19 is complete.
+- Status: ready.
 - Purpose: audit benchmark evidence and documentation before any public
   performance claim.
 - Allowed scope: benchmark result summaries, benchmark metadata review,

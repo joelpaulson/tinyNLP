@@ -1,7 +1,7 @@
 # BENCHMARKING
 
-tinyNLP does not make performance claims yet. Benchmarks are correctness checks
-plus timing, not demos.
+tinyNLP does not make broad performance claims. Benchmarks are correctness
+checks plus timing, not demos.
 
 ## Policy
 
@@ -48,20 +48,23 @@ dynamics residual assembly, sparse Jacobian assembly, and KKT construction.
 They validate expected outputs before timing and are used as test/collection
 scaffolding.
 
-There are no committed benchmark result summaries yet, and tinyNLP still makes
-no speed or performance claims.
+A narrow committed benchmark result summary now exists for scheduled
+`evaluate_residuals` on `chain_dynamics_case(horizon=100)`:
+`benchmarks/results/scheduled_residual_evaluation.md`. It is limited to that
+scheduled stage and must not be described as solver, Jacobian, KKT, sensitivity,
+or package-wide performance.
 
 The optional CasADi bridge is a correctness comparison path for supported
 canonical problems only. It does not call external solvers, run code generation,
 or support speed claims.
 
-## First Optimized Target Plan
+## First Optimized Target
 
-The first optimized backend target is scheduled chain residual evaluation. This
-is deliberately narrower than solver speed, Jacobian speed, KKT speed,
-sensitivity speed, or package-wide performance.
+The first optimized backend target is scheduled chain residual evaluation. The
+M19 implementation is deliberately narrower than solver speed, Jacobian speed,
+KKT speed, sensitivity speed, or package-wide performance.
 
-- Future benchmark source: `benchmarks/test_scheduler_backend_benchmark.py`.
+- Benchmark source: `benchmarks/test_scheduler_backend_benchmark.py`.
 - Scheduled stage: `evaluate_residuals` for `chain_dynamics_case(horizon=N)`.
 - Reference baseline: existing residual assembly using a cached
   `AssemblyContract` and the registered Python backend.
@@ -69,16 +72,16 @@ sensitivity speed, or package-wide performance.
   evaluator, with no new dependencies, GPU support, or code generation.
 - Correctness gate: optimized residual values must match the reference residual
   values for the same scheduled task before timing is used.
-- Required command:
+- Result summary: `benchmarks/results/scheduled_residual_evaluation.md`.
+- Required command shape:
 
   ```sh
   uv run pytest benchmarks/test_scheduler_backend_benchmark.py --benchmark-json <result-json>
   ```
 
-Committed result summaries for this target must include the git commit, command,
-Python version, OS and CPU metadata, dependency versions, problem horizon,
-scheduled stage, validation result, baseline measurements, and optimized
-measurements.
+Committed result summaries for this target must include the command, Python
+version, OS and CPU metadata, dependency versions, problem horizon, scheduled
+stage, validation result, baseline measurements, and optimized measurements.
 
 If the result succeeds before the benchmark-claim audit, the only acceptable
 claim wording is a narrow result-summary statement:
