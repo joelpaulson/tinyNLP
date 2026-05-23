@@ -23,7 +23,7 @@ optimizable for available hardware.
   identity.
 - Do not add inequalities, bounds, GPU support, production IPOPT-style logic, or
   performance claims until a milestone explicitly asks for them.
-- With M15 complete, stop before M16 unless explicitly approved.
+- With M16 complete, stop before M17 unless explicitly approved.
 
 ## Shared Required Checks
 
@@ -423,7 +423,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M16 Scheduled Pipeline Reports
 
-- Status: ready.
+- Status: complete.
 - Purpose: add printable reports for scheduled NLP execution.
 - Allowed scope: report formatting, validation summaries, task input/output
   summaries, cached structure summaries, materialized value summaries, backend
@@ -446,7 +446,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M17 Optional CasADi Correctness Bridge
 
-- Status: blocked until M16 is complete.
+- Status: ready.
 - Purpose: add an optional correctness bridge for comparison against CasADi where
   explicitly available.
 - Allowed scope: optional bridge module, optional dependency wiring if approved,

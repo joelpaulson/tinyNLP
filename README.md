@@ -35,7 +35,7 @@ hardware-specific execution planned later.
 
 ## Current Status
 
-tinyNLP is experimental and pre-alpha. M1-M15 are complete: the repository now
+tinyNLP is experimental and pre-alpha. M1-M16 are complete: the repository now
 includes a minimal scalar expression IR, CPU-first reference evaluator,
 deterministic structural traces, canonical expression examples, a deterministic
 KernelPlan, a small backend protocol, a registered Python reference backend,
@@ -44,14 +44,14 @@ structural sparsity discovery, problem containers, residual/Jacobian assembly
 contracts, dependency-free sparse coordinate assembly, explicit KKT system
 objects, a dense reference linear-solve interface, a simple constrained
 residual-reduction solver prototype, a scalar-parameter implicit sensitivity
-prototype, execution schedule metadata for visible pipeline stages, and
-pytest-benchmark smoke sources.
+prototype, execution schedule metadata, scheduled pipeline reports, audit
+examples for assembly/KKT and sensitivity paths, and pytest-benchmark smoke
+sources.
 
 It does not yet implement Hessian assembly, production nonlinear solver methods,
-production sensitivity workflows, full scheduled pipeline reports,
-scheduler-driven execution, bridges, optimized backends, inequalities, or
-bounds. The scheduler layer is being added as inspectable metadata before
-optimized backends are introduced.
+production sensitivity workflows, scheduler-driven execution, bridges,
+optimized backends, inequalities, or bounds. The scheduler layer is being added
+as inspectable metadata and reports before optimized backends are introduced.
 
 ## Installation From Source
 
@@ -128,7 +128,7 @@ src/tinynlp/
   autodiff/    reverse-mode scalar gradients, Jacobians, and verification
   nlp/         structural sparsity, problem APIs, and residual/Jacobian assembly
   solvers/     KKT systems, reference linear solve, solver, and sensitivities
-  schedule/    execution schedule metadata for visible pipeline stages
+  schedule/    execution schedule metadata and deterministic reports
   backends/    KernelPlan, backend protocol, registry, and Python reference backend
   bridges/     future import/export adapters
   profiling/   deterministic structural trace helpers

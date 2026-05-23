@@ -10,7 +10,10 @@ from tinynlp.schedule.core import (
     build_expression_schedule,
     build_kkt_assembly_schedule,
     build_problem_assembly_schedule,
+    build_sensitivity_schedule,
     format_execution_schedule,
+    format_pipeline_report,
+    format_schedule_report,
 )
 
 __all__ = [
@@ -23,5 +26,8 @@ __all__ = [
     "build_expression_schedule",
     "build_kkt_assembly_schedule",
     "build_problem_assembly_schedule",
+    "build_sensitivity_schedule",
     "format_execution_schedule",
+    "format_pipeline_report",
+    "format_schedule_report",
 ]

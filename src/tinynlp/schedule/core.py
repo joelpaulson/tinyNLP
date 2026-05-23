@@ -14,6 +14,7 @@ from tinynlp.nlp import (
     SparseMatrixAssembly,
     build_assembly_contract,
 )
+from tinynlp.solvers import SensitivityResult
 
 
 class ExecutionStage(StrEnum):
@@ -227,6 +228,130 @@ def build_kkt_assembly_schedule(
     return ExecutionSchedule(name=name, tasks=(task,))
 
 
+def build_sensitivity_schedule(
+    result: SensitivityResult,
+    *,
+    name: str = "sensitivity",
+    dependencies: Sequence[str] = (),
+) -> ExecutionSchedule:
+    """Build a metadata schedule for an implicit sensitivity result."""
+
+    trace = result.trace
+    kkt_item = ScheduleItem(
+        kind="kkt_system",
+        name="reduced_kkt",
+        detail=(
+            f"shape={_format_shape(trace.kkt_system.shape)} "
+            f"entries={len(trace.kkt_system.entries)}"
+        ),
+    )
+    rhs_item = ScheduleItem(
+        kind="rhs",
+        name="sensitivity_rhs",
+        detail=f"length={len(trace.rhs)} entries={len(trace.rhs_entries)}",
+    )
+    rhs_task = ExecutionTask(
+        task_id="t000",
+        stage=ExecutionStage.BUILD_SENSITIVITY_RHS,
+        label=f"build sensitivity RHS for {trace.parameter.name}",
+        inputs=(
+            ScheduleItem(
+                kind="parameter",
+                name=trace.parameter.name,
+                detail=_format_variable(trace.parameter),
+            ),
+            ScheduleItem(
+                kind="solve_variables",
+                name="solve_variables",
+                detail=_format_variable_names(trace.solve_variables),
+            ),
+            ScheduleItem(
+                kind="residual_check",
+                name="residual_values",
+                detail=(
+                    f"norm={trace.residual_norm:g} "
+                    f"values={_format_values(trace.residual_values)}"
+                ),
+            ),
+            kkt_item,
+        ),
+        outputs=(rhs_item,),
+        dependencies=tuple(dependencies),
+        backend_name="reference-python",
+        cached=(
+            kkt_item,
+            ScheduleItem(
+                kind="parameter_column",
+                name="rhs_entries",
+                detail=f"entries={len(trace.rhs_entries)}",
+            ),
+        ),
+        materialized=(
+            ScheduleItem(
+                kind="materialized_value",
+                name="sensitivity_rhs",
+                detail=f"values={_format_values(trace.rhs)}",
+            ),
+        ),
+        provenance=(
+            ScheduleProvenance(
+                kind="sensitivity_parameter",
+                detail=(
+                    f"parameter={trace.parameter.name} "
+                    f"{_format_variable(trace.parameter)}"
+                ),
+            ),
+        ),
+        validation_status=ValidationStatus.REFERENCE_VALIDATED,
+    )
+    solve_task = ExecutionTask(
+        task_id="t001",
+        stage=ExecutionStage.SOLVE_SENSITIVITY_SYSTEM,
+        label=f"solve sensitivity system for {trace.parameter.name}",
+        inputs=(kkt_item, rhs_item),
+        outputs=(
+            ScheduleItem(
+                kind="sensitivity_values",
+                name="sensitivities",
+                detail=_format_sensitivity_entries(result),
+            ),
+        ),
+        dependencies=("t000",),
+        backend_name=trace.linear_solver_name,
+        cached=(
+            ScheduleItem(
+                kind="linear_solver",
+                name="reference_solver",
+                detail=f"name={trace.linear_solver_name}",
+            ),
+        ),
+        materialized=(
+            ScheduleItem(
+                kind="materialized_value",
+                name="sensitivity_values",
+                detail=f"values=[{_format_sensitivity_entries(result)}]",
+            ),
+            ScheduleItem(
+                kind="materialized_value",
+                name="kkt_solve_residual",
+                detail=f"norm={trace.kkt_solve_residual_norm:g}",
+            ),
+        ),
+        provenance=(
+            ScheduleProvenance(
+                kind="sensitivity_result",
+                detail=(
+                    f"parameter={trace.parameter.name} "
+                    f"{_format_variable(trace.parameter)} "
+                    f"solve_variables={_format_variable_names(trace.solve_variables)}"
+                ),
+            ),
+        ),
+        validation_status=ValidationStatus.REFERENCE_VALIDATED,
+    )
+    return ExecutionSchedule(name=name, tasks=(rhs_task, solve_task))
+
+
 def format_execution_schedule(schedule: ExecutionSchedule) -> str:
     """Format an execution schedule deterministically."""
 
@@ -249,6 +374,63 @@ def format_execution_schedule(schedule: ExecutionSchedule) -> str:
         _append_items(lines, "cached", task.cached)
         _append_items(lines, "materialized", task.materialized)
         _append_provenance(lines, task.provenance)
+    return "\n".join(lines)
+
+
+def format_schedule_report(schedule: ExecutionSchedule) -> str:
+    """Format a richer deterministic audit report for one schedule."""
+
+    task_order = " -> ".join(task.task_id for task in schedule.tasks)
+    if not task_order:
+        task_order = "<none>"
+    lines = [
+        f"ScheduleReport name={schedule.name} tasks={len(schedule.tasks)}",
+        f"task_order: {task_order}",
+        "dependency_edges:",
+    ]
+    edges = _dependency_edges(schedule)
+    if edges:
+        lines.extend(f"  - {source} -> {target}" for source, target in edges)
+    else:
+        lines.append("  <none>")
+
+    for index, task in enumerate(schedule.tasks):
+        dependencies = ", ".join(task.dependencies)
+        if not dependencies:
+            dependencies = "<none>"
+        lines.extend(
+            [
+                (f"task index={index} id={task.task_id} stage={task.stage.value}"),
+                f"  label={task.label}",
+                f"  backend={task.backend_name}",
+                f"  validation_status={task.validation_status.value}",
+                f"  dependencies=[{dependencies}]",
+            ]
+        )
+        _append_items(lines, "inputs", task.inputs)
+        _append_items(lines, "outputs", task.outputs)
+        _append_items(lines, "cached", task.cached)
+        _append_items(lines, "materialized", task.materialized)
+        _append_provenance(lines, task.provenance)
+    return "\n".join(lines)
+
+
+def format_pipeline_report(
+    schedules: Sequence[ExecutionSchedule],
+    *,
+    title: str = "ScheduledPipelineReport",
+) -> str:
+    """Format a deterministic audit report for multiple schedules."""
+
+    lines = [f"{title} schedules={len(schedules)}"]
+    for index, schedule in enumerate(schedules):
+        lines.append(
+            f"pipeline_schedule index={index} name={schedule.name} "
+            f"tasks={len(schedule.tasks)}"
+        )
+        lines.extend(
+            "  " + line for line in format_schedule_report(schedule).splitlines()
+        )
     return "\n".join(lines)
 
 
@@ -479,6 +661,32 @@ def _format_operation_counts(plan: KernelPlan) -> str:
 
 def _format_shape(shape: tuple[int, int]) -> str:
     return f"({shape[0]}, {shape[1]})"
+
+
+def _format_variable(variable) -> str:
+    return f"name={variable.name} node={variable.node_id}"
+
+
+def _format_variable_names(variables) -> str:
+    return "names=[" + ", ".join(variable.name for variable in variables) + "]"
+
+
+def _format_values(values) -> str:
+    return "[" + ", ".join(f"{value:g}" for value in values) + "]"
+
+
+def _format_sensitivity_entries(result: SensitivityResult) -> str:
+    return ", ".join(
+        f"{entry.variable.name}={entry.value:g}" for entry in result.entries
+    )
+
+
+def _dependency_edges(schedule: ExecutionSchedule) -> tuple[tuple[str, str], ...]:
+    return tuple(
+        (dependency, task.task_id)
+        for task in schedule.tasks
+        for dependency in task.dependencies
+    )
 
 
 def _append_items(

@@ -357,3 +357,34 @@ M15: it does not execute tasks, optimize backends, or change solver behavior.
 - Later reports and optimized backends have a stable task metadata surface.
 - Schedule metadata must stay deterministic, address-free, and tied to existing
   provenance.
+
+## ADR 0014: Scheduled Reports as Audit Artifacts
+
+- Status: accepted
+- Date: 2026-05-22
+
+### Context
+
+After M15, tinyNLP has execution schedule metadata for expression, assembly, and
+KKT stages. The next scheduler layer needs readable reports that make scheduled
+work inspectable before any backend starts using schedules to control optimized
+execution.
+
+### Decision
+
+Add deterministic scheduled pipeline reports that print task order, dependency
+edges, stage names, inputs, outputs, cached structures, materialized values,
+backend choices, provenance, and validation status.
+
+These reports are audit artifacts. They may summarize reference results that
+were materialized by examples or tests, but they do not execute schedules,
+optimize kernels, or replace existing solver and sensitivity traces.
+
+### Consequences
+
+- Users can inspect the frontend -> scheduler -> backend path before optimized
+  execution exists.
+- Report examples can validate the current reference pipeline without making
+  speed claims.
+- Later optimized backend work must preserve or extend the report surface rather
+  than bypassing it.

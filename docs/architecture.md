@@ -23,7 +23,8 @@ model expression
 - `solvers`: explicit KKT systems, reference linear-solve workflows, and the
   simple constrained residual-reduction solver and implicit sensitivity
   prototypes.
-- `schedule`: execution schedule metadata for visible NLP pipeline stages.
+- `schedule`: execution schedule metadata and deterministic reports for visible
+  NLP pipeline stages.
 - `backends`: KernelPlan, backend protocol, registry, and Python reference
   backend.
 - `bridges`: future import/export adapters.
@@ -53,6 +54,12 @@ tasks; it may cache or reference `KernelPlan` summaries when a scheduled task
 uses expression evaluation, but it does not replace the backend protocol or
 execute optimized code.
 
+Scheduled reports are the current audit surface for the tinyNLP analog of
+frontend -> scheduler -> backend execution. They show the frontend structures
+that define the work, the scheduled task order and dependencies, and the
+reference backend or linear-solve component selected for each task. They are
+inspection artifacts, not optimized execution logs.
+
 ## Current Boundary
 
 The current boundary is scalar expression construction/evaluation, plan
@@ -61,7 +68,8 @@ discovery, residual/Jacobian assembly, explicit KKT system construction, and a
 dense reference linear-solve interface, plus a simple constrained
 residual-reduction solver prototype and scalar-parameter implicit sensitivity
 prototype. The repository also has execution schedule metadata for expression,
-assembly, and KKT stages. It intentionally does not implement Hessian assembly,
-production nonlinear solver methods, production sensitivity workflows, full
-scheduled pipeline reports, scheduler-driven execution, bridges, optimized
-backends, inequalities, or bounds.
+assembly, KKT, and sensitivity stages, plus deterministic scheduled pipeline
+reports and audit examples. It intentionally does not implement Hessian
+assembly, production nonlinear solver methods, production sensitivity workflows,
+scheduler-driven execution, bridges, optimized backends, inequalities, or
+bounds.

@@ -15,5 +15,10 @@ implicit sensitivity smoke example and is not a production differentiable
 optimization workflow. The sensitivity example treats the parameter as a
 symbolic variable and keeps solve variables explicit.
 
+The scheduled pipeline report examples show how to inspect the current
+frontend -> schedule -> backend metadata path for chain assembly/KKT work and
+the parameter sensitivity workflow. They are audit examples, not optimized
+execution, benchmark, or bridge examples.
+
 Examples that are meant to run as scripts use `_bootstrap.py` so they can import
 the local `src/tinynlp` package directly from a source checkout.
