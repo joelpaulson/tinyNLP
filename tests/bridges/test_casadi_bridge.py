@@ -26,6 +26,28 @@ def test_casadi_bridge_import_does_not_require_casadi() -> None:
     assert isinstance(casadi_available(), bool)
 
 
+def test_casadi_correctness_report_example_is_skip_safe() -> None:
+    example = _load_example("casadi_correctness_report")
+
+    report = example.casadi_correctness_report()
+
+    assert report == example.casadi_correctness_report()
+    assert "CasadiCorrectnessReport" in report
+    assert "purpose=correctness_only" in report
+    assert "comparison=problem_residual_jacobian_assembly" in report
+    assert "problem=chain_dynamics horizon=3" in report
+    assert "object at" not in report
+    if casadi_available():
+        assert "available=True" in report
+        assert "CasadiProblemAssemblyComparison problem=chain_dynamics" in report
+        assert "passed=True" in report
+        assert "max_error=0" in report
+    else:
+        assert "available=False" in report
+        assert "status=skipped" in report
+        assert "install=uv sync --extra casadi" in report
+
+
 def test_expression_values_match_casadi_when_available() -> None:
     _require_casadi()
     examples = _load_example("canonical_expressions")

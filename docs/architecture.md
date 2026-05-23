@@ -86,3 +86,18 @@ optimized backends, inequalities, or bounds.
 The optional CasADi bridge is isolated under `tinynlp.bridges` and is a
 correctness comparison path only. CasADi symbols and arrays do not enter core IR,
 autodiff, NLP assembly, solver, schedule, or backend modules.
+
+## Inspection Commands
+
+The most useful human-facing checks for the completed roadmap are:
+
+```sh
+uv run python examples/prepared_residual_schedule_report.py
+uv run python examples/scheduled_pipeline_report.py
+uv run python examples/casadi_correctness_report.py
+```
+
+The first command shows the prepared scheduler-backed residual path and its
+reference validation. The second shows assembly/Jacobian/KKT schedule metadata.
+The third is an optional CasADi correctness comparison; it prints a skip-safe
+message if CasADi is not installed.

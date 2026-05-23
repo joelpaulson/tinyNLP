@@ -6,6 +6,13 @@ identity: a tinygrad-inspired, CPU-first nonlinear programming execution
 substrate whose pipeline is visible, traceable, benchmarkable, and eventually
 optimizable for available hardware.
 
+## Roadmap Status
+
+The M0-M20 roadmap is complete. The current repository has an end-to-end visible
+reference pipeline through scheduled residual evaluation, an optional CasADi
+correctness bridge, and one narrow committed scheduled-stage benchmark result
+summary. New runtime work should start only after a fresh roadmap/planning pass.
+
 ## How Codex Should Use This File
 
 - Work one milestone at a time.
@@ -568,8 +575,8 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 ## Next Phase Planning
 
 - Status: ready.
-- Purpose: decide the next roadmap direction after the first scheduler-backed
-  optimized backend and benchmark-claim audit.
+- Purpose: decide the next roadmap direction after the completed M0-M20
+  roadmap.
 - Allowed scope: roadmap/task-board planning, architecture review, and selection
   of the next milestone sequence.
 - Out-of-scope items: new runtime work before a fresh milestone is approved.

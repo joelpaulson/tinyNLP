@@ -22,6 +22,11 @@ inspection and audit examples, not benchmark reports, solver comparisons, or
 bridge examples. `prepared_residual_schedule_report.py` is the easiest way to
 see the M19 scheduler-backed residual path by eye.
 
+`casadi_correctness_report.py` is an optional correctness-only bridge example.
+It compares the chain dynamics residual/Jacobian assembly path against CasADi
+when CasADi is installed, and otherwise prints a skip-safe install hint. It is
+not a solver wrapper, speed comparison, or benchmark report.
+
 Examples that are meant to run as scripts use `_bootstrap.py` so they can import
 the local `src/tinynlp` package directly from a source checkout.
 
@@ -29,4 +34,17 @@ Run the prepared residual schedule inspection example with:
 
 ```sh
 uv run python examples/prepared_residual_schedule_report.py
+```
+
+Run the full assembly/Jacobian/KKT schedule inspection example with:
+
+```sh
+uv run python examples/scheduled_pipeline_report.py
+```
+
+Run the optional CasADi correctness report with:
+
+```sh
+uv sync --extra casadi
+uv run python examples/casadi_correctness_report.py
 ```

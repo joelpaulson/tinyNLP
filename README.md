@@ -35,7 +35,7 @@ hardware-specific execution planned later.
 
 ## Current Status
 
-tinyNLP is experimental and pre-alpha. M1-M19 are complete: the repository now
+tinyNLP is experimental and pre-alpha. M1-M20 are complete: the repository now
 includes a minimal scalar expression IR, CPU-first reference evaluator,
 deterministic structural traces, canonical expression examples, a deterministic
 KernelPlan, a small backend protocol, a registered Python reference backend,
@@ -47,7 +47,8 @@ residual-reduction solver prototype, a scalar-parameter implicit sensitivity
 prototype, execution schedule metadata, scheduled pipeline reports, audit
 examples for assembly/KKT and sensitivity paths, an optional CasADi correctness
 bridge, a prepared scheduler-backed residual-evaluation backend, a narrow
-scheduled-stage benchmark result summary, and pytest-benchmark smoke sources.
+scheduled-stage benchmark result summary, pytest-benchmark smoke sources, and a
+benchmark-claim audit.
 
 It does not yet implement Hessian assembly, production nonlinear solver methods,
 production sensitivity workflows, broad scheduler-driven execution, external
@@ -79,6 +80,37 @@ uv run python -c "import tinynlp; print(tinynlp.__version__)"
 
 The public project name is `tinyNLP`. The distribution name is `tinynlp-opt`,
 and the import package is `tinynlp`.
+
+## Try The Current Pipeline
+
+Inspect the prepared scheduler-backed residual path:
+
+```sh
+uv run python examples/prepared_residual_schedule_report.py
+```
+
+Inspect the assembly/Jacobian/KKT schedule:
+
+```sh
+uv run python examples/scheduled_pipeline_report.py
+```
+
+Inspect the optional CasADi correctness bridge when CasADi is installed:
+
+```sh
+uv sync --extra casadi
+uv run python examples/casadi_correctness_report.py
+```
+
+Run the narrow scheduler-backed benchmark source:
+
+```sh
+uv run pytest benchmarks/test_scheduler_backend_benchmark.py --benchmark-json /private/tmp/tinynlp-scheduled-residual-benchmark.json
+```
+
+That benchmark is limited to scheduled `evaluate_residuals` on the canonical
+chain dynamics problem and validates outputs before timing. It is not a solver,
+Jacobian, KKT, sensitivity, CasADi, or package-wide speed comparison.
 
 ## Development Commands
 

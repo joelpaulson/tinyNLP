@@ -1,91 +1,85 @@
 # ROADMAP
 
-tinyNLP will grow through small, milestone-based phases. The roadmap stays
-high-level on purpose; detailed execution tasks live in `TASKS.md`.
+This roadmap is complete. M0-M20 established the first end-to-end tinyNLP
+execution path and the controls around it. Detailed milestone history remains in
+`TASKS.md`; this file now keeps a concise completed-roadmap snapshot and leaves
+space for the next major planning pass.
 
-## Phase 0: Control Packet and Tooling
+## Completed Roadmap Snapshot
 
-- Keep the package skeleton, CI, contributor rules, benchmark policy, and design
-  notes coherent.
-- Maintain `uv`, `pytest`, `ruff`, permissive `mypy`, and `pytest-benchmark`
-  as the initial development stack.
-- Avoid runtime feature work in this phase.
+### Project Foundation
 
-## Phase 1: Expression IR and Reference Evaluator
+- Created the package skeleton, CI, contributor rules, benchmark policy, and
+  design notes.
+- Standardized on `uv`, `pytest`, `ruff`, permissive `mypy`, and
+  `pytest-benchmark`.
+- Preserved the public name `tinyNLP`, distribution name `tinynlp-opt`, and
+  import package `tinynlp`.
 
-- Introduce a small expression IR for smooth scalar/vector expressions.
-- Add a CPU-first reference evaluator.
-- Keep every operation traceable from model expression to IR node.
-- Make expression execution visible through deterministic `KernelPlan` objects
-  and a small backend protocol.
+### Expression Execution
 
-## Phase 2: Trace Reports and Canonical Examples
+- Added a minimal scalar expression IR with variables, constants, and basic
+  arithmetic.
+- Added a CPU-first reference evaluator.
+- Made expression execution visible through deterministic `KernelPlan` objects,
+  backend protocol metadata, structural traces, and canonical examples.
 
-- Add concise trace reports that explain what was built and evaluated.
-- Add kernel-plan reports that show executable steps, operation counts, and
-  temporary counts.
-- Create canonical examples that exercise the visible pipeline.
-- Add benchmark smoke scaffolding without result summaries or speed claims.
-- Keep examples focused on clarity rather than coverage.
+### Derivatives and Structure
 
-## Phase 3: Autodiff and Derivative Verification
+- Added reverse-mode scalar gradients, vector Jacobians, derivative
+  verification, and deterministic derivative traces.
+- Added symbolic dependency and sparsity discovery without numeric sampling.
+- Kept symbolic structure separate from runtime numeric values.
 
-- Add derivative construction for the supported IR.
-- Verify derivatives against reference checks.
-- Keep derivative graphs inspectable and tied back to source operations.
+### Problem Assembly and KKT Layer
 
-## Phase 4: Sparsity and Structure Discovery
+- Added smooth structured constrained `Problem` objects and assembly contracts.
+- Added dependency-free residual/Jacobian coordinate assembly.
+- Added explicit KKT system objects, KKT block provenance, and a dense reference
+  linear-solve interface.
 
-- Discover sparsity and reusable structure separately from numeric values.
-- Report structural assumptions and discovered patterns.
-- Add tests for structural stability across value changes.
+### Solver and Sensitivity Prototypes
 
-## Phase 5: Problem API and Assembly Contracts
+- Added a simple constrained residual-reduction solver prototype using the
+  current identity/reference primal block convention.
+- Added a scalar-parameter implicit sensitivity prototype tied to visible KKT
+  metadata and explicit RHS construction.
+- Documented assumptions and limits so these prototypes are not presented as
+  production NLP methods.
 
-- Define a small problem API for smooth structured constrained problems.
-- Establish residual, Jacobian, and Hessian assembly contracts.
-- Keep assembly traceable to expression and derivative structure.
+### Scheduling and Reports
 
-## Phase 6: KKT Systems and Linear-Solve Interface
+- Added execution schedule metadata for expression, assembly, KKT, solver, and
+  sensitivity stages.
+- Added scheduled pipeline reports that show task order, dependencies, inputs,
+  outputs, cached structures, materialized values, backend choice, provenance,
+  and validation status.
+- Added human-facing audit examples for the chain pipeline, sensitivity path,
+  and prepared residual schedule.
 
-- Build explicit KKT system assembly for supported problems.
-- Add a minimal linear-solve interface without committing to large wrappers.
-- Preserve enough metadata to inspect each KKT block.
+### Correctness Bridges and Benchmark Evidence
 
-## Phase 7: Simple Constrained Solver Prototype
+- Added an optional, isolated CasADi correctness bridge for supported canonical
+  problems. CasADi remains optional and is not a performance baseline.
+- Added the first scheduler-backed prepared residual-evaluation backend for the
+  canonical chain dynamics problem.
+- Added a narrow committed benchmark result summary for scheduled
+  `evaluate_residuals` on `chain_dynamics_case(horizon=100)`.
+- Completed a benchmark-claim audit to keep public wording limited to committed
+  evidence.
 
-- Add a simple constrained solver prototype for the supported problem class.
-- Prioritize correctness, traceability, and debuggability.
-- Keep solver behavior covered by tests and trace reports.
+## Current Boundary
 
-## Phase 8: Sensitivity Workflows
+The completed roadmap covers the visible reference pipeline through scheduled
+residual evaluation. tinyNLP still intentionally does not implement Hessian
+assembly, production nonlinear solver methods, production sensitivity workflows,
+broad scheduler-driven execution, broad optimized backends, external solver
+wrappers, inequalities, or bounds.
 
-- Add sensitivity calculations after the KKT and derivative paths are stable.
-- Validate sensitivities against reference problems.
-- Document assumptions and failure modes.
+## Next Roadmap
 
-## Phase 9: Scheduler, Benchmark Baselines, and Optimized Backends
-
-- Define scheduler architecture before optimized backend work.
-- Add execution schedules that group pipeline work into deterministic tasks.
-- Add scheduled pipeline reports that show task dependencies, cached structures,
-  materialized values, backend choices, and validation status.
-- Keep optional correctness bridges such as CasADi isolated and skip-safe.
-- Add the first optimized backend only as a scheduler-backed backend for a
-  validated scheduled stage.
-- Audit benchmark commands, environment metadata, result summaries, and README
-  claims before any performance claim.
-
-## Later
-
-- Inequalities and bounds.
-- Additional solver backends.
-- Code generation.
-- Hardware-specific execution.
-- Bridges to external formats when they preserve the inspectable pipeline.
-
-## Execution Task Board
-
-`TASKS.md` is the execution board generated from this roadmap. It translates
-each phase into concrete, testable tasks without expanding scope beyond the
-active milestone.
+The next major task is a fresh roadmap planning pass. Future work can decide
+whether to deepen scheduled execution, add more benchmark-backed optimized
+stages, expand supported operations, introduce Hessian/objective-gradient
+workflows, or plan inequalities and bounds. New runtime work should wait for
+that next roadmap.

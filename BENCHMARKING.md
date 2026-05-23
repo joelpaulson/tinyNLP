@@ -58,6 +58,24 @@ The optional CasADi bridge is a correctness comparison path for supported
 canonical problems only. It does not call external solvers, run code generation,
 or support speed claims.
 
+## Human-Facing Checks
+
+Use these commands to inspect the current benchmark-adjacent paths without
+turning them into broad claims:
+
+```sh
+uv run python examples/prepared_residual_schedule_report.py
+uv run python examples/scheduled_pipeline_report.py
+uv run python examples/casadi_correctness_report.py
+```
+
+The CasADi report is skip-safe when CasADi is not installed. Install the
+optional extra only when you want that correctness comparison:
+
+```sh
+uv sync --extra casadi
+```
+
 ## First Optimized Target
 
 The first optimized backend target is scheduled chain residual evaluation. The
