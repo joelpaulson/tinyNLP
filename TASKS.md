@@ -23,7 +23,7 @@ optimizable for available hardware.
   identity.
 - Do not add inequalities, bounds, GPU support, production IPOPT-style logic, or
   performance claims until a milestone explicitly asks for them.
-- With M17 complete, stop before M18 unless explicitly approved.
+- With M18 complete, stop before M19 unless explicitly approved.
 
 ## Shared Required Checks
 
@@ -471,40 +471,79 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Stop conditions: bridge requires a mandatory heavy dependency, solver-wrapper
   behavior, unsupported problem classes, or unscheduled ad hoc comparison paths.
 
-## M18 First Scheduler-Backed Optimized Backend
+## M18 Optimization Target Audit and Benchmark Plan
+
+- Status: complete.
+- Purpose: choose the first narrow scheduler-backed optimization target and
+  define the benchmark evidence required before implementation.
+- Allowed scope: task-board, benchmarking policy, architecture docs, and ADR
+  updates that select the target stage, reference baseline, optimized path,
+  validation rules, benchmark command, metadata, and allowed claim wording.
+- Out-of-scope items: optimized backend implementation, new benchmark result
+  summaries, new dependencies, GPU support, code generation, solver-speed
+  claims, package-wide speed claims, inequalities, bounds.
+- Files likely touched: `TASKS.md`, `BENCHMARKING.md`, `benchmarks/README.md`,
+  `DECISIONS.md`, `docs/architecture.md`.
+- Implementation notes: candidate stages inspected are expression evaluation
+  through `KernelPlan`, chain residual evaluation, residual/Jacobian fusion,
+  cached sparse coordinate assembly, KKT assembly, and sensitivity workflows.
+  The selected first target is scheduled chain residual evaluation because it
+  exercises the NLP pipeline while remaining traceable to cached residual
+  `KernelPlan`s and the backend protocol.
+- Acceptance tests: documentation names the selected target, keeps the optimized
+  backend scheduler-backed, preserves correctness validation before timing, and
+  avoids performance claims.
+- Benchmark requirements: define the future benchmark source
+  `benchmarks/test_scheduler_backend_benchmark.py`, command, metadata, baseline,
+  optimized path, and result-summary wording without committing results.
+- Required checks: shared required checks.
+- Commit message: `Audit scheduler-backed optimization target`.
+- Stop conditions: the audit starts implementing an optimized backend, requires
+  new dependencies or code generation, or implies solver/package-wide speed
+  claims.
+
+## M19 First Scheduler-Backed Optimized Backend
 
 - Status: ready.
-- Purpose: add the first optimized backend by attaching it to scheduled pipeline
-  tasks rather than creating an ad hoc fast path.
-- Allowed scope: one narrow optimized CPU backend for an already-supported
-  scheduled stage, reference validation, benchmark source, benchmark command,
-  environment metadata, committed result summary, and docs linking only to
-  committed evidence.
+- Purpose: add the first optimized backend by attaching it to the scheduled
+  `evaluate_residuals` stage for the canonical chain dynamics problem.
+- Allowed scope: one narrow dependency-free CPU backend for prepared
+  `KernelPlan` residual execution, scheduler metadata/report integration,
+  reference validation, benchmark source, benchmark command, environment
+  metadata, committed result summary, and docs linking only to committed
+  evidence.
 - Out-of-scope items: GPU support, broad code generation, unsupported problem
-  classes, uncommitted speed claims, production solver claims, inequalities,
-  bounds.
+  classes, solver-speed claims, package-wide speed claims, residual/Jacobian
+  fusion, KKT optimization, sensitivity optimization, inequalities, bounds.
 - Files likely touched: scheduler modules, `src/tinynlp/backends/`,
   `benchmarks/`, `docs/`, `BENCHMARKING.md`, `README.md`, `tests/`,
   `TASKS.md`.
-- Implementation notes: optimized behavior must match the CPU reference path for
-  the same scheduled task before timing is reported. Schedule reports should
-  identify which backend executed the task and what validation passed.
-- Acceptance tests: optimized backend produces the same outputs as the reference
-  path for the scheduled stage, and schedule reports expose backend choice and
-  validation status.
-- Benchmark requirements: expected benchmark is one committed scheduled-stage
-  benchmark from the implemented pipeline; baseline is the CPU reference backend
-  for the same scheduled task, command, dependency set, machine metadata, and
-  output validation.
+- Implementation notes: the reference baseline is existing residual assembly
+  using a cached `AssemblyContract` and the registered Python backend. The
+  optimized path should prepare chain residual `KernelPlan`s for repeated
+  scheduled execution without changing problem semantics, adding dependencies,
+  or bypassing schedule metadata. CasADi remains correctness-only and is not the
+  benchmark baseline.
+- Acceptance tests: optimized residual execution matches the reference residual
+  assembly for the same scheduled task, schedule reports expose backend choice
+  and validation status, and no solver/Jacobian/KKT/sensitivity speed claim is
+  added.
+- Benchmark requirements: benchmark scheduled `evaluate_residuals` on
+  `chain_dynamics_case(horizon=N)` using
+  `benchmarks/test_scheduler_backend_benchmark.py`. Baseline is the Python
+  reference backend for the same scheduled residual task; optimized path is the
+  prepared `KernelPlan` CPU backend. Results must include command, git commit,
+  Python/OS/CPU metadata, dependency versions, horizon, scheduled stage,
+  validation result, and baseline/optimized measurements.
 - Required checks: shared required checks.
 - Commit message: `Add first scheduler-backed optimized backend`.
 - Stop conditions: result cannot be reproduced, output validation fails, the
   backend bypasses scheduler metadata, or the benchmark would imply a broader
   performance claim than the evidence supports.
 
-## M19 Benchmark and Result-Claim Audit
+## M20 Benchmark and Result-Claim Audit
 
-- Status: blocked until M18 is complete.
+- Status: blocked until M19 is complete.
 - Purpose: audit benchmark evidence and documentation before any public
   performance claim.
 - Allowed scope: benchmark result summaries, benchmark metadata review,

@@ -54,3 +54,37 @@ no speed or performance claims.
 The optional CasADi bridge is a correctness comparison path for supported
 canonical problems only. It does not call external solvers, run code generation,
 or support speed claims.
+
+## First Optimized Target Plan
+
+The first optimized backend target is scheduled chain residual evaluation. This
+is deliberately narrower than solver speed, Jacobian speed, KKT speed,
+sensitivity speed, or package-wide performance.
+
+- Future benchmark source: `benchmarks/test_scheduler_backend_benchmark.py`.
+- Scheduled stage: `evaluate_residuals` for `chain_dynamics_case(horizon=N)`.
+- Reference baseline: existing residual assembly using a cached
+  `AssemblyContract` and the registered Python backend.
+- Optimized path: a scheduler-backed prepared `KernelPlan` CPU residual
+  evaluator, with no new dependencies, GPU support, or code generation.
+- Correctness gate: optimized residual values must match the reference residual
+  values for the same scheduled task before timing is used.
+- Required command:
+
+  ```sh
+  uv run pytest benchmarks/test_scheduler_backend_benchmark.py --benchmark-json <result-json>
+  ```
+
+Committed result summaries for this target must include the git commit, command,
+Python version, OS and CPU metadata, dependency versions, problem horizon,
+scheduled stage, validation result, baseline measurements, and optimized
+measurements.
+
+If the result succeeds before the benchmark-claim audit, the only acceptable
+claim wording is a narrow result-summary statement:
+
+> On `<environment>`, for scheduled `evaluate_residuals` on
+> `chain_dynamics_case(horizon=N)`, the prepared KernelPlan backend measured
+> `<result>` against the Python reference backend using `<benchmark source>` at
+> `<commit>`. This is a narrow scheduled-stage result, not a solver, Jacobian,
+> KKT, sensitivity, or package-wide speed claim.

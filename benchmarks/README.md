@@ -38,3 +38,24 @@ them. Future committed summaries must include:
 
 Do not make README performance claims without benchmark source, command,
 environment metadata, and committed result summary.
+
+## Planned First Optimized Benchmark
+
+The first optimized backend benchmark should be narrow and scheduler-backed:
+
+- Source: `benchmarks/test_scheduler_backend_benchmark.py`.
+- Stage: scheduled `evaluate_residuals`.
+- Problem: `chain_dynamics_case(horizon=N)`.
+- Baseline: existing residual assembly with a cached `AssemblyContract` and the
+  registered Python backend.
+- Optimized path: prepared `KernelPlan` CPU residual execution attached to the
+  scheduled residual-evaluation task.
+- Command:
+
+  ```sh
+  uv run pytest benchmarks/test_scheduler_backend_benchmark.py --benchmark-json <result-json>
+  ```
+
+The benchmark must validate residual values before timing. Any committed result
+summary must state that the result is limited to this scheduled stage and is not
+a solver, Jacobian, KKT, sensitivity, or package-wide performance claim.

@@ -418,3 +418,42 @@ solvers, compare performance, or expose CasADi objects through core modules.
   optional extra is installed.
 - Scheduler/report integration for external validation metadata remains a later
   optimization and result-claim milestone concern.
+
+## ADR 0016: First Optimized Target Is Scheduled Residual Evaluation
+
+- Status: accepted
+- Date: 2026-05-22
+
+### Context
+
+tinyNLP now has `KernelPlan`, backend protocol, problem assembly contracts,
+execution schedules, scheduled reports, and optional CasADi correctness checks.
+Before adding an optimized backend, the project needs a narrow target that is
+large enough to exercise the NLP pipeline but small enough to validate and
+benchmark without making broad performance claims.
+
+Candidate stages were expression evaluation through `KernelPlan`, residual
+evaluation for the chain problem, residual/Jacobian fusion, cached sparse
+coordinate assembly, KKT assembly, and sensitivity workflows.
+
+### Decision
+
+The first optimized backend target is scheduled residual evaluation for the
+canonical chain dynamics problem. The optimized path should attach to the
+scheduled `evaluate_residuals` task and execute prepared residual `KernelPlan`s
+through a dependency-free CPU backend.
+
+The reference baseline is existing residual assembly using a cached
+`AssemblyContract` and the registered Python backend. CasADi remains an optional
+correctness bridge and is not a performance baseline.
+
+### Consequences
+
+- The first optimized backend must be scheduler-backed rather than an ad hoc
+  fast path.
+- Correctness validation against the reference residual values is required
+  before timing can support any result summary.
+- Any result claim is limited to scheduled chain residual evaluation and must
+  not imply solver, Jacobian, KKT, sensitivity, or package-wide speed.
+- Residual/Jacobian fusion, KKT assembly optimization, sensitivity speedups,
+  GPU support, and code generation remain later decisions.

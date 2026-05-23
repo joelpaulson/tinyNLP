@@ -61,6 +61,12 @@ that define the work, the scheduled task order and dependencies, and the
 reference backend or linear-solve component selected for each task. They are
 inspection artifacts, not optimized execution logs.
 
+The first planned optimized backend target is scheduled residual evaluation for
+the canonical chain dynamics problem. That target uses the scheduler to identify
+the `evaluate_residuals` stage and uses prepared residual `KernelPlan`s as the
+backend-facing work unit. It is not a solver, Jacobian, KKT, sensitivity, or
+package-wide performance target.
+
 ## Current Boundary
 
 The current boundary is scalar expression construction/evaluation, plan
