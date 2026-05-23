@@ -561,3 +561,39 @@ problem objective, when present, only as a tracked metric.
   optimizer.
 - Solver-speed claims still require future benchmark evidence and must remain
   separate from the existing scheduled residual-evaluation benchmark.
+
+## ADR 0020: Scheduler-Backed Residual and Jacobian Execution
+
+- Status: accepted
+- Date: 2026-05-23
+
+### Context
+
+The flagship workflow needs residual and Jacobian values together before it can
+support narrow benchmark evidence for the least-squares path. M19 proved the
+prepared `KernelPlan` backend on scheduled residual evaluation, but F3 needs the
+same scheduler-backed pattern for derivative execution without adding a fused
+compiler or new backend dependency.
+
+### Decision
+
+Add a prepared residual+Jacobian evaluator under `tinynlp.schedule`. It prepares
+the existing residual `KernelPlan`s and Jacobian derivative `KernelPlan`s from
+an `AssemblyContract`, executes them through the dependency-free
+`prepared-python` backend, and returns the standard `ResidualAssembly` and
+`SparseMatrixAssembly` objects.
+
+Represent the path as a deterministic `ExecutionSchedule` with existing stages:
+`evaluate_residuals`, `evaluate_jacobian`, and
+`assemble_sparse_coordinate_jacobian`. Validation must compare residual values,
+Jacobian coordinates, and Jacobian values against the reference assembly path
+before benchmark timing is interpreted.
+
+### Consequences
+
+- The prepared residual+Jacobian path is scheduler-backed and traceable to the
+  same assembly contract as the reference path.
+- F3 adds benchmark source only; it does not add a committed result summary or a
+  speed claim.
+- Fusing residual/Jacobian execution, optimizing KKT assembly, rewriting solver
+  internals, and broad scheduler execution remain later decisions.

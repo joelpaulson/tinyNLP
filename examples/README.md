@@ -21,10 +21,13 @@ symbolic variable and keeps solve variables explicit.
 
 The scheduled pipeline report examples show how to inspect the current
 frontend -> schedule -> backend metadata path for chain assembly/KKT work, the
-parameter sensitivity workflow, and prepared residual evaluation. They are
-inspection and audit examples, not benchmark reports, solver comparisons, or
-bridge examples. `prepared_residual_schedule_report.py` is the easiest way to
-see the M19 scheduler-backed residual path by eye.
+parameter sensitivity workflow, prepared residual evaluation, and prepared
+residual+Jacobian evaluation. They are inspection and audit examples, not
+benchmark reports, solver comparisons, or bridge examples.
+`prepared_residual_schedule_report.py` is the easiest way to see the M19
+scheduler-backed residual path by eye, while
+`prepared_residual_jacobian_schedule_report.py` shows the F3 flagship
+residual+Jacobian path.
 
 `casadi_correctness_report.py` is an optional correctness-only bridge example.
 It compares the chain dynamics residual/Jacobian assembly path against CasADi
@@ -38,6 +41,12 @@ Run the prepared residual schedule inspection example with:
 
 ```sh
 uv run python examples/prepared_residual_schedule_report.py
+```
+
+Run the prepared residual+Jacobian schedule inspection example with:
+
+```sh
+uv run python examples/prepared_residual_jacobian_schedule_report.py
 ```
 
 Run the helper-built flagship chain model with:

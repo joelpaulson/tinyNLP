@@ -48,6 +48,12 @@ dynamics residual assembly, sparse Jacobian assembly, and KKT construction.
 They validate expected outputs before timing and are used as test/collection
 scaffolding.
 
+The F3 benchmark source
+`benchmarks/test_scheduler_residual_jacobian_benchmark.py` validates prepared
+scheduled residual+Jacobian execution against reference residual/Jacobian
+assembly before timing. It has no committed result summary yet and must not be
+used for README speed wording until a later benchmark audit accepts evidence.
+
 A narrow committed benchmark result summary now exists for scheduled
 `evaluate_residuals` on `chain_dynamics_case(horizon=100)`:
 `benchmarks/results/scheduled_residual_evaluation.md`. It is limited to that
@@ -65,6 +71,7 @@ turning them into broad claims:
 
 ```sh
 uv run python examples/prepared_residual_schedule_report.py
+uv run python examples/prepared_residual_jacobian_schedule_report.py
 uv run python examples/scheduled_pipeline_report.py
 uv run python examples/casadi_correctness_report.py
 ```
@@ -125,6 +132,8 @@ benchmark evidence easier to understand. Keep these rules:
   result.
 - Do not add README speed wording until the exact claim appears in a committed
   benchmark result summary.
+- Treat the F3 residual+Jacobian benchmark source as preparatory until F4 adds
+  committed evidence and claim review.
 
 Flagship evidence should stay separated into three categories:
 

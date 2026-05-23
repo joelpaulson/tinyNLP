@@ -12,7 +12,7 @@ The M0-M20 roadmap is complete. The current repository has an end-to-end visible
 reference pipeline through scheduled residual evaluation, an optional CasADi
 correctness bridge, and one narrow committed scheduled-stage benchmark result
 summary. The active roadmap is now the F-series flagship usability and speed
-track, with F3 as the next implementation milestone.
+track, with F4 as the next implementation milestone.
 
 ## How Codex Should Use This File
 
@@ -668,7 +668,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## F3 Scheduler-Backed Residual + Jacobian Execution
 
-- Status: ready.
+- Status: complete.
 - Purpose: extend scheduler-backed prepared execution from residual-only to the
   residual-plus-Jacobian stage needed by the flagship workflow.
 - Allowed scope: schedule metadata for combined residual/Jacobian evaluation,
@@ -696,7 +696,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## F4 Flagship Benchmark and Optional CasADi Correctness Comparison
 
-- Status: blocked until F3 is complete.
+- Status: ready.
 - Purpose: produce narrow correctness and benchmark evidence for the flagship
   workflow.
 - Allowed scope: optional CasADi correctness report integration for the

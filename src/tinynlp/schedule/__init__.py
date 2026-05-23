@@ -15,6 +15,14 @@ from tinynlp.schedule.core import (
     format_pipeline_report,
     format_schedule_report,
 )
+from tinynlp.schedule.residual_jacobian import (
+    ScheduledResidualJacobianEvaluation,
+    ScheduledResidualJacobianEvaluator,
+    ScheduledResidualJacobianValidation,
+    format_scheduled_residual_jacobian_validation,
+    prepare_scheduled_residual_jacobian_evaluator,
+    validate_scheduled_residual_jacobian_evaluator,
+)
 from tinynlp.schedule.residuals import (
     ScheduledResidualEvaluator,
     ScheduledResidualValidation,
@@ -30,6 +38,9 @@ __all__ = [
     "ScheduleItem",
     "ScheduleProvenance",
     "ScheduledResidualEvaluator",
+    "ScheduledResidualJacobianEvaluation",
+    "ScheduledResidualJacobianEvaluator",
+    "ScheduledResidualJacobianValidation",
     "ScheduledResidualValidation",
     "ValidationStatus",
     "build_expression_schedule",
@@ -39,7 +50,10 @@ __all__ = [
     "format_execution_schedule",
     "format_pipeline_report",
     "format_schedule_report",
+    "format_scheduled_residual_jacobian_validation",
     "format_scheduled_residual_validation",
+    "prepare_scheduled_residual_jacobian_evaluator",
     "prepare_scheduled_residual_evaluator",
+    "validate_scheduled_residual_jacobian_evaluator",
     "validate_scheduled_residual_evaluator",
 ]

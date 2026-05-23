@@ -25,7 +25,7 @@ model expression
   constrained residual-reduction solver, transparent residual least-squares
   prototype, and implicit sensitivity prototype.
 - `schedule`: execution schedule metadata, deterministic reports, and scheduled
-  residual-evaluation helpers.
+  residual plus residual/Jacobian evaluation helpers.
 - `backends`: KernelPlan, backend protocol, registry, Python reference backend,
   and prepared KernelPlan backend.
 - `bridges`: optional correctness bridges, currently CasADi for supported
@@ -54,8 +54,8 @@ solver iteration steps, sensitivity RHS construction, and sensitivity solves.
 expression graph. `ExecutionSchedule` is broader metadata over NLP pipeline
 tasks; it may cache or reference `KernelPlan` summaries when a scheduled task
 uses expression evaluation, but it does not replace the backend protocol. The
-current optimized path is a small helper around a scheduled residual-evaluation
-task, not a general schedule executor.
+current optimized paths are small helpers around scheduled residual and
+residual/Jacobian evaluation tasks, not a general schedule executor.
 
 Scheduled reports are the current audit surface for the tinyNLP analog of
 frontend -> scheduler -> backend execution. They show the frontend structures
@@ -67,7 +67,9 @@ The first optimized backend target is scheduled residual evaluation for the
 canonical chain dynamics problem. That target uses the scheduler to identify the
 `evaluate_residuals` stage and uses prepared residual `KernelPlan`s as the
 backend-facing work unit. It is not a solver, Jacobian, KKT, sensitivity, or
-package-wide performance target.
+package-wide performance target. F3 extends the same pattern to a prepared
+residual+Jacobian path for the flagship workflow, but no result summary or
+speed claim exists for that path yet.
 
 ## Current Boundary
 
@@ -82,11 +84,11 @@ reduces residual norms through visible normal equations and reports
 `problem.objective` only as a tracked metric. The repository also has execution
 schedule metadata for expression, assembly, KKT, and sensitivity stages,
 deterministic scheduled pipeline reports and audit examples, and one
-scheduler-backed prepared residual-evaluation path for the canonical chain
-dynamics problem. It intentionally does not implement Hessian assembly,
-production nonlinear solver methods, production sensitivity workflows, broad
-scheduler-driven execution, external solver wrappers, broad optimized backends,
-inequalities, or bounds.
+scheduler-backed prepared residual-evaluation path plus a prepared
+residual+Jacobian path for the canonical chain dynamics problem. It
+intentionally does not implement Hessian assembly, production nonlinear solver
+methods, production sensitivity workflows, broad scheduler-driven execution,
+external solver wrappers, broad optimized backends, inequalities, or bounds.
 
 The optional CasADi bridge is isolated under `tinynlp.bridges` and is a
 correctness comparison path only. CasADi symbols and arrays do not enter core IR,
@@ -98,6 +100,7 @@ The most useful human-facing checks for the completed roadmap are:
 
 ```sh
 uv run python examples/prepared_residual_schedule_report.py
+uv run python examples/prepared_residual_jacobian_schedule_report.py
 uv run python examples/flagship_chain_modeling.py
 uv run python examples/flagship_least_squares_trace.py
 uv run python examples/scheduled_pipeline_report.py
@@ -105,8 +108,9 @@ uv run python examples/casadi_correctness_report.py
 ```
 
 The first command shows the prepared scheduler-backed residual path and its
-reference validation. The flagship command shows the helper-built chain model.
-The least-squares command shows the transparent normal-equation residual
-reduction trace. The scheduled pipeline command shows assembly/Jacobian/KKT
-schedule metadata. The CasADi command is an optional correctness comparison; it
-prints a skip-safe message if CasADi is not installed.
+reference validation. The second shows the prepared residual+Jacobian path. The
+flagship command shows the helper-built chain model. The least-squares command
+shows the transparent normal-equation residual reduction trace. The scheduled
+pipeline command shows assembly/Jacobian/KKT schedule metadata. The CasADi
+command is an optional correctness comparison; it prints a skip-safe message if
+CasADi is not installed.

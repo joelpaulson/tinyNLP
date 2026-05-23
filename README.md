@@ -35,7 +35,7 @@ hardware-specific execution planned later.
 
 ## Current Status
 
-tinyNLP is experimental and pre-alpha. M1-M20 and F1-F2 are complete: the
+tinyNLP is experimental and pre-alpha. M1-M20 and F1-F3 are complete: the
 repository now includes a minimal scalar expression IR, CPU-first reference
 evaluator, deterministic structural traces, canonical expression examples, a
 deterministic KernelPlan, a small backend protocol, a registered Python
@@ -48,15 +48,15 @@ prototype, a transparent residual least-squares/Gauss-Newton reference
 prototype, a scalar-parameter implicit sensitivity prototype, execution
 schedule metadata, scheduled pipeline reports, audit examples for assembly/KKT
 and sensitivity paths, an optional CasADi correctness bridge, a prepared
-scheduler-backed residual-evaluation backend, a narrow scheduled-stage
-benchmark result summary, pytest-benchmark smoke sources, and a benchmark-claim
-audit.
+scheduler-backed residual-evaluation backend, a prepared scheduler-backed
+residual+Jacobian evaluation path, a narrow scheduled-stage benchmark result
+summary, pytest-benchmark smoke sources, and a benchmark-claim audit.
 
 It does not yet implement Hessian assembly, production nonlinear solver methods,
 production sensitivity workflows, broad scheduler-driven execution, external
 solver wrappers, broad optimized backends, inequalities, or bounds. The current
-optimized path is limited to scheduled residual evaluation for the canonical
-chain dynamics problem.
+committed benchmark result is limited to scheduled residual evaluation for the
+canonical chain dynamics problem.
 
 ## Installation From Source
 
@@ -89,6 +89,12 @@ Inspect the prepared scheduler-backed residual path:
 
 ```sh
 uv run python examples/prepared_residual_schedule_report.py
+```
+
+Inspect the prepared scheduler-backed residual+Jacobian path:
+
+```sh
+uv run python examples/prepared_residual_jacobian_schedule_report.py
 ```
 
 Inspect the helper-built flagship chain model:
@@ -184,7 +190,7 @@ src/tinynlp/
   autodiff/    reverse-mode scalar gradients, Jacobians, and verification
   nlp/         modeling helpers, structural sparsity, problem APIs, and assembly
   solvers/     KKT systems, reference solves, solver prototypes, sensitivities
-  schedule/    execution schedule metadata, reports, and residual execution
+  schedule/    execution schedule metadata, reports, and scheduled execution
   backends/    KernelPlan, backend protocol, registry, reference and prepared backends
   bridges/     optional CasADi correctness bridge and future adapters
   profiling/   deterministic structural trace helpers
