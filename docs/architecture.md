@@ -21,9 +21,9 @@ model expression
 - `autodiff`: reverse-mode scalar gradients, Jacobians, and verification.
 - `nlp`: ergonomic modeling helpers, structural sparsity, problem APIs, and
   residual/Jacobian assembly.
-- `solvers`: explicit KKT systems, reference linear-solve workflows, and the
-  simple constrained residual-reduction solver and implicit sensitivity
-  prototypes.
+- `solvers`: explicit KKT systems, reference linear-solve workflows, the simple
+  constrained residual-reduction solver, transparent residual least-squares
+  prototype, and implicit sensitivity prototype.
 - `schedule`: execution schedule metadata, deterministic reports, and scheduled
   residual-evaluation helpers.
 - `backends`: KernelPlan, backend protocol, registry, Python reference backend,
@@ -75,10 +75,13 @@ The current boundary is scalar expression construction/evaluation, small
 modeling helpers for structured examples, plan visibility, derivative
 construction and verification, symbolic sparsity discovery, residual/Jacobian
 assembly, explicit KKT system construction, and a dense reference linear-solve
-interface, plus a simple constrained residual-reduction solver prototype and
-scalar-parameter implicit sensitivity prototype. The repository also has
-execution schedule metadata for expression, assembly, KKT, and sensitivity
-stages, deterministic scheduled pipeline reports and audit examples, and one
+interface, plus a simple constrained residual-reduction solver prototype, a
+transparent residual least-squares/Gauss-Newton reference prototype, and a
+scalar-parameter implicit sensitivity prototype. The least-squares prototype
+reduces residual norms through visible normal equations and reports
+`problem.objective` only as a tracked metric. The repository also has execution
+schedule metadata for expression, assembly, KKT, and sensitivity stages,
+deterministic scheduled pipeline reports and audit examples, and one
 scheduler-backed prepared residual-evaluation path for the canonical chain
 dynamics problem. It intentionally does not implement Hessian assembly,
 production nonlinear solver methods, production sensitivity workflows, broad
@@ -96,12 +99,14 @@ The most useful human-facing checks for the completed roadmap are:
 ```sh
 uv run python examples/prepared_residual_schedule_report.py
 uv run python examples/flagship_chain_modeling.py
+uv run python examples/flagship_least_squares_trace.py
 uv run python examples/scheduled_pipeline_report.py
 uv run python examples/casadi_correctness_report.py
 ```
 
 The first command shows the prepared scheduler-backed residual path and its
 reference validation. The flagship command shows the helper-built chain model.
-The scheduled pipeline command shows assembly/Jacobian/KKT schedule metadata.
-The CasADi command is an optional correctness comparison; it prints a skip-safe
-message if CasADi is not installed.
+The least-squares command shows the transparent normal-equation residual
+reduction trace. The scheduled pipeline command shows assembly/Jacobian/KKT
+schedule metadata. The CasADi command is an optional correctness comparison; it
+prints a skip-safe message if CasADi is not installed.

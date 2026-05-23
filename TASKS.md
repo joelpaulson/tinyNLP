@@ -12,7 +12,7 @@ The M0-M20 roadmap is complete. The current repository has an end-to-end visible
 reference pipeline through scheduled residual evaluation, an optional CasADi
 correctness bridge, and one narrow committed scheduled-stage benchmark result
 summary. The active roadmap is now the F-series flagship usability and speed
-track, with F2 as the next implementation milestone.
+track, with F3 as the next implementation milestone.
 
 ## How Codex Should Use This File
 
@@ -640,7 +640,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## F2 Transparent Least-Squares / Gauss-Newton Reference Prototype
 
-- Status: ready.
+- Status: complete.
 - Purpose: add a visible reference least-squares path for the flagship workflow
   using existing residual/Jacobian assembly.
 - Allowed scope: reference Gauss-Newton or least-squares step objects, explicit
@@ -654,9 +654,9 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Implementation notes: report objective metric, residual norm, step norm,
   damping, solve residual, and termination status. Be explicit that this is a
   transparent reference prototype, not a production NLP method.
-- Acceptance tests: tiny flagship cases reduce least-squares residual/objective
-  metrics, failure states are deterministic, and trace formatting is stable and
-  address-free.
+- Acceptance tests: tiny flagship cases reduce residual norms and
+  least-squares values, report tracked objective metrics, failure states are
+  deterministic, and trace formatting is stable and address-free.
 - Benchmark requirements: none; no solver-speed claims.
 - Handoff gate: required checks pass, the solver trace example runs, docs do
   not imply production solver behavior, and F3 is marked ready before
@@ -668,7 +668,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## F3 Scheduler-Backed Residual + Jacobian Execution
 
-- Status: blocked until F2 is complete.
+- Status: ready.
 - Purpose: extend scheduler-backed prepared execution from residual-only to the
   residual-plus-Jacobian stage needed by the flagship workflow.
 - Allowed scope: schedule metadata for combined residual/Jacobian evaluation,

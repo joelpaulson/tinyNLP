@@ -43,7 +43,7 @@ Codex may:
   examples, the optional CasADi correctness bridge, and the M19 prepared
   scheduler-backed residual-evaluation backend, plus the M20 benchmark-claim
   audit, final roadmap closeout, F0 flagship roadmap, and F1 ergonomic modeling
-  helpers.
+  helpers, plus the F2 transparent residual least-squares prototype.
 - Refine benchmark policy and benchmark harness structure before benchmark
   result summaries.
 
@@ -53,7 +53,7 @@ Codex may not implement these before a milestone asks for them:
 - Production solver backends or broad sensitivity workflows beyond the M13
   prototype.
 - Hessian-backed nonlinear solver methods beyond the M12 residual-reduction
-  prototype.
+  prototype and F2 residual least-squares prototype.
 - Broad bridges to external modeling systems beyond the optional M17 CasADi
   correctness bridge.
 - Optimized backends beyond the M19 prepared residual-evaluation path.

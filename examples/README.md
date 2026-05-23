@@ -12,10 +12,12 @@ dynamics problem is the first problem/assembly/KKT smoke case for the pre-solver
 pipeline and the canonical smoke case for the simple constrained solver
 prototype. The flagship chain model shows the same style of workflow with
 ergonomic variable-array, value-map, sum, residual-block, and `Problem` helpers.
-These are not production nonlinear solver examples. The parameter sensitivity
-problem is the first scalar-parameter implicit sensitivity smoke example and is
-not a production differentiable optimization workflow. The sensitivity example
-treats the parameter as a symbolic variable and keeps solve variables explicit.
+The flagship least-squares trace shows a transparent residual Gauss-Newton
+reference path with normal-equation metadata. These are not production nonlinear
+solver examples. The parameter sensitivity problem is the first scalar-parameter
+implicit sensitivity smoke example and is not a production differentiable
+optimization workflow. The sensitivity example treats the parameter as a
+symbolic variable and keeps solve variables explicit.
 
 The scheduled pipeline report examples show how to inspect the current
 frontend -> schedule -> backend metadata path for chain assembly/KKT work, the
@@ -42,6 +44,12 @@ Run the helper-built flagship chain model with:
 
 ```sh
 uv run python examples/flagship_chain_modeling.py
+```
+
+Run the transparent flagship residual least-squares trace with:
+
+```sh
+uv run python examples/flagship_least_squares_trace.py
 ```
 
 Run the full assembly/Jacobian/KKT schedule inspection example with:

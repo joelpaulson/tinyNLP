@@ -527,3 +527,37 @@ evidence.
   policy.
 - The next roadmap should advance one F milestone at a time with clear handoff
   gates and validation checks.
+
+## ADR 0019: Transparent Residual Least-Squares Prototype
+
+- Status: accepted
+- Date: 2026-05-23
+
+### Context
+
+The flagship workflow needs a user-facing reference solver path that is easier
+to understand than a production nonlinear optimizer. The current pipeline has
+residual assembly, Jacobian assembly, and pure-Python reference linear algebra,
+but it does not have Hessian assembly or objective-gradient methods.
+
+### Decision
+
+Add a dependency-free damped Gauss-Newton style residual least-squares prototype
+for supported problems. It builds dense normal equations from the assembled
+residual vector and Jacobian:
+
+```text
+(J^T J + regularization*I) dx = -J^T r
+```
+
+The prototype accepts damped steps that reduce `0.5 * ||r||^2` and reports the
+problem objective, when present, only as a tracked metric.
+
+### Consequences
+
+- The solver path is inspectable through residual/Jacobian assembly, normal
+  equation metadata, damping decisions, and trace records.
+- This is not Hessian assembly, an IPOPT-style method, or a production NLP
+  optimizer.
+- Solver-speed claims still require future benchmark evidence and must remain
+  separate from the existing scheduled residual-evaluation benchmark.

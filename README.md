@@ -35,20 +35,22 @@ hardware-specific execution planned later.
 
 ## Current Status
 
-tinyNLP is experimental and pre-alpha. M1-M20 and F1 are complete: the
+tinyNLP is experimental and pre-alpha. M1-M20 and F1-F2 are complete: the
 repository now includes a minimal scalar expression IR, CPU-first reference
 evaluator, deterministic structural traces, canonical expression examples, a
-deterministic KernelPlan, a small backend protocol, a registered Python reference backend,
-reverse-mode scalar autodiff, vector Jacobian construction and verification,
-structural sparsity discovery, problem containers, residual/Jacobian assembly
-contracts, a small ergonomic modeling-helper layer, dependency-free sparse
-coordinate assembly, explicit KKT system objects, a dense reference linear-solve
-interface, a simple constrained residual-reduction solver prototype, a
-scalar-parameter implicit sensitivity prototype, execution schedule metadata,
-scheduled pipeline reports, audit examples for assembly/KKT and sensitivity
-paths, an optional CasADi correctness bridge, a prepared scheduler-backed
-residual-evaluation backend, a narrow scheduled-stage benchmark result summary,
-pytest-benchmark smoke sources, and a benchmark-claim audit.
+deterministic KernelPlan, a small backend protocol, a registered Python
+reference backend, reverse-mode scalar autodiff, vector Jacobian construction
+and verification, structural sparsity discovery, problem containers,
+residual/Jacobian assembly contracts, a small ergonomic modeling-helper layer,
+dependency-free sparse coordinate assembly, explicit KKT system objects, a dense
+reference linear-solve interface, a simple constrained residual-reduction solver
+prototype, a transparent residual least-squares/Gauss-Newton reference
+prototype, a scalar-parameter implicit sensitivity prototype, execution
+schedule metadata, scheduled pipeline reports, audit examples for assembly/KKT
+and sensitivity paths, an optional CasADi correctness bridge, a prepared
+scheduler-backed residual-evaluation backend, a narrow scheduled-stage
+benchmark result summary, pytest-benchmark smoke sources, and a benchmark-claim
+audit.
 
 It does not yet implement Hessian assembly, production nonlinear solver methods,
 production sensitivity workflows, broad scheduler-driven execution, external
@@ -93,6 +95,12 @@ Inspect the helper-built flagship chain model:
 
 ```sh
 uv run python examples/flagship_chain_modeling.py
+```
+
+Inspect the transparent residual least-squares trace:
+
+```sh
+uv run python examples/flagship_least_squares_trace.py
 ```
 
 Inspect the assembly/Jacobian/KKT schedule:
@@ -175,7 +183,7 @@ src/tinynlp/
   ir/          minimal scalar expression graph and IR structures
   autodiff/    reverse-mode scalar gradients, Jacobians, and verification
   nlp/         modeling helpers, structural sparsity, problem APIs, and assembly
-  solvers/     KKT systems, reference linear solve, solver, and sensitivities
+  solvers/     KKT systems, reference solves, solver prototypes, sensitivities
   schedule/    execution schedule metadata, reports, and residual execution
   backends/    KernelPlan, backend protocol, registry, reference and prepared backends
   bridges/     optional CasADi correctness bridge and future adapters
