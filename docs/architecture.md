@@ -19,7 +19,8 @@ model expression
 
 - `ir`: minimal expression graph and scalar operation structures.
 - `autodiff`: reverse-mode scalar gradients, Jacobians, and verification.
-- `nlp`: structural sparsity, problem APIs, and residual/Jacobian assembly.
+- `nlp`: ergonomic modeling helpers, structural sparsity, problem APIs, and
+  residual/Jacobian assembly.
 - `solvers`: explicit KKT systems, reference linear-solve workflows, and the
   simple constrained residual-reduction solver and implicit sensitivity
   prototypes.
@@ -70,18 +71,19 @@ package-wide performance target.
 
 ## Current Boundary
 
-The current boundary is scalar expression construction/evaluation, plan
-visibility, derivative construction and verification, symbolic sparsity
-discovery, residual/Jacobian assembly, explicit KKT system construction, and a
-dense reference linear-solve interface, plus a simple constrained
-residual-reduction solver prototype and scalar-parameter implicit sensitivity
-prototype. The repository also has execution schedule metadata for expression,
-assembly, KKT, and sensitivity stages, deterministic scheduled pipeline reports
-and audit examples, and one scheduler-backed prepared residual-evaluation path
-for the canonical chain dynamics problem. It intentionally does not implement
-Hessian assembly, production nonlinear solver methods, production sensitivity
-workflows, broad scheduler-driven execution, external solver wrappers, broad
-optimized backends, inequalities, or bounds.
+The current boundary is scalar expression construction/evaluation, small
+modeling helpers for structured examples, plan visibility, derivative
+construction and verification, symbolic sparsity discovery, residual/Jacobian
+assembly, explicit KKT system construction, and a dense reference linear-solve
+interface, plus a simple constrained residual-reduction solver prototype and
+scalar-parameter implicit sensitivity prototype. The repository also has
+execution schedule metadata for expression, assembly, KKT, and sensitivity
+stages, deterministic scheduled pipeline reports and audit examples, and one
+scheduler-backed prepared residual-evaluation path for the canonical chain
+dynamics problem. It intentionally does not implement Hessian assembly,
+production nonlinear solver methods, production sensitivity workflows, broad
+scheduler-driven execution, external solver wrappers, broad optimized backends,
+inequalities, or bounds.
 
 The optional CasADi bridge is isolated under `tinynlp.bridges` and is a
 correctness comparison path only. CasADi symbols and arrays do not enter core IR,
@@ -93,11 +95,13 @@ The most useful human-facing checks for the completed roadmap are:
 
 ```sh
 uv run python examples/prepared_residual_schedule_report.py
+uv run python examples/flagship_chain_modeling.py
 uv run python examples/scheduled_pipeline_report.py
 uv run python examples/casadi_correctness_report.py
 ```
 
 The first command shows the prepared scheduler-backed residual path and its
-reference validation. The second shows assembly/Jacobian/KKT schedule metadata.
-The third is an optional CasADi correctness comparison; it prints a skip-safe
+reference validation. The flagship command shows the helper-built chain model.
+The scheduled pipeline command shows assembly/Jacobian/KKT schedule metadata.
+The CasADi command is an optional correctness comparison; it prints a skip-safe
 message if CasADi is not installed.

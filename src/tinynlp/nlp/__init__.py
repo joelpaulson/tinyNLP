@@ -18,6 +18,13 @@ from tinynlp.nlp.assembly import (
     format_sparse_matrix,
     to_dense,
 )
+from tinynlp.nlp.modeling import (
+    VariableArray,
+    merge_value_maps,
+    residual_block,
+    sum_expressions,
+    variable_array,
+)
 from tinynlp.nlp.problem import Problem, ResidualBlock, ResidualKind
 from tinynlp.nlp.sparsity import (
     SparsityEntry,
@@ -44,6 +51,7 @@ __all__ = [
     "SparsityEntry",
     "SparsityPattern",
     "SparsityTraceEvent",
+    "VariableArray",
     "assemble_jacobian",
     "assemble_residuals",
     "build_assembly_contract",
@@ -53,5 +61,9 @@ __all__ = [
     "format_sparsity",
     "format_sparse_matrix",
     "jacobian_sparsity",
+    "merge_value_maps",
+    "residual_block",
+    "sum_expressions",
     "to_dense",
+    "variable_array",
 ]

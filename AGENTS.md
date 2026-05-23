@@ -42,7 +42,8 @@ Codex may:
   execution schedule metadata, scheduled report helpers, schedule audit
   examples, the optional CasADi correctness bridge, and the M19 prepared
   scheduler-backed residual-evaluation backend, plus the M20 benchmark-claim
-  audit and final roadmap closeout.
+  audit, final roadmap closeout, F0 flagship roadmap, and F1 ergonomic modeling
+  helpers.
 - Refine benchmark policy and benchmark harness structure before benchmark
   result summaries.
 

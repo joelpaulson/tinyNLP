@@ -62,8 +62,41 @@ class Problem:
         be added without changing the current residual assembly contract.
         """
 
-        residual_tuple = tuple(residuals)
+        block = ResidualBlock(
+            name="residuals",
+            kind=ResidualKind.EQUALITY,
+            expressions=tuple(residuals),
+        )
+        return cls.from_blocks((block,), name=name, objective=objective)
+
+    @classmethod
+    def from_blocks(
+        cls,
+        blocks: Sequence[ResidualBlock],
+        *,
+        name: str = "problem",
+        objective: Expr | None = None,
+    ) -> Problem:
+        """Build a problem from explicit residual blocks.
+
+        Equality residual blocks are the first implemented block kind. Keeping
+        block names explicit makes the current path easier to inspect and leaves
+        room for future inequality and bound block types.
+        """
+
+        block_tuple = tuple(blocks)
+        if not block_tuple:
+            msg = "problem must contain at least one residual block"
+            raise ValueError(msg)
+        residual_tuple = tuple(
+            expression for block in block_tuple for expression in block.expressions
+        )
         graph = require_non_empty_same_graph(list(residual_tuple))
+        for block in block_tuple:
+            for expression in block.expressions:
+                if expression.graph is not graph:
+                    msg = "all residual blocks must belong to the same graph"
+                    raise ValueError(msg)
         if objective is not None and objective.graph is not graph:
             msg = "objective must belong to the same graph as residuals"
             raise ValueError(msg)
@@ -74,17 +107,12 @@ class Problem:
         variables = variable_refs_for_expressions(list(expressions_for_variables))
         _ensure_unique_variable_names(variables)
 
-        block = ResidualBlock(
-            name="residuals",
-            kind=ResidualKind.EQUALITY,
-            expressions=residual_tuple,
-        )
         return cls(
             name=_validate_problem_name(name),
             graph=graph,
             variables=variables,
             objective=objective,
-            residual_blocks=(block,),
+            residual_blocks=block_tuple,
         )
 
     @property

@@ -12,7 +12,7 @@ The M0-M20 roadmap is complete. The current repository has an end-to-end visible
 reference pipeline through scheduled residual evaluation, an optional CasADi
 correctness bridge, and one narrow committed scheduled-stage benchmark result
 summary. The active roadmap is now the F-series flagship usability and speed
-track, with F1 as the next implementation milestone.
+track, with F2 as the next implementation milestone.
 
 ## How Codex Should Use This File
 
@@ -613,7 +613,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## F1 Ergonomic Modeling Layer
 
-- Status: ready.
+- Status: complete.
 - Purpose: make the flagship chain workflow easy to define without hiding the
   existing IR, problem, schedule, and assembly path.
 - Allowed scope: small helper APIs for variable arrays, named residual groups,
@@ -640,7 +640,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## F2 Transparent Least-Squares / Gauss-Newton Reference Prototype
 
-- Status: blocked until F1 is complete.
+- Status: ready.
 - Purpose: add a visible reference least-squares path for the flagship workflow
   using existing residual/Jacobian assembly.
 - Allowed scope: reference Gauss-Newton or least-squares step objects, explicit
