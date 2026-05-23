@@ -490,3 +490,40 @@ values, and reference-validation status.
   evaluation.
 - Broader optimized backends, residual/Jacobian fusion, KKT optimization,
   sensitivity optimization, and hardware-specific execution remain later work.
+
+## ADR 0018: Flagship-First Roadmap Before Operation Expansion
+
+- Status: accepted
+- Date: 2026-05-23
+
+### Context
+
+M0-M20 established the visible pipeline, optional CasADi correctness checks, and
+one narrow scheduler-backed residual-evaluation benchmark. The project now
+needs a clearer reason for users to try tinyNLP: a lightweight workflow that is
+easy to define, inspect, validate, and benchmark.
+
+Adding more expression operations would broaden the implementation surface, but
+it would not by itself clarify the user-facing value proposition.
+
+### Decision
+
+Start the next roadmap with a flagship usability and speed track before
+expanding the operation set. The flagship should be a chain-structured
+nonlinear workflow that demonstrates model construction, schedule inspection,
+residual/Jacobian assembly, a transparent reference solver path, optional
+CasADi correctness comparison, and narrow scheduled-stage benchmarks.
+
+Optimize scheduled residual/Jacobian stages before claiming solver speed.
+Preserve the split between correctness evidence, usability evidence, and speed
+evidence.
+
+### Consequences
+
+- New operation support waits until the flagship workflow proves a need for it.
+- README speed wording still requires committed benchmark evidence for the exact
+  claim.
+- CasADi remains correctness-only unless a future milestone explicitly changes
+  policy.
+- The next roadmap should advance one F milestone at a time with clear handoff
+  gates and validation checks.

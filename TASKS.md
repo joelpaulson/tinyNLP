@@ -11,7 +11,8 @@ optimizable for available hardware.
 The M0-M20 roadmap is complete. The current repository has an end-to-end visible
 reference pipeline through scheduled residual evaluation, an optional CasADi
 correctness bridge, and one narrow committed scheduled-stage benchmark result
-summary. New runtime work should start only after a fresh roadmap/planning pass.
+summary. The active roadmap is now the F-series flagship usability and speed
+track, with F1 as the next implementation milestone.
 
 ## How Codex Should Use This File
 
@@ -30,7 +31,8 @@ summary. New runtime work should start only after a fresh roadmap/planning pass.
   identity.
 - Do not add inequalities, bounds, GPU support, production IPOPT-style logic, or
   performance claims until a milestone explicitly asks for them.
-- With M20 complete, pause for fresh roadmap planning before new runtime work.
+- With F0 complete, proceed through the flagship F-series roadmap one milestone
+  at a time.
 
 ## Shared Required Checks
 
@@ -574,12 +576,178 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## Next Phase Planning
 
-- Status: ready.
+- Status: complete.
 - Purpose: decide the next roadmap direction after the completed M0-M20
   roadmap.
-- Allowed scope: roadmap/task-board planning, architecture review, and selection
-  of the next milestone sequence.
+- Allowed scope: roadmap/task-board planning, architecture review, and
+  selection of the next milestone sequence.
 - Out-of-scope items: new runtime work before a fresh milestone is approved.
 - Required checks: documentation checks as appropriate.
 - Stop conditions: proposed work would add broad performance claims, unsupported
   problem classes, or dependencies without explicit roadmap approval.
+
+## F0 Flagship Story and Acceptance Criteria
+
+- Status: complete.
+- Purpose: define the next roadmap around one flagship chain-structured
+  nonlinear workflow that is lightweight, inspectable, correctness-checkable,
+  and benchmarkable.
+- Allowed scope: planning docs, task-board entries, contributor rules,
+  benchmark policy, and ADR updates.
+- Out-of-scope items: runtime modeling APIs, solver changes, new operations,
+  new benchmarks, CasADi runtime changes, optimized backend work, performance
+  claims.
+- Files likely touched: `ROADMAP.md`, `TASKS.md`, `AGENTS.md`,
+  `BENCHMARKING.md`, `DECISIONS.md`.
+- Implementation notes: keep M0-M20 closed; treat F0-F5 as the new active
+  roadmap. Keep correctness, usability, and speed evidence separate.
+- Acceptance tests: docs describe F0-F5 clearly; no runtime feature work is
+  introduced; no broad speed or solver claims are added.
+- Benchmark requirements: policy only; no new result summary.
+- Handoff gate: required checks pass, docs do not overclaim, and F1 is marked
+  ready before committing.
+- Required checks: shared required checks.
+- Commit message: `Add flagship usability and speed roadmap`.
+- Stop conditions: the plan starts implementing runtime work or requires a new
+  dependency.
+
+## F1 Ergonomic Modeling Layer
+
+- Status: ready.
+- Purpose: make the flagship chain workflow easy to define without hiding the
+  existing IR, problem, schedule, and assembly path.
+- Allowed scope: small helper APIs for variable arrays, named residual groups,
+  explicit value maps, and concise construction of the existing chain-style
+  problem.
+- Out-of-scope items: new math operations, vector IR, inequalities, bounds,
+  Hessian assembly, production modeling language, external dependencies,
+  optimized execution, performance claims.
+- Files likely touched: `src/tinynlp/ir/`, `src/tinynlp/nlp/`, `examples/`,
+  `tests/`, `docs/architecture.md`, `README.md`, `TASKS.md`.
+- Implementation notes: helpers should reduce example boilerplate while keeping
+  symbolic graph structure and numeric values separate. The flagship problem
+  should remain readable in roughly 20-40 lines.
+- Acceptance tests: helpers create deterministic variable order, residuals,
+  values, and `Problem` objects equivalent to the current explicit chain
+  example; invalid shapes and duplicate names fail clearly.
+- Benchmark requirements: none; no timing claims.
+- Handoff gate: required checks pass, the flagship modeling example runs, docs
+  avoid speed claims, and F2 is marked ready before committing.
+- Required checks: shared required checks.
+- Commit message: `Add ergonomic flagship modeling layer`.
+- Stop conditions: the API starts becoming a broad modeling framework or needs
+  new operations/dependencies.
+
+## F2 Transparent Least-Squares / Gauss-Newton Reference Prototype
+
+- Status: blocked until F1 is complete.
+- Purpose: add a visible reference least-squares path for the flagship workflow
+  using existing residual/Jacobian assembly.
+- Allowed scope: reference Gauss-Newton or least-squares step objects, explicit
+  residual/Jacobian/KKT or normal-equation provenance, solver trace records,
+  damping diagnostics, and tests on tiny deterministic flagship cases.
+- Out-of-scope items: Hessian assembly, IPOPT-style production logic,
+  inequalities, bounds, sparse factorization libraries, broad solver-speed
+  claims, optimized backend work.
+- Files likely touched: `src/tinynlp/solvers/`, `src/tinynlp/nlp/`,
+  `examples/`, `tests/`, `docs/architecture.md`, `TASKS.md`.
+- Implementation notes: report objective metric, residual norm, step norm,
+  damping, solve residual, and termination status. Be explicit that this is a
+  transparent reference prototype, not a production NLP method.
+- Acceptance tests: tiny flagship cases reduce least-squares residual/objective
+  metrics, failure states are deterministic, and trace formatting is stable and
+  address-free.
+- Benchmark requirements: none; no solver-speed claims.
+- Handoff gate: required checks pass, the solver trace example runs, docs do
+  not imply production solver behavior, and F3 is marked ready before
+  committing.
+- Required checks: shared required checks.
+- Commit message: `Add transparent flagship least-squares prototype`.
+- Stop conditions: implementation requires Hessian assembly, a new dependency,
+  broad solver policy, or overfits to one numeric case.
+
+## F3 Scheduler-Backed Residual + Jacobian Execution
+
+- Status: blocked until F2 is complete.
+- Purpose: extend scheduler-backed prepared execution from residual-only to the
+  residual-plus-Jacobian stage needed by the flagship workflow.
+- Allowed scope: schedule metadata for combined residual/Jacobian evaluation,
+  prepared dependency-free CPU execution for supported current operations,
+  reference validation, tests, and benchmark source preparation.
+- Out-of-scope items: GPU support, code generation, Numba/LLVM/C backends,
+  CasADi performance comparisons, KKT optimization, solver-speed claims,
+  new operations, inequalities, bounds.
+- Files likely touched: `src/tinynlp/backends/`, `src/tinynlp/schedule/`,
+  `benchmarks/`, `tests/`, `BENCHMARKING.md`, `TASKS.md`.
+- Implementation notes: optimized work must attach to `ExecutionSchedule`
+  metadata and validate against reference residual/Jacobian assembly before any
+  timing is used.
+- Acceptance tests: prepared residual/Jacobian values match reference assembly
+  for flagship sizes; reports expose backend choice, cached prepared structures,
+  materialized values, and validation status.
+- Benchmark requirements: benchmark source may be added, but no result summary
+  or claim unless F4 explicitly performs the benchmark audit.
+- Handoff gate: required checks pass, schedule reports remain deterministic,
+  validation precedes timing, and F4 is marked ready before committing.
+- Required checks: shared required checks.
+- Commit message: `Add scheduler-backed residual and Jacobian execution`.
+- Stop conditions: implementation bypasses schedules, requires new
+  dependencies, or implies solver/package-wide speed.
+
+## F4 Flagship Benchmark and Optional CasADi Correctness Comparison
+
+- Status: blocked until F3 is complete.
+- Purpose: produce narrow correctness and benchmark evidence for the flagship
+  workflow.
+- Allowed scope: optional CasADi correctness report integration for the
+  flagship, benchmark commands, benchmark result summaries for named scheduled
+  stages, environment metadata, and documentation audits.
+- Out-of-scope items: CasADi performance baselines, solver-speed claims without
+  stage-specific evidence, new optimized backend implementation, broad
+  benchmark campaigns, new dependencies beyond existing optional CasADi.
+- Files likely touched: `benchmarks/`, `examples/`, `BENCHMARKING.md`,
+  `README.md`, `docs/architecture.md`, `tests/`, `TASKS.md`.
+- Implementation notes: keep evidence separate: correctness from tests/CasADi,
+  usability from runnable examples/reports, speed from committed benchmark
+  summaries for named scheduled stages.
+- Acceptance tests: benchmark sources validate outputs before timing; optional
+  CasADi checks skip cleanly without CasADi and pass when installed; any result
+  summary includes command, environment, problem size, baseline, optimized path,
+  and validation result.
+- Benchmark requirements: required only for claims added in this milestone;
+  claims must be narrow and stage-specific.
+- Handoff gate: required checks pass, documented benchmark commands run, claims
+  cite committed evidence, and F5 is marked ready before committing.
+- Required checks: shared required checks, plus optional CasADi validation when
+  feasible.
+- Commit message: `Add flagship benchmark and correctness evidence`.
+- Stop conditions: results are noisy or unreproducible, claims exceed evidence,
+  or CasADi becomes required.
+
+## F5 Polished User-Facing Flagship Example and README Audit
+
+- Status: blocked until F4 is complete.
+- Purpose: make the flagship value proposition obvious to a new user.
+- Allowed scope: one start-here example/tutorial, README updates, example docs,
+  command snippets, report formatting polish, and final claim audit.
+- Out-of-scope items: new runtime features, new benchmarks without evidence,
+  broad speed claims, new operations, inequalities, bounds, GPU/codegen, solver
+  wrapper claims.
+- Files likely touched: `examples/`, `README.md`, `docs/`, `BENCHMARKING.md`,
+  `tests/`, `TASKS.md`.
+- Implementation notes: the example should print or expose the model/problem,
+  schedule, residual/Jacobian assembly, solver trace when applicable, optional
+  CasADi correctness report, and benchmark command. It should not hide the
+  pipeline in opaque utilities.
+- Acceptance tests: the start-here example is deterministic and address-free;
+  README wording remains backed by committed evidence; commands work from a
+  source checkout.
+- Benchmark requirements: no new result summary unless explicitly needed for a
+  README claim.
+- Handoff gate: required checks pass, the start-here example runs, README claims
+  are evidence-backed, and the next roadmap direction is left as a planning
+  step.
+- Required checks: shared required checks, plus documented example commands.
+- Commit message: `Add polished flagship example and README audit`.
+- Stop conditions: the example implies unsupported solver classes, broad
+  performance, or hides traceability.

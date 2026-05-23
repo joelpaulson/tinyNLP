@@ -33,7 +33,7 @@ Codex may:
 - Add minimal package stubs needed for layout or importability.
 - Add tests for behavior that already exists or is explicitly requested by the
   active milestone.
-- Maintain and test completed M1-M19 features: core expression IR, reference
+- Maintain and test completed M1-M20 features: core expression IR, reference
   evaluator, trace reports, canonical examples, benchmark smoke scaffolding,
   KernelPlan, backend protocol, registered Python reference backend, autodiff,
   Jacobian verification, structural sparsity, problem APIs, residual/Jacobian
@@ -41,7 +41,8 @@ Codex may:
   simple constrained residual-reduction solver, implicit sensitivity prototype,
   execution schedule metadata, scheduled report helpers, schedule audit
   examples, the optional CasADi correctness bridge, and the M19 prepared
-  scheduler-backed residual-evaluation backend.
+  scheduler-backed residual-evaluation backend, plus the M20 benchmark-claim
+  audit and final roadmap closeout.
 - Refine benchmark policy and benchmark harness structure before benchmark
   result summaries.
 
@@ -61,6 +62,8 @@ Codex may not implement these before a milestone asks for them:
   summary.
 - Inequalities, bounds, GPU support, hardware-specific code generation, or large
   external solver wrappers.
+- New expression operations unless the active milestone explicitly asks for
+  them and includes derivative, backend, bridge, and tests.
 
 Do not make speed claims in README or project documentation unless they are
 backed by committed benchmark output.
@@ -96,6 +99,24 @@ For long Codex runs:
 - Delete the short-lived local branch after a successful merge.
 - Stop and ask the user if the merge is not fast-forward, if conflicts appear,
   or if unrelated user changes are present.
+
+## Flagship Roadmap Transition Rules
+
+For the F-series flagship usability and speed roadmap:
+
+- Work one F milestone at a time.
+- Do not start the next F milestone until required checks pass and `TASKS.md`
+  marks the current milestone complete and the next milestone ready.
+- Keep the flagship example honest: it must expose the model/problem, schedule,
+  residual/Jacobian assembly, solver trace when applicable, optional CasADi
+  correctness report, and benchmark command rather than hiding work in opaque
+  utilities.
+- Keep correctness, usability, and speed evidence separate.
+- Do not add README speed wording unless a committed benchmark result summary
+  supports the exact claim.
+- Do not add new operations, inequalities, bounds, GPU support, code generation,
+  broad bridges, or broad solver claims unless the active milestone explicitly
+  asks for them.
 
 ## Commit Discipline
 

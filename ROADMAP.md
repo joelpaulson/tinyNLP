@@ -2,8 +2,8 @@
 
 This roadmap is complete. M0-M20 established the first end-to-end tinyNLP
 execution path and the controls around it. Detailed milestone history remains in
-`TASKS.md`; this file now keeps a concise completed-roadmap snapshot and leaves
-space for the next major planning pass.
+`TASKS.md`; this file now keeps a concise completed-roadmap snapshot and records
+the next flagship planning pass.
 
 ## Completed Roadmap Snapshot
 
@@ -76,10 +76,60 @@ assembly, production nonlinear solver methods, production sensitivity workflows,
 broad scheduler-driven execution, broad optimized backends, external solver
 wrappers, inequalities, or bounds.
 
-## Next Roadmap
+## Next Roadmap: Flagship Usability and Speed Track
 
-The next major task is a fresh roadmap planning pass. Future work can decide
-whether to deepen scheduled execution, add more benchmark-backed optimized
-stages, expand supported operations, introduce Hessian/objective-gradient
-workflows, or plan inequalities and bounds. New runtime work should wait for
-that next roadmap.
+The next roadmap should turn the existing visible pipeline into a compelling
+flagship workflow. The aim is one chain-structured nonlinear example that is
+easy to model, inspect, solve, validate, and benchmark narrowly. This track
+prioritizes lightweight usability plus inspectability before expanding the math
+operation set.
+
+### F0: Flagship Story and Acceptance Criteria
+
+- Define the flagship problem, audience, and success criteria.
+- Keep the public value proposition narrow: a lightweight, inspectable
+  chain-structured nonlinear workflow.
+- Separate correctness evidence, usability evidence, and speed evidence.
+
+### F1: Ergonomic Modeling Layer
+
+- Add small helpers that make structured examples easier to write without
+  hiding the IR, problem, schedule, or assembly path.
+- Prefer variable arrays, named residual blocks, explicit values, and concise
+  example construction over broad modeling syntax.
+- Do not add new operations unless the flagship workflow proves they are needed.
+
+### F2: Transparent Least-Squares / Gauss-Newton Reference Prototype
+
+- Add a reference residual/Jacobian-based least-squares path for the flagship
+  workflow.
+- Report objective metric, residual norm, step norm, damping, and solve status.
+- Keep this a transparent reference prototype, not an IPOPT-style production
+  solver.
+
+### F3: Scheduler-Backed Residual + Jacobian Execution
+
+- Extend scheduler-backed prepared execution from residual-only to a
+  residual-plus-Jacobian scheduled stage.
+- Validate outputs against the reference assembly path before timing.
+- Keep optimized work dependency-free and attached to schedule metadata.
+
+### F4: Flagship Benchmark and Optional CasADi Correctness Comparison
+
+- Add benchmark sources and committed result summaries only for named scheduled
+  stages.
+- Use CasADi as an optional correctness comparison, not a performance baseline.
+- Keep claims limited to committed evidence for the flagship problem and stage.
+
+### F5: Polished User-Facing Flagship Example and README Audit
+
+- Add a single "start here" example that prints or exposes the model, schedule,
+  residual/Jacobian assembly, solver trace, optional CasADi correctness report,
+  and benchmark command.
+- Update README only after the example and evidence exist.
+- Preserve narrow wording around speed, solver scope, and supported problem
+  classes.
+
+New runtime work should proceed one F milestone at a time. Each milestone must
+leave tests passing, reports deterministic, docs honest, and any performance
+claim tied to committed benchmark evidence.

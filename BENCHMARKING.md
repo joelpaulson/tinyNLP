@@ -109,3 +109,25 @@ this result:
 > `<result>` against the Python reference backend using `<benchmark source>` at
 > `<commit>`. This is a narrow scheduled-stage result, not a solver, Jacobian,
 > KKT, sensitivity, or package-wide speed claim.
+
+## Flagship Benchmark Rules
+
+The next roadmap should use the flagship chain-structured workflow to make
+benchmark evidence easier to understand. Keep these rules:
+
+- Validate correctness before timing every benchmark.
+- Benchmark named scheduled stages before making broader workflow claims.
+- Measure residual and Jacobian scheduled stages before claiming solver speed.
+- Treat CasADi as an optional correctness comparison only, not a performance
+  baseline.
+- Keep result summaries narrow, stage-specific, and tied to one command,
+  environment, problem size, reference baseline, optimized path, and validation
+  result.
+- Do not add README speed wording until the exact claim appears in a committed
+  benchmark result summary.
+
+Flagship evidence should stay separated into three categories:
+
+- Correctness: tests and optional CasADi comparisons.
+- Usability: runnable examples and readable reports.
+- Speed: committed benchmark summaries for named scheduled stages.
