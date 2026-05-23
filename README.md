@@ -35,7 +35,7 @@ hardware-specific execution planned later.
 
 ## Current Status
 
-tinyNLP is experimental and pre-alpha. M1-M16 are complete: the repository now
+tinyNLP is experimental and pre-alpha. M1-M17 are complete: the repository now
 includes a minimal scalar expression IR, CPU-first reference evaluator,
 deterministic structural traces, canonical expression examples, a deterministic
 KernelPlan, a small backend protocol, a registered Python reference backend,
@@ -45,13 +45,14 @@ contracts, dependency-free sparse coordinate assembly, explicit KKT system
 objects, a dense reference linear-solve interface, a simple constrained
 residual-reduction solver prototype, a scalar-parameter implicit sensitivity
 prototype, execution schedule metadata, scheduled pipeline reports, audit
-examples for assembly/KKT and sensitivity paths, and pytest-benchmark smoke
-sources.
+examples for assembly/KKT and sensitivity paths, an optional CasADi correctness
+bridge, and pytest-benchmark smoke sources.
 
 It does not yet implement Hessian assembly, production nonlinear solver methods,
-production sensitivity workflows, scheduler-driven execution, bridges,
-optimized backends, inequalities, or bounds. The scheduler layer is being added
-as inspectable metadata and reports before optimized backends are introduced.
+production sensitivity workflows, scheduler-driven execution, external solver
+wrappers, optimized backends, inequalities, or bounds. The scheduler layer is
+being added as inspectable metadata and reports before optimized backends are
+introduced.
 
 ## Installation From Source
 
@@ -61,6 +62,12 @@ Install the project from a local checkout with uv:
 git clone https://github.com/joelpaulson/tinyNLP.git
 cd tinyNLP
 uv sync
+```
+
+Install the optional CasADi correctness bridge only when needed:
+
+```sh
+uv sync --extra casadi
 ```
 
 Import the package:
@@ -130,7 +137,7 @@ src/tinynlp/
   solvers/     KKT systems, reference linear solve, solver, and sensitivities
   schedule/    execution schedule metadata and deterministic reports
   backends/    KernelPlan, backend protocol, registry, and Python reference backend
-  bridges/     future import/export adapters
+  bridges/     optional CasADi correctness bridge and future adapters
   profiling/   deterministic structural trace helpers
 
 docs/          design notes and architecture sketches

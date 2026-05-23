@@ -15,6 +15,8 @@ plus timing, not demos.
 - README speed claims require benchmark source, command, environment metadata,
   and committed result summary.
 - Do not report speedups without a reproducible baseline.
+- Optional correctness bridges such as CasADi are not benchmark result
+  summaries and must not be described as performance baselines.
 
 ## Measurement Targets
 
@@ -48,3 +50,7 @@ scaffolding.
 
 There are no committed benchmark result summaries yet, and tinyNLP still makes
 no speed or performance claims.
+
+The optional CasADi bridge is a correctness comparison path for supported
+canonical problems only. It does not call external solvers, run code generation,
+or support speed claims.

@@ -388,3 +388,33 @@ optimize kernels, or replace existing solver and sensitivity traces.
   speed claims.
 - Later optimized backend work must preserve or extend the report surface rather
   than bypassing it.
+
+## ADR 0015: Optional CasADi Correctness Bridge
+
+- Status: accepted
+- Date: 2026-05-22
+
+### Context
+
+tinyNLP needs a small external correctness check before scheduler-backed
+optimized backend work. CasADi is useful as a symbolic reference for supported
+expression and Jacobian calculations, but it must not become part of the core
+runtime or solver path.
+
+### Decision
+
+Add CasADi as an optional extra and isolate all CasADi imports under
+`tinynlp.bridges.casadi`. The bridge converts supported tinyNLP IR operations
+to CasADi symbols internally and compares expression values plus
+residual/Jacobian assembly on canonical problems.
+
+The bridge does not call IPOPT, use CasADi code generation, wrap external
+solvers, compare performance, or expose CasADi objects through core modules.
+
+### Consequences
+
+- Normal installs and tests remain skip-safe without CasADi.
+- CasADi can validate current reference math on supported examples when the
+  optional extra is installed.
+- Scheduler/report integration for external validation metadata remains a later
+  optimization and result-claim milestone concern.

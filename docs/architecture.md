@@ -27,7 +27,8 @@ model expression
   NLP pipeline stages.
 - `backends`: KernelPlan, backend protocol, registry, and Python reference
   backend.
-- `bridges`: future import/export adapters.
+- `bridges`: optional correctness bridges, currently CasADi for supported
+  canonical problems, plus future import/export adapters.
 - `profiling`: deterministic structural trace helpers.
 
 ## Scheduler Layer
@@ -71,5 +72,9 @@ prototype. The repository also has execution schedule metadata for expression,
 assembly, KKT, and sensitivity stages, plus deterministic scheduled pipeline
 reports and audit examples. It intentionally does not implement Hessian
 assembly, production nonlinear solver methods, production sensitivity workflows,
-scheduler-driven execution, bridges, optimized backends, inequalities, or
-bounds.
+scheduler-driven execution, external solver wrappers, optimized backends,
+inequalities, or bounds.
+
+The optional CasADi bridge is isolated under `tinynlp.bridges` and is a
+correctness comparison path only. CasADi symbols and arrays do not enter core IR,
+autodiff, NLP assembly, solver, schedule, or backend modules.

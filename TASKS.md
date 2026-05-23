@@ -23,7 +23,7 @@ optimizable for available hardware.
   identity.
 - Do not add inequalities, bounds, GPU support, production IPOPT-style logic, or
   performance claims until a milestone explicitly asks for them.
-- With M16 complete, stop before M17 unless explicitly approved.
+- With M17 complete, stop before M18 unless explicitly approved.
 
 ## Shared Required Checks
 
@@ -446,7 +446,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M17 Optional CasADi Correctness Bridge
 
-- Status: ready.
+- Status: complete.
 - Purpose: add an optional correctness bridge for comparison against CasADi where
   explicitly available.
 - Allowed scope: optional bridge module, optional dependency wiring if approved,
@@ -473,7 +473,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## M18 First Scheduler-Backed Optimized Backend
 
-- Status: blocked until M17 is complete.
+- Status: ready.
 - Purpose: add the first optimized backend by attaching it to scheduled pipeline
   tasks rather than creating an ad hoc fast path.
 - Allowed scope: one narrow optimized CPU backend for an already-supported
