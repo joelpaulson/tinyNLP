@@ -101,6 +101,7 @@ autodiff, NLP assembly, solver, schedule, or backend modules.
 The most useful human-facing checks for the completed roadmap are:
 
 ```sh
+uv run python examples/flagship_start_here.py
 uv run python examples/prepared_residual_schedule_report.py
 uv run python examples/prepared_residual_jacobian_schedule_report.py
 uv run python examples/flagship_chain_modeling.py
@@ -109,10 +110,9 @@ uv run python examples/scheduled_pipeline_report.py
 uv run python examples/casadi_correctness_report.py
 ```
 
-The first command shows the prepared scheduler-backed residual path and its
-reference validation. The second shows the prepared residual+Jacobian path. The
-flagship command shows the helper-built chain model. The least-squares command
-shows the transparent normal-equation residual reduction trace. The scheduled
-pipeline command shows assembly/Jacobian/KKT schedule metadata. The CasADi
-command is an optional correctness comparison; it prints a skip-safe message if
-CasADi is not installed.
+The first command is the recommended start-here walkthrough. It shows the
+helper-built model, residual/Jacobian assembly, prepared schedule validation,
+least-squares trace summary, optional CasADi correctness status, and benchmark
+evidence pointers. The other commands expose each layer in more detail. The
+CasADi command is an optional correctness comparison; it prints a skip-safe
+message if CasADi is not installed.

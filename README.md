@@ -35,7 +35,7 @@ hardware-specific execution planned later.
 
 ## Current Status
 
-tinyNLP is experimental and pre-alpha. M1-M20 and F1-F3 are complete: the
+tinyNLP is experimental and pre-alpha. M0-M20 and F0-F5 are complete: the
 repository now includes a minimal scalar expression IR, CPU-first reference
 evaluator, deterministic structural traces, canonical expression examples, a
 deterministic KernelPlan, a small backend protocol, a registered Python
@@ -50,7 +50,8 @@ schedule metadata, scheduled pipeline reports, audit examples for assembly/KKT
 and sensitivity paths, an optional CasADi correctness bridge, a prepared
 scheduler-backed residual-evaluation backend, a prepared scheduler-backed
 residual+Jacobian evaluation path, narrow scheduled-stage benchmark result
-summaries, pytest-benchmark smoke sources, and benchmark-claim audits.
+summaries, pytest-benchmark smoke sources, benchmark-claim audits, and a
+polished flagship start-here walkthrough.
 
 It does not yet implement Hessian assembly, production nonlinear solver methods,
 production sensitivity workflows, broad scheduler-driven execution, external
@@ -85,6 +86,12 @@ The public project name is `tinyNLP`. The distribution name is `tinynlp-opt`,
 and the import package is `tinynlp`.
 
 ## Try The Current Pipeline
+
+Start with the flagship walkthrough:
+
+```sh
+uv run python examples/flagship_start_here.py
+```
 
 Inspect the prepared scheduler-backed residual path:
 

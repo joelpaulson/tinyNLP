@@ -128,8 +128,9 @@ this result:
 
 ## Flagship Benchmark Rules
 
-The next roadmap should use the flagship chain-structured workflow to make
-benchmark evidence easier to understand. Keep these rules:
+The F-series flagship roadmap uses the chain-structured workflow to make
+benchmark evidence easier to understand. F5 adds a polished start-here example
+but no new benchmark result summary. Keep these rules:
 
 - Validate correctness before timing every benchmark.
 - Benchmark named scheduled stages before making broader workflow claims.

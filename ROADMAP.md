@@ -1,9 +1,10 @@
 # ROADMAP
 
 This roadmap is complete. M0-M20 established the first end-to-end tinyNLP
-execution path and the controls around it. Detailed milestone history remains in
-`TASKS.md`; this file now keeps a concise completed-roadmap snapshot and records
-the next flagship planning pass.
+execution path and the controls around it. F0-F5 added the first polished
+flagship workflow. Detailed milestone history remains in `TASKS.md`; this file
+now keeps a concise completed-roadmap snapshot and records that the next phase
+needs fresh planning before runtime work continues.
 
 ## Completed Roadmap Snapshot
 
@@ -71,17 +72,18 @@ the next flagship planning pass.
 ## Current Boundary
 
 The completed roadmap covers the visible reference pipeline through scheduled
-residual evaluation. tinyNLP still intentionally does not implement Hessian
-assembly, production nonlinear solver methods, production sensitivity workflows,
-broad scheduler-driven execution, broad optimized backends, external solver
-wrappers, inequalities, or bounds.
+residual evaluation, the flagship residual+Jacobian path, and a transparent
+reference least-squares prototype. tinyNLP still intentionally does not
+implement Hessian assembly, production nonlinear solver methods, production
+sensitivity workflows, broad scheduler-driven execution, broad optimized
+backends, external solver wrappers, inequalities, or bounds.
 
-## Next Roadmap: Flagship Usability and Speed Track
+## Completed Flagship Usability and Speed Track
 
-The next roadmap should turn the existing visible pipeline into a compelling
-flagship workflow. The aim is one chain-structured nonlinear example that is
-easy to model, inspect, solve, validate, and benchmark narrowly. This track
-prioritizes lightweight usability plus inspectability before expanding the math
+The F-series roadmap turned the visible pipeline into one chain-structured
+nonlinear example that is easy to model, inspect, solve with a reference
+least-squares prototype, validate, and benchmark narrowly. This track
+prioritized lightweight usability plus inspectability before expanding the math
 operation set.
 
 ### F0: Flagship Story and Acceptance Criteria
@@ -120,6 +122,8 @@ operation set.
   stages.
 - Use CasADi as an optional correctness comparison, not a performance baseline.
 - Keep claims limited to committed evidence for the flagship problem and stage.
+- Added a narrow committed result summary for scheduled residual+Jacobian
+  evaluation on `flagship_chain_case(horizon=100)`.
 
 ### F5: Polished User-Facing Flagship Example and README Audit
 
@@ -130,6 +134,10 @@ operation set.
 - Preserve narrow wording around speed, solver scope, and supported problem
   classes.
 
-New runtime work should proceed one F milestone at a time. Each milestone must
-leave tests passing, reports deterministic, docs honest, and any performance
-claim tied to committed benchmark evidence.
+## Next Roadmap Planning
+
+New runtime work should wait for a fresh roadmap and task board. The next
+planning pass should choose whether to prioritize broader modeling ergonomics,
+more operations, stronger solver methods, scheduled backend execution, or new
+benchmark targets. Any future performance claim still needs committed benchmark
+evidence for the exact stage, problem, command, and environment.

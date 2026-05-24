@@ -11,8 +11,8 @@ optimizable for available hardware.
 The M0-M20 roadmap is complete. The current repository has an end-to-end visible
 reference pipeline through scheduled residual evaluation, an optional CasADi
 correctness bridge, and narrow committed scheduled-stage benchmark result
-summaries. The active roadmap is now the F-series flagship usability and speed
-track, with F5 as the next implementation milestone.
+summaries. The F-series flagship usability and speed track is complete. The next
+task is planning the next roadmap before new runtime work begins.
 
 ## How Codex Should Use This File
 
@@ -31,8 +31,8 @@ track, with F5 as the next implementation milestone.
   identity.
 - Do not add inequalities, bounds, GPU support, production IPOPT-style logic, or
   performance claims until a milestone explicitly asks for them.
-- With F0 complete, proceed through the flagship F-series roadmap one milestone
-  at a time.
+- With F0-F5 complete, do not begin new runtime work until the next roadmap is
+  planned and added to this task board.
 
 ## Shared Required Checks
 
@@ -574,7 +574,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Stop conditions: result summaries cannot be reproduced or claims exceed the
   committed evidence.
 
-## Next Phase Planning
+## Post-M20 Planning
 
 - Status: complete.
 - Purpose: decide the next roadmap direction after the completed M0-M20
@@ -726,7 +726,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 
 ## F5 Polished User-Facing Flagship Example and README Audit
 
-- Status: ready.
+- Status: complete.
 - Purpose: make the flagship value proposition obvious to a new user.
 - Allowed scope: one start-here example/tutorial, README updates, example docs,
   command snippets, report formatting polish, and final claim audit.
@@ -751,3 +751,25 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml','rb'))"
 - Commit message: `Add polished flagship example and README audit`.
 - Stop conditions: the example implies unsupported solver classes, broad
   performance, or hides traceability.
+
+## Next Roadmap Planning
+
+- Status: ready.
+- Purpose: decide the next roadmap before new runtime milestones begin.
+- Allowed scope: planning documents, task-board updates, benchmark-target
+  selection, dependency policy review, and public positioning cleanup.
+- Out-of-scope items: runtime implementation, new operations, solver changes,
+  backend changes, bridges, new benchmark result summaries, or performance
+  claims.
+- Files likely touched: `ROADMAP.md`, `TASKS.md`, `AGENTS.md`,
+  `BENCHMARKING.md`, `DECISIONS.md`, `README.md`, and `docs/`.
+- Implementation notes: choose one coherent next track and define milestone
+  gates before touching runtime code.
+- Acceptance tests: docs clearly state the next roadmap; no unsupported feature
+  or speed claims are introduced; existing tests still pass.
+- Benchmark requirements: policy only unless the next roadmap explicitly asks
+  for a new result summary.
+- Required checks: shared required checks.
+- Commit message: `Plan next tinyNLP roadmap`.
+- Stop conditions: the planning pass tries to implement runtime behavior or
+  broadens public claims without evidence.

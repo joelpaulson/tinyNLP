@@ -5,6 +5,11 @@ This directory holds canonical examples for the current visible pipeline.
 Examples should make the computational path visible. Prefer a small number of
 traceable examples over broad coverage.
 
+Start with `flagship_start_here.py` for a compact walkthrough of the current
+flagship workflow. It prints the model/problem shape, residual/Jacobian
+assembly, prepared schedule validation, least-squares trace summary, optional
+CasADi correctness status, and narrow benchmark evidence links.
+
 Current examples include an affine expression, a quadratic expression, a
 residual-like expression list, a larger banded residual system, an explicit
 chain dynamics problem, and a helper-built flagship chain model. The chain
@@ -37,6 +42,12 @@ report.
 
 Examples that are meant to run as scripts use `_bootstrap.py` so they can import
 the local `src/tinynlp` package directly from a source checkout.
+
+Run the start-here flagship walkthrough with:
+
+```sh
+uv run python examples/flagship_start_here.py
+```
 
 Run the prepared residual schedule inspection example with:
 

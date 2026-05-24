@@ -45,7 +45,8 @@ Codex may:
   audit, final roadmap closeout, F0 flagship roadmap, and F1 ergonomic modeling
   helpers, the F2 transparent residual least-squares prototype, and the F3
   scheduler-backed residual+Jacobian execution helpers, plus the F4 flagship
-  correctness and benchmark evidence.
+  correctness and benchmark evidence and F5 polished flagship start-here
+  example.
 - Refine benchmark policy and benchmark harness structure before benchmark
   result summaries.
 
@@ -121,6 +122,8 @@ For the F-series flagship usability and speed roadmap:
 - Do not add new operations, inequalities, bounds, GPU support, code generation,
   broad bridges, or broad solver claims unless the active milestone explicitly
   asks for them.
+- After F5, do not start new runtime milestones until a fresh roadmap and
+  `TASKS.md` task board are written and approved.
 
 ## Commit Discipline
 
