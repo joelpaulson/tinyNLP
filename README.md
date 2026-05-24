@@ -220,6 +220,6 @@ src/tinynlp/
 
 docs/          design notes and architecture sketches
 examples/      canonical examples for the current visible pipeline
-benchmarks/    benchmark smoke sources and future committed summaries
+benchmarks/    benchmark smoke sources and committed result summaries
 tests/         pytest suite
 ```
